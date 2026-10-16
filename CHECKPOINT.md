@@ -1,29 +1,26 @@
 # ShubhDate night build — CHECKPOINT
 
-Updated: 2026-10-16 ~05:05 Toronto (run 1, Claude Fable 5.1)
+Updated: 2026-10-16 ~05:50 Toronto (run 1, Claude Fable 5.1)
 
 ## Done (committed + pushed to https://github.com/SakredStudio/subhdate)
-- Step 0 scaffold (Vite 8, TS 5.9, vitest 5, astronomy-engine 2.1.19; @swisseph/node dev-only oracle). Engine MIT, app proprietary.
-- Step 1 L0 `engine/astro.ts`: calibrated Lahiri ayanamsa (matches SE to 0.02"), nutation, Sun/Moon/planets, rise/set limb + centre, topocentric moonrise, root finder, tz helpers.
-- Step 2 L1 `engine/panchanga.ts`: five limbs with end instants, vara, amanta + purnimanta masa, adhika, samvatsara (Vikram/Gujarati/Shaka + Jovian names), ritu, ayana, rashis.
-- Step 3 golden gate: **oracle 7160/7161 = 99.99%** (the one miss is a parallax-shift sanity check at the Nov 9 sunrise edge, not an astronomical error); **Moon histogram p99 5.6"** (gate 40"); **Drik manual 15 rows, 220/220 = 100%**; **kala vs Drik 65/65**.
-- Step 4 L2 `engine/kala.ts` + `data/kala.json` (rahu/yama/gulika, abhijit, brahma, 30 muhurtas, durmuhurta, choghadiya day+night, hora, pradosha, varjyam/amrit kaal, sandhya). L3 `engine/flags.ts` + `data/yogas.json` (sarvartha/amrita/siddha/ravi-guru pushya/pushkara/ravi yoga, dagdha/visha/hutashana/yamaghanta/mrityu/krakacha, rikta/amavasya, bad yogas, gand mool, gandanta, panchaka+type, bhadra+loka, adhika/kshaya/kharmas/chaturmas/holashtak/pitru paksha, abujha days, sankranti day + avoid window + punya kaal, eclipse day/window (local solar), guru/shukra asta, vinchudo (west)).
-- Step 5 L4 `engine/personal.ts` (janma, tara bala, chandra bala, unknown-time ambiguity), L5 `engine/muhurta.ts` + `rules/{vivaha,griha_pravesh,general}.json` (12 events; hard/soft; strictness family/standard/relaxed; reason codes; windows; confidence; caveats).
-- Step 6 `engine/festivals.ts` + `data/festivals.json`: rules not dates; diaspora note vs Delhi. Anchors verified: Karwa Chauth 2026-10-29 (Delhi, moonrise 20:17; Toronto 10-28), Dhanteras 11-06, Diwali 11-08 (pradosha 17:31–19:55 Delhi), Govardhan 11-10, Bhai Dooj 11-11, Devutthani Ekadashi 11-20/21, Makar Sankranti 2027-01-15.
-- Tests: 60 passing (`npm test`), typecheck clean.
+- Steps 0–7 complete: scaffold, L0 astro, L1 panchanga, golden gate, L2 kala, L3 flags, L4 personal, L5 muhurta (12 packs), festivals by rule, L6 explain + i18n (EN/HI/Hinglish reasons; EN/HI/GU terms; sankalpa IAST + Devanagari).
+- Step 8 PWA in `app/`: Today (panchang, kala, choghadiya with "now", hora, flags, festival of the day, sankalpa, diaspora banner, personal bala), Find Muhurta (12 events, range, city, strictness, birth toggle), Result detail (windows, in-favour/against sentences, caveats, sources, Save / Share / .ics), Festivals (6 months, puja windows, moonrise, diaspora notes), Saved (IndexedDB), Settings (9 languages, region, month naming, sunrise convention, Abhijit-on-Wednesday, birth details with janma nakshatra, waitlist link), About/How we calculate, Privacy, first-run language+city screen. Engine runs in a Web Worker; day payloads cached in IndexedDB; service worker offline shell; manifest + generated PNG icons.
+- Verified in the browser (dev server): Today for Toronto 2026-10-16 (sunrise 07:33, tithi Shashthi till 20:24, Rahu 11:40–13:02 etc.), muhurta search Nov 18–Dec 15 Toronto vivaha (28 days, first wedding day Nov 20/21 after Devutthani), result detail, festivals list with diaspora notes, settings.
+- GitHub Pages enabled (build_type = workflow via gh api). Workflow `.github/workflows/deploy.yml`: tests + golden validation + typecheck + build + deploy. First run failed only because Pages was not yet enabled; second run triggered by the latest push.
 
-## In progress
-- Step 7 L6 explain + i18n (reason dictionaries EN/HI/Hinglish, terms EN/HI/GU, sankalpa generator).
+## Verified numbers
+- Oracle 7160/7161 (99.99%); Moon histogram p99 5.6"; Drik manual 220/220 (100%); kala vs Drik 65/65; 72 unit/golden tests green; typecheck clean; `vite build` OK (app 90 KB, worker 185 KB raw).
 
 ## Next step
-1. Finish L6 (`engine/explain.ts`, `i18n/*`), test, commit.
-2. Step 8 PWA in `app/` (vanilla ES modules + Vite): Today, Find Muhurta, Result detail, Saved, Festivals, Settings, About, Privacy; worker + IndexedDB; service worker; manifest; design tokens from the handoff.
-3. Step 9 GitHub Actions → Pages; verify live; append LIVE-GO-PLAN §4.1; final CHECKPOINT + morning report.
+1. Confirm the Pages deploy (`gh run list`), load https://sakredstudio.github.io/subhdate/, check SW registration + offline reload, Today for Toronto and Mumbai vs Drik.
+2. Append the shipped line to C:\sakred-os\LIVE-GO-PLAN.md §4.1.
+3. Final CHECKPOINT with the morning report.
 
 ## Known gaps / UNVERIFIED (also marked in data files)
-- Drik's Lahiri runs ~16" ahead of Swiss Ephemeris SE_SIDM_LAHIRI (Drik ayanamsha 24.238203 vs SE 24.233762 on 2026-10-20). Effect: sankranti instants differ by ~4 min (Makara 2027: SE 21:10 IST, Drik 21:14); tithi/nakshatra ends unaffected at minute resolution. We follow SE and say so.
-- Jovian samvatsara names: south (Shaka+11) mod 60 ✓ Drik; north = south+13 ✓ Drik (Siddharthi); Gujarati lags north by one ✓ Drik (Pingala/Kalayukta). Beyond 2026 UNVERIFIED.
-- Amrit kaal = Varjyam start + 24 ghatis: UNVERIFIED beyond Swati/Bharani/Krittika.
-- Packs: sagai (vagdana) and mundan nakshatra lists are [M]/UNVERIFIED; bhoomi_puja month list [M]; Monday 9th durmuhurta [S1]; Bhai Dooj/Vasant Panchami day-rules [M].
-- Night Rahu kaal (South) not implemented. Lagna/sthira-lagna windows not implemented (v3). Kshaya masa path untested.
-- Moon rise/set vs Drik within 1 min on 14 rows, 2 min on one (Toronto 2026-10-29 moonset).
+- Service worker: in the Vite dev server the registration logs "unknown error fetching the script"; to be confirmed on the production build / live site.
+- Drik's Lahiri runs ~16" ahead of SE's; sankranti instants differ by ~4 min (Makara 2027: SE 21:10 IST, Drik 21:14).
+- Jovian samvatsara names beyond 2026, Amrit kaal offset, sagai/mundan/bhoomi lists, Monday 9th durmuhurta, Bhai Dooj/Vasant Panchami day rules: UNVERIFIED.
+- Night Rahu kaal, lagna/sthira-lagna, Vakya mode, partner bala: not in v1.
+- Waitlist URL is a placeholder constant `WAITLIST_URL` in app/main.ts (Soul to replace with the Google Form link).
+- City list is hand-curated (~330 cities); GeoNames import planned.
+- Beta languages (MR/TA/TE/BN/KN) have ~30 UI strings each; reasons fall back to English.

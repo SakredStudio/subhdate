@@ -484,6 +484,65 @@
    "sunRashiEnd": "21:14",
    "moonRashi": "Meena",
    "note": "Makara sankranti instant 21:14 IST (Sun leaves Dhanu)"
+  },
+  {
+   "place": {
+    "name": "Mumbai",
+    "lat": 19.076,
+    "lon": 72.8777,
+    "tz": "Asia/Kolkata"
+   },
+   "date": "2026-10-16",
+   "url": "https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=1275339&date=16/10/2026",
+   "read": "2026-10-16",
+   "sunrise": "06:33",
+   "sunset": "18:15",
+   "moonrise": "11:30",
+   "moonset": "22:20",
+   "tithi": "Shashthi",
+   "tithiEnd": "05:54",
+   "nakshatra": "Jyeshtha",
+   "nakshatraEnd": "06:47",
+   "yoga": "Shobhana",
+   "yogaEnd": "22:06",
+   "karana": "Kaulava",
+   "rahuKaal": "10:56-12:24",
+   "gulika": "08:01-09:28",
+   "yamaganda": "15:19-16:47",
+   "abhijit": "12:00-12:47",
+   "amanta": "Ashwina",
+   "purnimanta": "Ashwina",
+   "paksha": "Shukla"
+  },
+  {
+   "place": {
+    "name": "Toronto",
+    "lat": 43.6532,
+    "lon": -79.3832,
+    "tz": "America/Toronto"
+   },
+   "date": "2026-10-16",
+   "url": "https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=6167865&date=16/10/2026",
+   "read": "2026-10-16",
+   "sunrise": "07:33",
+   "sunset": "18:32",
+   "moonrise": "13:54",
+   "moonset": "22:00",
+   "tithi": "Shashthi",
+   "tithiEnd": "20:24",
+   "nakshatra": "Mula",
+   "nakshatraEnd": "00:17",
+   "yoga": "Shobhana",
+   "yogaEnd": "12:36",
+   "karana": "Taitila",
+   "rahuKaal": "11:40-13:03",
+   "gulika": "08:56-10:18",
+   "yamaganda": "15:48-17:10",
+   "abhijit": "12:41-13:25",
+   "amanta": "Ashwina",
+   "purnimanta": "Ashwina",
+   "paksha": "Shukla",
+   "note": "live site https://sakredstudio.github.io/subhdate/ checked against this page on 2026-10-16"
   }
  ]
 }
