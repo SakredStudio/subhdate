@@ -17,7 +17,7 @@ const secDiff = (a: Date | null, b: string | null) => (a && b) ? Math.abs(a.getT
 const arcDiff = (a: number, b: number) => { let d = Math.abs(a - b) * 3600; if (d > 648000) d = 1296000 - d; return d; };
 
 describe('golden: engine vs Swiss Ephemeris oracle', () => {
-  const files = readdirSync(dir).filter(f => f.endsWith('.json') && f !== 'drik-manual.json');
+  const files = readdirSync(dir).filter((f: string) => f.endsWith('.json') && f !== 'drik-manual.json');
   const totals: Record<string, Row> = {};
   for (const f of files) {
     const g = JSON.parse(readFileSync(new URL(f, dir), 'utf8'));

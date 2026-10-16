@@ -36,7 +36,8 @@
     "vikram": "Siddharthi",
     "gujarati": "Pingala"
    },
-   "ayanamsha": 24.238203
+   "ayanamsha": 24.238203,
+   "moonset": "01:22"
   },
   {
    "place": {
@@ -70,7 +71,10 @@
     "shaka": "Parabhava",
     "vikram": "Siddharthi",
     "gujarati": "Pingala"
-   }
+   },
+   "moonrise": "06:39",
+   "moonset": "17:09",
+   "note": "moonrise 06:39 Nov 09 (Vedic day)"
   },
   {
    "place": {
@@ -101,7 +105,8 @@
    "paksha": "Krishna",
    "shaka": 1948,
    "vikram": 2083,
-   "note": "Drik lists No Moonrise on this civil date (EST, -05:00)"
+   "note": "Drik lists No Moonrise on this civil date (EST, -05:00)",
+   "moonset": "16:09"
   },
   {
    "place": {
@@ -348,7 +353,8 @@
    "amanta": "Ashwina",
    "purnimanta": "Kartika",
    "paksha": "Krishna",
-   "note": "moonrise listed as 05:58 Nov 09 (next civil date)"
+   "note": "moonrise 05:58 Nov 09 is before the next sunrise, so Drik lists it on Nov 08 (Vedic day)",
+   "moonrise": "05:58"
   },
   {
    "place": {
@@ -379,6 +385,105 @@
    "purnimanta": "Kartika",
    "paksha": "Krishna",
    "note": "Karwa Chauth listed"
+  },
+  {
+   "place": {
+    "name": "Toronto",
+    "lat": 43.6532,
+    "lon": -79.3832,
+    "tz": "America/Toronto"
+   },
+   "date": "2026-10-29",
+   "url": "https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=6167865&date=29/10/2026",
+   "read": "2026-10-16",
+   "sunrise": "07:50",
+   "sunset": "18:12",
+   "moonrise": "20:47",
+   "moonset": "12:12",
+   "tithi": "Chaturthi",
+   "tithiEnd": "12:39",
+   "nakshatra": "Mrigashira",
+   "nakshatraEnd": "23:34",
+   "yoga": "Parigha",
+   "yogaEnd": "14:36",
+   "karana": "Balava",
+   "rahuKaal": "14:19-15:37",
+   "gulika": "10:25-11:43",
+   "yamaganda": "07:50-09:08",
+   "abhijit": "12:40-13:22",
+   "amanta": "Ashwina",
+   "purnimanta": "Kartika",
+   "paksha": "Krishna",
+   "note": "EDT. Karwa Chauth not listed for Toronto on this page (Chaturthi ends 12:39, before moonrise)"
+  },
+  {
+   "place": {
+    "name": "Mumbai",
+    "lat": 19.076,
+    "lon": 72.8777,
+    "tz": "Asia/Kolkata"
+   },
+   "date": "2026-10-20",
+   "url": "https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=1275339&date=20/10/2026",
+   "read": "2026-10-16",
+   "sunrise": "06:34",
+   "sunset": "18:12",
+   "moonrise": "14:26",
+   "moonset": "01:53",
+   "tithi": "Navami",
+   "tithiEnd": "12:50",
+   "nakshatra": "Shravana",
+   "nakshatraEnd": "18:02",
+   "yoga": "Shula",
+   "yogaEnd": "00:50",
+   "karana": "Kaulava",
+   "rahuKaal": "15:18-16:45",
+   "gulika": "12:23-13:50",
+   "yamaganda": "09:29-10:56",
+   "abhijit": "12:00-12:46",
+   "durmuhurta": [
+    "08:54-09:40"
+   ],
+   "amanta": "Ashwina",
+   "purnimanta": "Ashwina",
+   "paksha": "Shukla"
+  },
+  {
+   "place": {
+    "name": "New Delhi",
+    "lat": 28.6139,
+    "lon": 77.209,
+    "tz": "Asia/Kolkata"
+   },
+   "date": "2027-01-14",
+   "url": "https://www.drikpanchang.com/panchang/day-panchang.html?geoname-id=1261481&date=14/01/2027",
+   "read": "2026-10-16",
+   "sunrise": "07:15",
+   "sunset": "17:45",
+   "moonrise": "10:51",
+   "moonset": "23:33",
+   "tithi": "Shashthi",
+   "tithiEnd": "13:58",
+   "nakshatra": "Uttara Bhadrapada",
+   "nakshatraEnd": "23:18",
+   "yoga": "Parigha",
+   "yogaEnd": "17:22",
+   "karana": "Taitila",
+   "rahuKaal": "13:49-15:08",
+   "gulika": "09:53-11:11",
+   "yamaganda": "07:15-08:34",
+   "abhijit": "12:09-12:51",
+   "durmuhurta": [
+    "10:45-11:27",
+    "14:57-15:39"
+   ],
+   "amanta": "Pausha",
+   "purnimanta": "Pausha",
+   "paksha": "Shukla",
+   "sunRashi": "Dhanu",
+   "sunRashiEnd": "21:14",
+   "moonRashi": "Meena",
+   "note": "Makara sankranti instant 21:14 IST (Sun leaves Dhanu)"
   }
  ]
 }

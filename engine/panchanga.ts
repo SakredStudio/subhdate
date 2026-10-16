@@ -172,10 +172,12 @@ export function panchang(date: string, place: Place, opts: PanchangOptions = {})
   if (civil(sr, place.tz).day !== d) sr = sunriseAt(place, addDays(midnight, 0.5), conv) ?? sr;
   const ss = sunsetAt(place, sr, conv)!;
   const nextSr = sunriseAt(place, addDays(sr, 0.5), conv)!;
-  const mr = moonriseAt(place, midnight);
-  const ms = moonsetAt(place, midnight);
-  const moonriseToday = mr && civil(mr, place.tz).day === d ? mr : null;
-  const moonsetToday = ms && civil(ms, place.tz).day === d ? ms : null;
+  // Moonrise/moonset of the Vedic day: the first one at or after sunrise and before the next sunrise
+  // (Drik Panchang convention; a day near new moon can have none). Topocentric, see astro.ts.
+  const mr = moonriseAt(place, sr);
+  const ms = moonsetAt(place, sr);
+  const moonriseToday = mr && mr.getTime() < nextSr.getTime() ? mr : null;
+  const moonsetToday = ms && ms.getTime() < nextSr.getTime() ? ms : null;
 
   const wd = civil(sr, place.tz).weekday;
   const tithiSpans = spans(elongation, 12, 30, sr, nextSr, i => tithiName(i + 1)) as TithiSpan[];
