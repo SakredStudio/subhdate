@@ -1,0 +1,144 @@
+{
+  "id": "general",
+  "_about": "Shared pack for the ten events that do not yet have a fully tuned pack. `events` gives each event its nakshatra lists, varas, tithis and extra rules; `hard`/`soft` are common. Sources per event from research/02 §3.5 and §4.2; items marked UNVERIFIED are the researcher's [M] hypotheses or gaps.",
+  "windowMinutes": 60,
+  "preferDaytime": true,
+  "hard": [
+    { "when": "flag:rahu_kaal", "code": "rahu_kaal", "source": "research/02 §2.6.1 [S]" },
+    { "when": "flag:bhadra_martya", "code": "bhadra_martya", "source": "research/02 §3.3 Bhadra [S1]" },
+    { "when": "flag:eclipse_day", "code": "eclipse_day", "source": "research/02 §3.3 Grahana [P-via-Raman]" },
+    { "when": "tithiNum in [30]", "code": "amavasya", "source": "research/02 §4.3 [S]" },
+    { "when": "flag:vyatipata|vaidhriti", "code": "vyatipata_vaidhriti", "relaxable": true, "source": "research/02 §3.3 [P]" },
+    { "when": "personal:chandrashtama", "code": "chandrashtama", "source": "research/02 §3.2 [S]" }
+  ],
+  "soft": [
+    { "when": "tithi in [2,3,5,7,10,11,13]", "w": 12, "code": "tithi_good", "source": "research/02 §4.3 [S]" },
+    { "when": "tithi in [4,9,14]", "w": -25, "code": "rikta_tithi", "source": "research/02 §4.3 [S]" },
+    { "when": "paksha == Shukla", "w": 5, "code": "shukla_paksha", "source": "research/02 §4.3 [S]" },
+    { "when": "flag:sarvartha_siddhi", "w": 10, "code": "sarvartha_siddhi", "source": "research/02 §3.3 [S]" },
+    { "when": "flag:amrita_siddhi", "w": 10, "code": "amrita_siddhi", "source": "research/02 §3.3 [S]" },
+    { "when": "flag:siddha_yoga", "w": 5, "code": "siddha_yoga", "source": "research/02 §3.3 [S]" },
+    { "when": "flag:ravi_yoga", "w": 5, "code": "ravi_yoga", "source": "research/02 §3.3 [M]" },
+    { "when": "flag:abhijit", "w": 5, "code": "abhijit", "source": "research/02 §2.6.2 [S]" },
+    { "when": "flag:amrit_kaal", "w": 4, "code": "amrit_kaal", "source": "research/02 §2.6.7 [P]/UNVERIFIED offset" },
+    { "when": "kala:choghadiya in [Amrit,Shubh,Labh]", "w": 8, "code": "choghadiya_good", "source": "research/02 §2.6.5 [P]" },
+    { "when": "kala:choghadiya in [Udveg,Rog,Kaal]", "w": -6, "code": "choghadiya_avoid", "source": "research/02 §2.6.5 [P]" },
+    { "when": "personal:tara in [2,4,6,8,9]", "w": 10, "else": -12, "code": "tara_good", "elseCode": "tara_bad", "source": "research/02 §3.2 [S]" },
+    { "when": "personal:chandra good", "w": 8, "code": "chandra_good", "source": "research/02 §3.2 [S]" },
+    { "when": "personal:chandra avoid", "w": -10, "code": "chandra_avoid", "source": "research/02 §3.2 [S]" },
+    { "when": "flag:inauspicious_yoga", "w": -8, "code": "inauspicious_yoga", "source": "research/02 §2.1 [S]" },
+    { "when": "flag:dagdha_tithi|visha_tithi|hutashana_tithi", "w": -8, "code": "vara_tithi_dosha", "source": "research/02 §3.3 [S]" },
+    { "when": "flag:mrityu_yoga", "w": -8, "code": "mrityu_yoga", "source": "research/02 §3.3 [S]" },
+    { "when": "flag:durmuhurta", "w": -8, "code": "durmuhurta", "source": "research/02 §2.6.4 [P-via-Raman]" },
+    { "when": "flag:yamaganda", "w": -5, "code": "yamaganda", "source": "research/02 §2.6.1 [S]" },
+    { "when": "flag:gulika", "w": -5, "code": "gulika", "source": "research/02 §2.6.1 [S]" },
+    { "when": "flag:varjyam", "w": -6, "code": "varjyam", "source": "research/02 §2.6.7 [P]" },
+    { "when": "flag:panchaka", "w": -8, "code": "panchaka", "source": "research/02 §3.3 Panchaka [S] (North)" },
+    { "when": "flag:adhika_masa", "w": -15, "code": "adhika_masa", "source": "research/02 §2.3 [S]" },
+    { "when": "flag:pitru_paksha", "w": -15, "code": "pitru_paksha", "source": "research/02 §3.5 [S]" },
+    { "when": "flag:kharmas", "w": -8, "code": "kharmas", "source": "research/02 §3.5 [S]" },
+    { "when": "flag:bhadra", "w": -5, "code": "bhadra_other_loka", "source": "research/02 §3.3 Bhadra [S1]" }
+  ],
+  "events": {
+    "sagai": {
+      "names": { "en": "Engagement (Sagai / Roka)", "hi": "सगाई", "gu": "સગાઈ" },
+      "invocation": { "deity": "Ganesha", "line": "Om Gam Ganapataye Namah" },
+      "nakshatras": { "good": [4,5,10,12,13,15,17,19,21,26,27,14,22,23,1,8], "avoid": [2,3,6,9,18,16,24,25,11,20] },
+      "varas": { "good": ["Mon","Wed","Thu","Fri"], "avoid": ["Tue","Sat"] },
+      "source": "UNVERIFIED: research/02 has no sagai/vagdana table; vivaha nakshatras used plus Pushya (the marriage curse does not apply to vagdana) [M]; Muhurta Martanda covers vagdana (research/02 §1.6)"
+    },
+    "vahana": {
+      "names": { "en": "Vehicle purchase", "hi": "वाहन खरीद", "gu": "વાહન ખરીદી" },
+      "invocation": { "deity": "Ganesha", "line": "Om Gam Ganapataye Namah" },
+      "nakshatras": { "good": [1,4,5,7,8,13,14,15,17,22,23,24,27], "avoid": [2,3,6,9,10,11,16,18,19,20,25] },
+      "tithisExtra": { "good": [6,12,15] },
+      "varas": { "good": ["Mon","Wed","Thu","Fri"], "avoid": ["Tue","Sat"] },
+      "extraSoft": [ { "when": "flag:yamaganda", "w": -6, "code": "yamaganda" }, { "when": "flag:gulika", "w": -6, "code": "gulika" } ],
+      "note": "drive_east_or_north_first",
+      "source": "research/02 §3.5 vahana [S] dekhopanchang + shubhpanchang (Chara + Kshipra + Mridu classes)"
+    },
+    "vyapara": {
+      "names": { "en": "Business / shop opening", "hi": "व्यापार आरंभ", "gu": "વેપાર શરૂઆત" },
+      "invocation": { "deity": "Lakshmi", "line": "Om Shreem Mahalakshmyai Namah" },
+      "nakshatras": { "good": [8,1,4,5,7,13,14,17,27,12,21,26,22], "avoid": [2,3,6,9,10,11,16,18,19,20,25] },
+      "tithisOverride": { "good": [1,2,3,5,6,10,11,13] },
+      "varas": { "good": ["Wed","Thu","Fri"], "ok": ["Mon"], "avoid": ["Tue","Sat"] },
+      "extraSoft": [ { "when": "nakshatra in [8]", "w": 10, "code": "pushya_business" }, { "when": "flag:ravi_pushya|guru_pushya", "w": 10, "code": "ravi_guru_pushya" }, { "when": "flag:abujha_muhurta", "w": 15, "code": "abujha_muhurta" } ],
+      "source": "research/02 §3.5 vyapara [S] dekhopanchang business-start; abujha days [M]"
+    },
+    "namakarana": {
+      "names": { "en": "Naming ceremony (Namakarana)", "hi": "नामकरण", "gu": "નામકરણ" },
+      "invocation": { "deity": "Ganesha", "line": "Om Gam Ganapataye Namah" },
+      "nakshatras": { "good": [1,4,5,7,8,13,14,15,17,12,21,26,22,23,24,27], "avoid": [2,3,6,9,10,11,16,18,19,20,25] },
+      "tithisOverride": { "good": [2,3,5,6,7,10,11,12,13], "avoid": [4,8,9,14] },
+      "varas": { "good": ["Mon","Wed","Thu","Fri"], "ok": ["Sun"], "avoid": ["Tue","Sat"] },
+      "extraHard": [ { "when": "flag:gandanta", "code": "gandanta", "source": "research/02 §3.5 namakarana [S]: first padas of Gand Mool avoided" } ],
+      "extraSoft": [ { "when": "flag:gand_mool", "w": -15, "code": "gand_mool" }, { "when": "personal:tara in [1]", "w": -15, "code": "janma_nakshatra_avoid" } ],
+      "source": "research/02 §3.5 namakarana [S] vedicnakshatra + vedastro"
+    },
+    "annaprashana": {
+      "names": { "en": "First solid food (Annaprashana)", "hi": "अन्नप्राशन", "gu": "અન્નપ્રાશન" },
+      "invocation": { "deity": "Ganesha", "line": "Om Gam Ganapataye Namah" },
+      "nakshatras": { "good": [1,4,5,7,8,13,14,15,17,12,21,26,22,23,24,27], "avoid": [2,3,6,9,18,19,10,11,16,20,25] },
+      "tithisOverride": { "good": [2,3,5,7,10,13], "avoid": [4,6,8,9,12,14] },
+      "varas": { "good": ["Mon","Wed","Thu","Fri"], "avoid": ["Sun","Tue","Sat"] },
+      "extraSoft": [ { "when": "paksha == Shukla", "w": 5, "code": "shukla_paksha_extra" } ],
+      "source": "research/02 §3.5 annaprashana [S] dekhopanchang + nepaljyotish"
+    },
+    "mundan": {
+      "names": { "en": "First tonsure (Mundan / Chudakarana)", "hi": "मुंडन", "gu": "મુંડન" },
+      "invocation": { "deity": "Ganesha", "line": "Om Gam Ganapataye Namah" },
+      "nakshatras": { "good": [1,5,7,8,13,14,15,18,22,23,24,27], "avoid": [2,3,6,9,10,11,16,19,20,25] },
+      "tithisOverride": { "good": [2,3,5,7,10,11,13] },
+      "varas": { "good": ["Mon","Wed","Thu","Fri"], "avoid": ["Sun","Tue","Sat"] },
+      "masas": { "good": ["Chaitra","Vaishakha","Jyeshtha","Ashadha","Magha","Phalguna"] },
+      "extraSoft": [ { "when": "ayana == Uttarayana", "w": 5, "code": "uttarayana" } ],
+      "source": "UNVERIFIED: research/02 §3.5 chudakarana is [M] (Muhurta Chintamani Samskara prakarana not located online); verify before relying on it"
+    },
+    "yatra": {
+      "names": { "en": "Journey (Yatra)", "hi": "यात्रा", "gu": "યાત્રા" },
+      "invocation": { "deity": "Ganesha", "line": "Om Gam Ganapataye Namah" },
+      "nakshatras": { "good": [7,15,22,23,24,1,8,13,5,17,27], "avoid": [2,3,6,9,10,16,18,19,11,20,25] },
+      "tithisOverride": { "good": [2,3,5,7,10,11,13], "avoid": [4,6,8,9,12,14] },
+      "varas": { "good": ["Mon","Wed","Thu","Fri"], "avoid": ["Tue","Sat"] },
+      "extraHard": [ { "when": "flag:yamaghanta", "code": "yamaghanta", "relaxable": true, "source": "research/02 §3.3 Yamaghanta [S]: avoid especially for travel" } ],
+      "extraSoft": [ { "when": "flag:panchaka", "w": -10, "code": "panchaka_south_travel" }, { "when": "kala:choghadiya in [Char]", "w": 6, "code": "choghadiya_char_travel" } ],
+      "directions": {
+        "dishaShulaByWeekday": ["W", "E", "N", "N", "S", "W", "E"],
+        "yoginiByTithi": { "1": "E", "9": "E", "3": "SE", "11": "SE", "5": "S", "13": "S", "4": "SW", "12": "SW", "6": "W", "14": "W", "7": "NW", "15": "NW", "2": "N", "10": "N", "8": "NE", "30": "NE" },
+        "chandraVasaByMoonRashi": ["E", "S", "W", "N", "E", "S", "W", "N", "E", "S", "W", "N"],
+        "source": "research/02 §3.5 yatra [S] dekhopanchang 17-3 / astromedha (Wed north [CONFLICT]); Yogini [S] sourcelibrary; Chandra vasa [M]"
+      },
+      "source": "research/02 §3.5 yatra [S] Drik seven-category (Chara + Kshipra + Mridu)"
+    },
+    "new_job": {
+      "names": { "en": "Joining a new job", "hi": "नई नौकरी", "gu": "નવી નોકરી" },
+      "invocation": { "deity": "Ganesha", "line": "Om Gam Ganapataye Namah" },
+      "nakshatras": { "good": [4,12,21,26,1,8,13,17,22,27], "avoid": [2,3,6,9,10,11,16,18,19,20,25] },
+      "varas": { "good": ["Mon","Wed","Thu","Fri"], "ok": ["Sun"], "avoid": ["Tue","Sat"] },
+      "extraSoft": [ { "when": "nakshatra in [4,12,21,26]", "w": 8, "code": "nakshatra_dhruva" } ],
+      "source": "research/02 §3.5 starting a job [S] Drik seven-category (Dhruva: starting of service)"
+    },
+    "exam_interview": {
+      "names": { "en": "Exam or interview", "hi": "परीक्षा / साक्षात्कार", "gu": "પરીક્ષા / ઇન્ટરવ્યૂ" },
+      "invocation": { "deity": "Saraswati", "line": "Om Aim Saraswatyai Namah" },
+      "nakshatras": { "good": [1,8,13,5,14,17,27], "avoid": [2,3,6,9,10,11,16,18,19,20,25] },
+      "varas": { "good": ["Wed","Thu"], "ok": ["Mon","Fri"], "avoid": ["Tue","Sat"] },
+      "extraSoft": [ { "when": "kala:hora in [Mercury,Jupiter]", "w": 8, "code": "hora_mercury_jupiter" }, { "when": "tithi in [5]", "w": 5, "code": "panchami_saraswati" } ],
+      "source": "research/02 §3.5 examinations [S] Drik seven-category (Kshipra + Mridu: learning and display of arts)"
+    },
+    "bhoomi_puja": {
+      "names": { "en": "Bhoomi puja / property", "hi": "भूमि पूजन", "gu": "ભૂમિ પૂજન" },
+      "invocation": { "deity": "Ganesha", "line": "Om Gam Ganapataye Namah" },
+      "nakshatras": { "good": [4,5,8,12,13,14,15,17,21,22,23,24,26,27], "avoid": [2,3,6,9,10,11,16,18,19,20,25] },
+      "tithisOverride": { "good": [2,3,5,6,7,10,11,12,13] },
+      "varas": { "good": ["Mon","Wed","Thu","Fri"], "avoid": ["Sun","Tue","Sat"] },
+      "masas": { "good": ["Vaishakha","Shravana","Margashirsha","Magha","Phalguna"] },
+      "extraHard": [ { "when": "flag:adhika_masa", "code": "adhika_masa", "source": "research/02 §3.5 property [S]/[M]" } ],
+      "extraSoft": [ { "when": "flag:tripushkara|dwipushkara", "w": 5, "code": "pushkara_asset" }, { "when": "flag:panchaka", "w": -12, "code": "panchaka_pillar" } ],
+      "source": "research/02 §3.5 griharambha [M] + property purchase [S]/[M]: verify month list (Muhurta Chintamani Vastu prakarana)"
+    }
+  },
+  "caveats": ["family_pandit", "general_pack"],
+  "sources": ["Drik Panchang nakshatra seven-category page (Brihat Samhita 98 / Muhurta Chintamani 1)", "dekhopanchang muhurta modules", "research/02 §3.5"]
+}
