@@ -1,0 +1,57 @@
+{
+  "_about": "Panchang vocabulary per language. Keys are the engine's canonical English names. Sources: standard Rashtriya Panchang / Drik Panchang vocabulary (research/03 §9); Gujarati tithi names follow Kalnirnay-style usage (Ekam, Bij, Trij ... Punam, Amas; Sud/Vad for paksha).",
+  "tithi": {
+    "en": { "Pratipada": "Pratipada", "Dwitiya": "Dwitiya", "Tritiya": "Tritiya", "Chaturthi": "Chaturthi", "Panchami": "Panchami", "Shashthi": "Shashthi", "Saptami": "Saptami", "Ashtami": "Ashtami", "Navami": "Navami", "Dashami": "Dashami", "Ekadashi": "Ekadashi", "Dwadashi": "Dwadashi", "Trayodashi": "Trayodashi", "Chaturdashi": "Chaturdashi", "Purnima": "Purnima", "Amavasya": "Amavasya" },
+    "hi": { "Pratipada": "प्रतिपदा", "Dwitiya": "द्वितीया", "Tritiya": "तृतीया", "Chaturthi": "चतुर्थी", "Panchami": "पंचमी", "Shashthi": "षष्ठी", "Saptami": "सप्तमी", "Ashtami": "अष्टमी", "Navami": "नवमी", "Dashami": "दशमी", "Ekadashi": "एकादशी", "Dwadashi": "द्वादशी", "Trayodashi": "त्रयोदशी", "Chaturdashi": "चतुर्दशी", "Purnima": "पूर्णिमा", "Amavasya": "अमावस्या" },
+    "gu": { "Pratipada": "એકમ", "Dwitiya": "બીજ", "Tritiya": "ત્રીજ", "Chaturthi": "ચોથ", "Panchami": "પાંચમ", "Shashthi": "છઠ", "Saptami": "સાતમ", "Ashtami": "આઠમ", "Navami": "નોમ", "Dashami": "દસમ", "Ekadashi": "અગિયારસ", "Dwadashi": "બારસ", "Trayodashi": "તેરસ", "Chaturdashi": "ચૌદસ", "Purnima": "પૂનમ", "Amavasya": "અમાસ" }
+  },
+  "paksha": { "en": { "Shukla": "Shukla", "Krishna": "Krishna" }, "hi": { "Shukla": "शुक्ल", "Krishna": "कृष्ण" }, "gu": { "Shukla": "સુદ", "Krishna": "વદ" } },
+  "nakshatra": {
+    "hi": ["अश्विनी", "भरणी", "कृत्तिका", "रोहिणी", "मृगशिरा", "आर्द्रा", "पुनर्वसु", "पुष्य", "आश्लेषा", "मघा", "पूर्वा फाल्गुनी", "उत्तरा फाल्गुनी", "हस्त", "चित्रा", "स्वाति", "विशाखा", "अनुराधा", "ज्येष्ठा", "मूल", "पूर्वाषाढ़ा", "उत्तराषाढ़ा", "श्रवण", "धनिष्ठा", "शतभिषा", "पूर्व भाद्रपद", "उत्तर भाद्रपद", "रेवती"],
+    "gu": ["અશ્વિની", "ભરણી", "કૃત્તિકા", "રોહિણી", "મૃગશીર્ષ", "આર્દ્રા", "પુનર્વસુ", "પુષ્ય", "આશ્લેષા", "મઘા", "પૂર્વા ફાલ્ગુની", "ઉત્તરા ફાલ્ગુની", "હસ્ત", "ચિત્રા", "સ્વાતિ", "વિશાખા", "અનુરાધા", "જ્યેષ્ઠા", "મૂળ", "પૂર્વાષાઢા", "ઉત્તરાષાઢા", "શ્રવણ", "ધનિષ્ઠા", "શતભિષા", "પૂર્વા ભાદ્રપદ", "ઉત્તરા ભાદ્રપદ", "રેવતી"]
+  },
+  "yoga": {
+    "hi": ["विष्कम्भ", "प्रीति", "आयुष्मान", "सौभाग्य", "शोभन", "अतिगण्ड", "सुकर्मा", "धृति", "शूल", "गण्ड", "वृद्धि", "ध्रुव", "व्याघात", "हर्षण", "वज्र", "सिद्धि", "व्यतीपात", "वरीयान", "परिघ", "शिव", "सिद्ध", "साध्य", "शुभ", "शुक्ल", "ब्रह्म", "इन्द्र", "वैधृति"],
+    "gu": ["વિષ્કંભ", "પ્રીતિ", "આયુષ્માન", "સૌભાગ્ય", "શોભન", "અતિગંડ", "સુકર્મા", "ધૃતિ", "શૂળ", "ગંડ", "વૃદ્ધિ", "ધ્રુવ", "વ્યાઘાત", "હર્ષણ", "વજ્ર", "સિદ્ધિ", "વ્યતિપાત", "વરીયાન", "પરિઘ", "શિવ", "સિદ્ધ", "સાધ્ય", "શુભ", "શુક્લ", "બ્રહ્મ", "ઇન્દ્ર", "વૈધૃતિ"]
+  },
+  "karana": {
+    "hi": { "Bava": "बव", "Balava": "बालव", "Kaulava": "कौलव", "Taitila": "तैतिल", "Gara": "गर", "Vanija": "वणिज", "Vishti": "विष्टि (भद्रा)", "Shakuni": "शकुनि", "Chatushpada": "चतुष्पाद", "Naga": "नाग", "Kimstughna": "किंस्तुघ्न" },
+    "gu": { "Bava": "બવ", "Balava": "બાલવ", "Kaulava": "કૌલવ", "Taitila": "તૈતિલ", "Gara": "ગર", "Vanija": "વણિજ", "Vishti": "વિષ્ટિ (ભદ્રા)", "Shakuni": "શકુનિ", "Chatushpada": "ચતુષ્પાદ", "Naga": "નાગ", "Kimstughna": "કિંસ્તુઘ્ન" }
+  },
+  "vara": {
+    "en": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    "hi": ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"],
+    "gu": ["રવિવાર", "સોમવાર", "મંગળવાર", "બુધવાર", "ગુરુવાર", "શુક્રવાર", "શનિવાર"]
+  },
+  "rashi": {
+    "hi": ["मेष", "वृषभ", "मिथुन", "कर्क", "सिंह", "कन्या", "तुला", "वृश्चिक", "धनु", "मकर", "कुम्भ", "मीन"],
+    "gu": ["મેષ", "વૃષભ", "મિથુન", "કર્ક", "સિંહ", "કન્યા", "તુલા", "વૃશ્ચિક", "ધન", "મકર", "કુંભ", "મીન"]
+  },
+  "masa": {
+    "hi": ["चैत्र", "वैशाख", "ज्येष्ठ", "आषाढ़", "श्रावण", "भाद्रपद", "आश्विन", "कार्तिक", "मार्गशीर्ष", "पौष", "माघ", "फाल्गुन"],
+    "gu": ["ચૈત્ર", "વૈશાખ", "જેઠ", "અષાઢ", "શ્રાવણ", "ભાદરવો", "આસો", "કારતક", "માગશર", "પોષ", "મહા", "ફાગણ"]
+  },
+  "ritu": { "hi": ["वसन्त", "ग्रीष्म", "वर्षा", "शरद", "हेमन्त", "शिशिर"], "gu": ["વસંત", "ગ્રીષ્મ", "વર્ષા", "શરદ", "હેમંત", "શિશિર"] },
+  "ayana": { "hi": { "Uttarayana": "उत्तरायण", "Dakshinayana": "दक्षिणायन" }, "gu": { "Uttarayana": "ઉત્તરાયણ", "Dakshinayana": "દક્ષિણાયન" } },
+  "choghadiya": {
+    "hi": { "Udveg": "उद्वेग", "Char": "चर", "Labh": "लाभ", "Amrit": "अमृत", "Kaal": "काल", "Shubh": "शुभ", "Rog": "रोग" },
+    "gu": { "Udveg": "ઉદ્વેગ", "Char": "ચલ", "Labh": "લાભ", "Amrit": "અમૃત", "Kaal": "કાળ", "Shubh": "શુભ", "Rog": "રોગ" }
+  },
+  "planet": {
+    "hi": { "Sun": "सूर्य", "Moon": "चन्द्र", "Mars": "मंगल", "Mercury": "बुध", "Jupiter": "गुरु", "Venus": "शुक्र", "Saturn": "शनि" },
+    "gu": { "Sun": "સૂર્ય", "Moon": "ચંદ્ર", "Mars": "મંગળ", "Mercury": "બુધ", "Jupiter": "ગુરુ", "Venus": "શુક્ર", "Saturn": "શનિ" }
+  },
+  "sanskritVara": ["भानुवासरे", "इन्दुवासरे", "भौमवासरे", "सौम्यवासरे", "गुरुवासरे", "भृगुवासरे", "स्थिरवासरे"],
+  "sanskritVaraIast": ["bhānu-vāsare", "indu-vāsare", "bhauma-vāsare", "saumya-vāsare", "guru-vāsare", "bhṛgu-vāsare", "sthira-vāsare"],
+  "sanskritRitu": ["वसन्तर्तौ", "ग्रीष्मर्तौ", "वर्षर्तौ", "शरदृतौ", "हेमन्तर्तौ", "शिशिरर्तौ"],
+  "sanskritRituIast": ["vasanta-ṛtau", "grīṣma-ṛtau", "varṣa-ṛtau", "śarad-ṛtau", "hemanta-ṛtau", "śiśira-ṛtau"],
+  "iast": {
+    "tithi": { "Pratipada": "pratipat", "Dwitiya": "dvitīyā", "Tritiya": "tṛtīyā", "Chaturthi": "caturthī", "Panchami": "pañcamī", "Shashthi": "ṣaṣṭhī", "Saptami": "saptamī", "Ashtami": "aṣṭamī", "Navami": "navamī", "Dashami": "daśamī", "Ekadashi": "ekādaśī", "Dwadashi": "dvādaśī", "Trayodashi": "trayodaśī", "Chaturdashi": "caturdaśī", "Purnima": "pūrṇimā", "Amavasya": "amāvāsyā" },
+    "nakshatra": ["aśvinī", "bharaṇī", "kṛttikā", "rohiṇī", "mṛgaśirā", "ārdrā", "punarvasu", "puṣya", "āśleṣā", "maghā", "pūrvaphalgunī", "uttaraphalgunī", "hasta", "citrā", "svātī", "viśākhā", "anurādhā", "jyeṣṭhā", "mūla", "pūrvāṣāḍhā", "uttarāṣāḍhā", "śravaṇa", "dhaniṣṭhā", "śatabhiṣā", "pūrvabhādrapadā", "uttarabhādrapadā", "revatī"],
+    "yoga": ["viṣkambha", "prīti", "āyuṣmān", "saubhāgya", "śobhana", "atigaṇḍa", "sukarmā", "dhṛti", "śūla", "gaṇḍa", "vṛddhi", "dhruva", "vyāghāta", "harṣaṇa", "vajra", "siddhi", "vyatīpāta", "varīyān", "parigha", "śiva", "siddha", "sādhya", "śubha", "śukla", "brahma", "indra", "vaidhṛti"],
+    "karana": { "Bava": "bava", "Balava": "bālava", "Kaulava": "kaulava", "Taitila": "taitila", "Gara": "gara", "Vanija": "vaṇija", "Vishti": "viṣṭi", "Shakuni": "śakuni", "Chatushpada": "catuṣpāda", "Naga": "nāga", "Kimstughna": "kiṃstughna" },
+    "masa": ["caitra", "vaiśākha", "jyeṣṭha", "āṣāḍha", "śrāvaṇa", "bhādrapada", "āśvina", "kārttika", "mārgaśīrṣa", "pauṣa", "māgha", "phālguna"],
+    "samvatsara": ["prabhava", "vibhava", "śukla", "pramoda", "prajāpati", "aṅgirasa", "śrīmukha", "bhāva", "yuva", "dhātṛ", "īśvara", "bahudhānya", "pramāthī", "vikrama", "vṛṣa", "citrabhānu", "svabhānu", "tāraṇa", "pārthiva", "vyaya", "sarvajit", "sarvadhārī", "virodhī", "vikṛti", "khara", "nandana", "vijaya", "jaya", "manmatha", "durmukhī", "hevilambī", "vilambī", "vikārī", "śārvarī", "plava", "śubhakṛt", "śobhakṛt", "krodhī", "viśvāvasu", "parābhava", "plavaṅga", "kīlaka", "saumya", "sādhāraṇa", "virodhikṛt", "paridhāvī", "pramādī", "ānanda", "rākṣasa", "anala", "piṅgala", "kālayukti", "siddhārthī", "raudra", "durmati", "dundubhi", "rudhirodgārī", "raktākṣī", "krodhana", "akṣaya"]
+  },
+  "samvatsaraDevanagari": ["प्रभव", "विभव", "शुक्ल", "प्रमोद", "प्रजापति", "अंगिरस", "श्रीमुख", "भाव", "युव", "धातृ", "ईश्वर", "बहुधान्य", "प्रमाथी", "विक्रम", "वृष", "चित्रभानु", "स्वभानु", "तारण", "पार्थिव", "व्यय", "सर्वजित्", "सर्वधारी", "विरोधी", "विकृति", "खर", "नन्दन", "विजय", "जय", "मन्मथ", "दुर्मुखी", "हेविलम्बी", "विलम्बी", "विकारी", "शार्वरी", "प्लव", "शुभकृत्", "शोभकृत्", "क्रोधी", "विश्वावसु", "पराभव", "प्लवंग", "कीलक", "सौम्य", "साधारण", "विरोधिकृत्", "परिधावी", "प्रमादी", "आनन्द", "राक्षस", "अनल", "पिंगल", "कालयुक्ति", "सिद्धार्थी", "रौद्र", "दुर्मति", "दुन्दुभि", "रुधिरोद्गारी", "रक्ताक्षी", "क्रोधन", "अक्षय"]
+}
