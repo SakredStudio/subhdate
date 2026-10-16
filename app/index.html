@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ShubhDate</title>
+  <meta name="description" content="ShubhDate: an honest Vedic panchang and muhurta app. The right moment, the reason why, and your sankalpa, for your city and your family's calendar. No ads, no account." />
+  <meta name="theme-color" content="#0B1020" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ShubhDate" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <header class="topbar">
+    <a href="#/today" class="brand"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">ShubhDate</span></a>
+    <button class="city-chip" id="city-chip" type="button" aria-label="Change city"></button>
+  </header>
+  <main id="view" class="view" aria-live="polite"></main>
+  <nav class="tabbar" id="tabbar" aria-label="Main">
+    <a href="#/today" data-tab="today"><span class="tab-icon">☀</span><span class="tab-label" data-i18n="nav.today">Today</span></a>
+    <a href="#/muhurta" data-tab="muhurta"><span class="tab-icon">✦</span><span class="tab-label" data-i18n="nav.muhurta">Muhurta</span></a>
+    <a href="#/festivals" data-tab="festivals"><span class="tab-icon">🪔</span><span class="tab-label" data-i18n="nav.festivals">Festivals</span></a>
+    <a href="#/saved" data-tab="saved"><span class="tab-icon">❀</span><span class="tab-label" data-i18n="nav.saved">Saved</span></a>
+    <a href="#/settings" data-tab="settings"><span class="tab-icon">⚙</span><span class="tab-label" data-i18n="nav.settings">Settings</span></a>
+  </nav>
+  <div id="sheet-root"></div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>
