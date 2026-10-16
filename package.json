@@ -1,0 +1,27 @@
+{
+  "name": "shubhdate",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ShubhDate: an honest Vedic panchang + muhurta engine (MIT) and an offline PWA (proprietary).",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "golden": "node tools/oracle/make-golden.mjs",
+    "histogram": "node tools/oracle/moon-histogram.mjs",
+    "validate": "vitest run engine/test/validate.test.ts --reporter=verbose"
+  },
+  "dependencies": {
+    "astronomy-engine": "^2.1.19"
+  },
+  "devDependencies": {
+    "@swisseph/node": "^1.4.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
+  }
+}

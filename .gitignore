@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.vite/
+*.log
+.DS_Store
+Thumbs.db
+
+# never ship the AGPL oracle output of every run; golden JSON is committed on purpose
+tools/oracle/out/
+
+# business-internal docs stay out of the public repo (Soul can flip this)
+NIGHT-BUILD-BRIEF.md
+docs/ROADMAP-V1-V3.md
+research/01-users-market.md
+
+# old prototype with the fake engine
+ShubhDate_v2.html
+subhdate.zip

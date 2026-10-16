@@ -1,0 +1,9 @@
+Copyright (c) 2026 Sakred Studio (1789918 CANADA INC.). All rights reserved.
+
+The files in this `app/` folder (the ShubhDate user interface, copy, artwork
+and service worker) are proprietary. They are published here for transparency
+("show your working") but may not be copied, redistributed or used to build a
+competing product without written permission.
+
+The calculation engine in `../engine/` is a separate work released under the
+MIT License (see `../engine/LICENSE`). Use it freely.
