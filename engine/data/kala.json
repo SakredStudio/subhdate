@@ -1,0 +1,245 @@
+{
+  "_about": "L2 day-division tables. Weekday index 0 = Sunday. Segment indices are 1-based. Every table carries a source id from research/02-vedic-knowledge.md (section) with its confidence tag, or UNVERIFIED.",
+  "eighths": {
+    "rahuKaal": [
+      8,
+      2,
+      7,
+      5,
+      6,
+      4,
+      3
+    ],
+    "yamaganda": [
+      5,
+      4,
+      3,
+      2,
+      1,
+      7,
+      6
+    ],
+    "gulika": [
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "source": "research/02 §2.6.1 [S] hindutone + dekhopanchang; Phaladeepika ch. 25 via Wikipedia Upagraha (Gulika = Saturn's eighth, Yamaganda = Jupiter's)"
+  },
+  "choghadiya": {
+    "sequence": [
+      "Udveg",
+      "Char",
+      "Labh",
+      "Amrit",
+      "Kaal",
+      "Shubh",
+      "Rog"
+    ],
+    "lords": [
+      "Sun",
+      "Venus",
+      "Mercury",
+      "Moon",
+      "Saturn",
+      "Jupiter",
+      "Mars"
+    ],
+    "dayStart": [
+      0,
+      3,
+      6,
+      2,
+      5,
+      1,
+      4
+    ],
+    "nightOffset": 5,
+    "quality": {
+      "Amrit": "good",
+      "Shubh": "good",
+      "Labh": "good",
+      "Char": "neutral",
+      "Udveg": "avoid",
+      "Rog": "avoid",
+      "Kaal": "avoid"
+    },
+    "source": "research/02 §2.6.5 [P] Drik Panchang choghadiya tutorial: day = +1 steps through the sequence starting at dayStart[weekday]; night = starts at dayStart+5 and steps -2 (Sun night Shubh, Amrit, Char, Rog, Kaal, Labh, Udveg, Shubh), both reproduced in test/kala.test.ts for all 7 weekdays",
+    "nightStep": -2
+  },
+  "hora": {
+    "chain": [
+      "Sun",
+      "Venus",
+      "Mercury",
+      "Moon",
+      "Saturn",
+      "Jupiter",
+      "Mars"
+    ],
+    "quality": {
+      "Jupiter": "good",
+      "Moon": "good",
+      "Mercury": "good",
+      "Venus": "good",
+      "Sun": "neutral",
+      "Mars": "avoid",
+      "Saturn": "avoid"
+    },
+    "source": "research/02 §2.6.6 [S] dekhopanchang module 7-3, shubhpanchang hora"
+  },
+  "muhurtas": {
+    "names": [
+      "Rudra",
+      "Ahi",
+      "Mitra",
+      "Pitri",
+      "Vasu",
+      "Varaha",
+      "Vishvedeva",
+      "Abhijit",
+      "Satamukhi",
+      "Puruhuta",
+      "Vahini",
+      "Naktanakara",
+      "Varuna",
+      "Aryaman",
+      "Bhaga",
+      "Girisha",
+      "Ajapada",
+      "Ahirbudhnya",
+      "Pushya",
+      "Ashvini",
+      "Yama",
+      "Agni",
+      "Vidhatri",
+      "Kanda",
+      "Aditi",
+      "Jiva",
+      "Vishnu",
+      "Dyumadgadyuti",
+      "Brahma",
+      "Samudra"
+    ],
+    "quality": [
+      "bad",
+      "bad",
+      "good",
+      "bad",
+      "good",
+      "good",
+      "good",
+      "good",
+      "good",
+      "conflict",
+      "bad",
+      "bad",
+      "good",
+      "good",
+      "conflict",
+      "bad",
+      "bad",
+      "good",
+      "good",
+      "good",
+      "bad",
+      "conflict",
+      "good",
+      "good",
+      "good",
+      "verygood",
+      "good",
+      "good",
+      "verygood",
+      "good"
+    ],
+    "abhijitIndex": 8,
+    "abhijitNotOnWeekday": [
+      3
+    ],
+    "brahmaIndex": 29,
+    "source": "research/02 §2.6.4 [S] Wikipedia Muhurta + dekhopanchang; quality conflicts (10, 15, 22) Raman vs dekho marked 'conflict'; Abhijit not on Wednesday [S] §2.6.2"
+  },
+  "durmuhurta": {
+    "byWeekday": [
+      [
+        14
+      ],
+      [
+        9,
+        12
+      ],
+      [
+        4,
+        11
+      ],
+      [
+        8
+      ],
+      [
+        6,
+        12
+      ],
+      [
+        4,
+        9
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "source": "research/02 §2.6.4 [P-via-Raman] Muhurta Chintamani dosha #7/#13 (jyotishkalpadrum); matches Drik Panchang 'Dur Muhurtam' windows on 2026-10-20 (Tue, 4th) and 2027-01-14 (Thu, 6th and 12th); Monday 9th [S1]"
+  },
+  "brahmaMuhurta": {
+    "rule": "29th of 30 muhurtas: nextSunrise - 2 night-muhurtas to nextSunrise - 1 night-muhurta",
+    "source": "research/02 §2.6.3 [S] Wikipedia Muhurta, dekhopanchang"
+  },
+  "pradosha": {
+    "festivalGhatis": 6,
+    "vrataGhatis": 3,
+    "source": "research/02 §2.6.8 [CONFLICT] Nirnayasindhu 3 ghati vs digests 6 ghati; Drik uses sunset + 2h24m for Dhanteras/Diwali Lakshmi puja [M]"
+  },
+  "varjyam": {
+    "startGhati": [
+      51,
+      25,
+      31,
+      41,
+      15,
+      22,
+      31,
+      21,
+      33,
+      31,
+      21,
+      19,
+      22,
+      21,
+      15,
+      15,
+      11,
+      15,
+      57,
+      25,
+      21,
+      11,
+      11,
+      19,
+      17,
+      25,
+      31
+    ],
+    "lengthGhatis": 4,
+    "amritOffsetGhatis": 24,
+    "source": "research/02 §2.6.7 [P] Drik nakshatra-thyajyam table (Tamil column, 1-based: value 51 means 50 ghatis elapsed; verified on Chennai 2026-11-08 Swati). Amrit kaal = Varjyam start + 24 ghatis: matches Drik for Swati, and the Prashnamarga column for Bharani/Krittika, but not Rohini (52) - UNVERIFIED for other nakshatras"
+  },
+  "sandhya": {
+    "ghatisEitherSide": 1,
+    "source": "research/02 §2.6.9 [M] Dharmasindhu sandhya kaalas avoided for beginnings"
+  }
+}
