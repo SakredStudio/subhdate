@@ -1,0 +1,93 @@
+{
+  "_about": "L3 day/instant flags. Weekday 0 = Sunday. Nakshatra 1 = Ashwini .. 27 = Revati. Tithi 1..15 Shukla, 16..30 Krishna (30 = Amavasya). Rashi 1 = Mesha. Each table carries a source id from research/02-vedic-knowledge.md and its confidence tag ([P] primary, [S] two secondaries, [S1] single secondary, [M] unverified memory), or UNVERIFIED.",
+  "sarvarthaSiddhi": {
+    "byWeekday": [[1, 8, 12, 13, 19, 21, 26], [4, 5, 8, 13, 17, 22], [1, 3, 12, 21, 26], [4, 5, 13, 17, 18, 27], [1, 7, 8, 17, 22, 27], [1, 7, 8, 17, 22, 27], [4, 15, 22, 27]],
+    "optional": { "2": [9], "3": [3] },
+    "source": "research/02 §3.3 Sarvartha Siddhi [S] dekhopanchang (Muhurta Chintamani, Nirnayasindhu); optional Tue Ashlesha / Wed Krittika 'some add'",
+    "note": "cancelled by Rahu kaal (suspended), Bhadra (void), eclipse (void)"
+  },
+  "amritaSiddhi": {
+    "byWeekday": [13, 5, 1, 17, 8, 27, 4],
+    "exceptions": { "2": { "nakshatra": 1, "badFor": ["griha_pravesh"] }, "6": { "nakshatra": 4, "badFor": ["yatra"] }, "4": { "nakshatra": 8, "badFor": ["vivaha"] } },
+    "source": "research/02 §3.3 Amrita Siddhi [S] dekhopanchang (Muhurta Deepika); hindu-blog gives Wed Vishakha [CONFLICT]; exceptions [M]"
+  },
+  "siddhaVaraTithi": {
+    "byWeekday": [[4, 9, 14], [6, 11, 15], [3, 8, 13], [5, 10, 30], [2, 7, 12], [1, 6, 11], [3, 7, 12]],
+    "source": "research/02 §3.3 Siddha yoga [S] dekhopanchang (Muhurta Chintamani); tithi numbers apply to both pakshas"
+  },
+  "dagdhaTithi": { "byWeekday": [12, 11, 5, 3, 6, 8, 9], "source": "research/02 §3.3 Dagdha [S] onlinejyotish + ganeshmitra; Wed 3 (some: 2)" },
+  "vishaTithi": { "byWeekday": [4, 6, 7, 2, 8, 9, 7], "source": "research/02 §3.3 Visha [S] onlinejyotish + ganeshmitra" },
+  "hutashanaTithi": { "byWeekday": [12, 6, 7, 8, 9, 10, 11], "source": "research/02 §3.3 Hutashana [S] onlinejyotish + ganeshmitra" },
+  "yamaghanta": { "byWeekday": [10, 16, 6, 19, 3, 4, 13], "source": "research/02 §3.3 Yamaghanta (vara + nakshatra) [S] Ernst Wilhelm summary; avoid especially for travel" },
+  "mrityuYogaVaraTithi": {
+    "byWeekdayGroup": ["Nanda", "Bhadra", "Nanda", "Jaya", "Rikta", "Bhadra", "Purna"],
+    "source": "research/02 §3.3 Mrityu yoga (vara + tithi group) [S] onlinejyotish: Sun/Tue Nanda, Mon/Fri Bhadra, Wed Jaya, Thu Rikta, Sat Purna"
+  },
+  "krakacha": { "rule": "weekday(Sun=1) + tithi(1..15) == 13", "source": "research/02 §3.3 Krakacha [S1] onlinejyotish" },
+  "raviPushya": { "weekday": 0, "nakshatra": 8, "source": "research/02 §3.3 [S] Drik seven-category; Pushya never for marriage" },
+  "guruPushya": { "weekday": 4, "nakshatra": 8, "source": "research/02 §3.3 [S] Drik seven-category; Pushya never for marriage" },
+  "pushkara": {
+    "tithis": [2, 7, 12, 17, 22, 27],
+    "weekdays": [0, 2, 6],
+    "dwipushkara": [5, 14, 23],
+    "tripushkara": [3, 7, 16, 26],
+    "source": "research/02 §3.3 Tripushkara/Dwipushkara [S] dekhopanchang (Bhadra-group tithi + Sun/Tue/Sat + nakshatra); vedpanchang lists U.Ashadha instead of Vishakha/U.Bhadra [CONFLICT], dekho followed"
+  },
+  "raviYoga": { "offsetsFromSunNakshatra": [4, 6, 9, 10, 13, 20], "source": "research/02 §3.3 Ravi yoga [M]" },
+  "panchaka": {
+    "startLongitude": 300,
+    "typeByWeekday": ["Roga", "Raja", "Agni", null, null, "Chora", "Mrityu"],
+    "benignWeekdays": [3, 4],
+    "source": "research/02 §3.3 Panchaka [S] dekhopanchang + shubhpanchang (Dharmasindhu/Nirnayasindhu); 300 deg = Dhanishtha 3rd pada, agrees with docs/ENGINE-DESIGN §5; weekday types [S], r-astro swaps Sun/Mon [CONFLICT]; North-Indian observance (UP/Bihar/Rajasthan/MP), not a bar in the South"
+  },
+  "bhadra": {
+    "martyaRashis": [4, 5, 11, 12],
+    "swargaRashis": [1, 2, 3, 8],
+    "patalaRashis": [6, 7, 9, 10],
+    "source": "research/02 §3.3 Bhadra [S1] astrobix (attributed to Muhurta Chintamani); Drik agrees on the loka effect; only martya-loka Bhadra blocks auspicious work"
+  },
+  "gandMool": { "nakshatras": [1, 9, 10, 18, 19, 27], "source": "research/02 §3.3 Gand Mool [S] Drik gandamool page" },
+  "gandanta": {
+    "lastPadaOf": [9, 18, 27],
+    "firstPadaOf": [1, 10, 19],
+    "tithiGhatis": 2,
+    "source": "research/02 §3.3 Gandanta [P-via-Raman] jyotishkalpadrum: nakshatra gandanta = last pada of Ashlesha/Jyeshtha/Revati, first pada of Ashwini/Magha/Mula; tithi gandanta = last 2 ghatis of Purna tithis, first 2 of Nanda"
+  },
+  "yogaFlags": {
+    "avoid": [17, 27],
+    "bad": [1, 6, 9, 10, 13, 15, 19],
+    "parighaFirstHalfOnly": true,
+    "source": "research/02 §2.1 yoga list [S] astroshastra + Raman: 6, 9, 10, 17, 27 extremely bad; Ekargala nine-yoga list adds 1, 13, 15, 19; Parigha first half bad [M]"
+  },
+  "tithiFlags": {
+    "rikta": [4, 9, 14, 19, 24, 29],
+    "source": "research/02 §4.3 [S] dekhopanchang tithi groups (Jyotisha Ratnamala)"
+  },
+  "kharmas": { "sunRashis": [9, 12], "source": "research/02 §3.5 vivaha [S]: Sun in Dhanu (mid-Dec to mid-Jan) and Meena (mid-Mar to mid-Apr); Muhurta Martanda" },
+  "chaturmas": { "from": { "masa": 4, "tithi": 11 }, "to": { "masa": 8, "tithi": 11 }, "source": "research/02 §3.5 [S]: Devshayani Ekadashi (Ashadha Shukla 11) to Devutthani/Prabodhini Ekadashi (Kartika Shukla 11), amanta" },
+  "holashtak": { "masa": 12, "fromTithi": 8, "toTithi": 15, "source": "research/02 §3.5 [S] dekhopanchang holashtak: Phalguna Shukla 8 to Purnima" },
+  "pitruPaksha": { "masa": 6, "fromTithi": 16, "toTithi": 30, "source": "research/02 §3.5 [S]: Bhadrapada Krishna 1 to Amavasya (amanta) = purnimanta Ashwina Krishna" },
+  "sankranti": {
+    "avoidDaysByRashi": { "10": 3, "4": 3, "1": 1, "7": 1 },
+    "avoidGhatisOther": 30,
+    "punyaKaalGhatis": 16,
+    "source": "research/02 §3.3 Sankranti [P-via-Raman] jyotishkalpadrum: Makara/Karka 3 days either side, Mesha/Tula 1 day, others 30 ghatis (Raman 16 [CONFLICT]); punya kaal 16 ghatis after ingress [M]"
+  },
+  "eclipse": { "daysBefore": 3, "daysAfter": 7, "sutakHoursSolar": 12, "sutakHoursLunar": 9, "source": "research/02 §3.3 Grahana [P-via-Raman] jyotishkalpadrum; sutak hours [M]; only locally visible solar eclipses count (Dharmasindhu) [M]" },
+  "combustion": {
+    "Jupiter": 11, "Venus": 10, "VenusRetrograde": 8, "balyaVriddhaDays": 3,
+    "source": "research/02 §3.5 vivaha hard blocks [S] dekhopanchang muhurta-selection, panditjionway: Guru asta 11 deg, Shukra asta 10 deg (8 deg retrograde); balya/vriddha 3 days [S]"
+  },
+  "vinchudo": { "moonRashi": 8, "source": "Drik Panchang Ahmedabad 2026-11-10 lists 'Vinchudo' (Moon in Vrishchika, Gujarati custom) [S1] UNVERIFIED rule text" },
+  "abujha": {
+    "days": [
+      { "id": "akshaya_tritiya", "masa": 2, "tithi": 3 },
+      { "id": "vijaya_dashami", "masa": 7, "tithi": 10 },
+      { "id": "devutthani_ekadashi", "masa": 8, "tithi": 11 },
+      { "id": "vasant_panchami", "masa": 11, "tithi": 5 },
+      { "id": "phulera_dooj", "masa": 12, "tithi": 2 },
+      { "id": "bhadali_navami", "masa": 4, "tithi": 9 }
+    ],
+    "source": "research/02 §3.5 vyapara [M] abujha (self-proven) muhurta days in North India; Gudi Padwa/Ugadi (Chaitra Shukla 1) [S]"
+  }
+}

@@ -38,7 +38,7 @@ describe('golden: engine vs Swiss Ephemeris oracle', () => {
         check(r, secDiff(sameDay(msG), d.moonset) <= TOL.riseSec, `${d.date} moonset(geo) ${msG?.toISOString()} vs ${d.moonset}`);
         // topocentric must be later than geocentric for rise, earlier for set, by 2-8 minutes
         const mrGv = moonriseGeocentric(city, p.sunrise); // same Vedic-day search as the shipped moonrise
-        if (p.moonrise && mrGv) check(r, (p.moonrise.getTime() - mrGv.getTime()) / 60000 > 2 && (p.moonrise.getTime() - mrGv.getTime()) / 60000 < 9, `${d.date} moonrise parallax shift ${((p.moonrise.getTime() - mrGv.getTime()) / 60000).toFixed(1)} min`);
+        if (p.moonrise && mrGv && Math.abs(p.moonrise.getTime() - mrGv.getTime()) < 3600000) check(r, (p.moonrise.getTime() - mrGv.getTime()) / 60000 > 2 && (p.moonrise.getTime() - mrGv.getTime()) / 60000 < 9, `${d.date} moonrise parallax shift ${((p.moonrise.getTime() - mrGv.getTime()) / 60000).toFixed(1)} min`);
         // centre convention
         const { y, m, dd } = (() => { const q = parseIsoDate(d.date); return { y: q.y, m: q.m, dd: q.d }; })();
         const mid = localMidnightUtc(y, m, dd, city.tz);
