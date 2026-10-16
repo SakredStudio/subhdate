@@ -92,19 +92,33 @@ function spans(f: (d: Date) => number, width: number, count: number, sunrise: Da
   return out;
 }
 
-/** Previous new moon at or before `t`, and the next one after it. */
+/** Previous new moon at or before `t`, and the next one after it. Memoised: consecutive days share a month. */
+let nmCache: { nm1: Date; nm2: Date } | null = null;
 function lunarMonthBounds(t: Date): { nm1: Date; nm2: Date } {
+  if (nmCache && t.getTime() >= nmCache.nm1.getTime() && t.getTime() < nmCache.nm2.getTime()) return nmCache;
+  if (nmCache && t.getTime() >= nmCache.nm2.getTime() && t.getTime() < nmCache.nm2.getTime() + 30 * 86400000) {
+    const nm2 = searchIncreasingAngle(elongation, 360, addDays(nmCache.nm2, 1), 31)!;
+    if (t.getTime() < nm2.getTime()) { nmCache = { nm1: nmCache.nm2, nm2 }; return nmCache; }
+  }
   let nm1 = searchIncreasingAngle(elongation, 360, addDays(t, -31), 31)!;
   let nm2 = searchIncreasingAngle(elongation, 360, addDays(nm1, 1), 31)!;
   while (nm2.getTime() <= t.getTime()) { nm1 = nm2; nm2 = searchIncreasingAngle(elongation, 360, addDays(nm1, 1), 31)!; }
-  return { nm1, nm2 };
+  nmCache = { nm1, nm2 };
+  return nmCache;
 }
-/** Previous full moon at or before `t`, and the next one after it. */
+/** Previous full moon at or before `t`, and the next one after it. Memoised like lunarMonthBounds. */
+let fmCache: { fm1: Date; fm2: Date } | null = null;
 function purnimantaBounds(t: Date): { fm1: Date; fm2: Date } {
+  if (fmCache && t.getTime() >= fmCache.fm1.getTime() && t.getTime() < fmCache.fm2.getTime()) return fmCache;
+  if (fmCache && t.getTime() >= fmCache.fm2.getTime() && t.getTime() < fmCache.fm2.getTime() + 30 * 86400000) {
+    const fm2 = searchIncreasingAngle(elongation, 180, addDays(fmCache.fm2, 1), 31)!;
+    if (t.getTime() < fm2.getTime()) { fmCache = { fm1: fmCache.fm2, fm2 }; return fmCache; }
+  }
   let fm1 = searchIncreasingAngle(elongation, 180, addDays(t, -31), 31)!;
   let fm2 = searchIncreasingAngle(elongation, 180, addDays(fm1, 1), 31)!;
   while (fm2.getTime() <= t.getTime()) { fm1 = fm2; fm2 = searchIncreasingAngle(elongation, 180, addDays(fm1, 1), 31)!; }
-  return { fm1, fm2 };
+  fmCache = { fm1, fm2 };
+  return fmCache;
 }
 
 /** Number of sidereal sankrantis (Sun rashi ingresses) in [a, b). */

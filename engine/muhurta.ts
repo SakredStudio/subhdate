@@ -170,30 +170,29 @@ export function scoreDay(pack: Pack, date: string, req: MuhurtaRequest, pers?: P
       ctx.chandrashtama = cb ? cb.chandrashtama : null;
       void prim;
     }
+    const base = { nakshatra: nak.name, tithi: ti.name, vara: p.vara.short, masa: p.masa.amanta.name, choghadiya: chog?.name ?? null, hora: hr?.lord ?? null };
+    const paramsFor = (when: string) => { const fl = active.find(f => when.includes(f.id)); return { ...base, ...(fl?.params ?? {}) }; };
     const rejected: Reason[] = [];
     for (const r of [...hard, ...familyHard]) {
-      if (evalCond(r.when, ctx) === true) {
-        const fl = active.find(f => r.when.includes(f.id));
-        rejected.push({ code: r.code, weight: -100, params: fl?.params, source: r.source });
-      }
+      if (evalCond(r.when, ctx) === true) rejected.push({ code: r.code, weight: -100, params: paramsFor(r.when), source: r.source });
     }
     for (const r of rejected) if (!dayRejectCounts.has(r.code)) dayRejectCounts.set(r.code, r);
-    let score = 50; const reasons: Reason[] = [];
+    let score = 0; const reasons: Reason[] = [];
     if (rejected.length === 0) {
       for (const r of softAll) {
         const v = evalCond(r.when, ctx);
-        if (v === true && r.w) { score += r.w; const fl = active.find(f => r.when.includes(f.id)); reasons.push({ code: r.code, weight: r.w, params: fl?.params, source: r.source }); }
-        else if (v === false && r.else) { score += r.else; reasons.push({ code: r.elseCode ?? `not_${r.code}`, weight: r.else, source: r.source }); }
+        if (v === true && r.w) { score += r.w; reasons.push({ code: r.code, weight: r.w, params: paramsFor(r.when), source: r.source }); }
+        else if (v === false && r.else) { score += r.else; reasons.push({ code: r.elseCode ?? `not_${r.code}`, weight: r.else, params: base, source: r.source }); }
       }
     }
-    score = Math.max(0, Math.min(100, Math.round(score)));
+    score = rejected.length ? 0 : Math.round(50 + 50 * Math.tanh(score / 60));
     slots.push({ start, end, score, reasons, rejected, chog: chog?.name, hora: hr?.lord, nak: nak.name, tithi: `${ti.paksha} ${ti.name}` });
   }
   // merge adjacent accepted slots with the same score and reason codes
   const windows: MuhurtaWindow[] = [];
   for (const s of slots) {
     if (s.rejected.length) continue;
-    const key = s.score + '|' + s.reasons.map(r => r.code).join(',');
+    const key = String(s.score);
     const last = windows[windows.length - 1];
     if (last && (last as any)._key === key && last.end.getTime() === s.start.getTime()) { last.end = s.end; continue; }
     const w: MuhurtaWindow & { _key?: string } = { date, start: s.start, end: s.end, score: s.score, reasons: s.reasons, choghadiya: s.chog, hora: s.hora, nakshatra: s.nak, tithi: s.tithi, _key: key };

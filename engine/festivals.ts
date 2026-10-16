@@ -8,7 +8,7 @@ import { panchang, spanAt, type PanchangDay, type Region } from './panchanga.ts'
 import { kala } from './kala.ts';
 import { dayFlags } from './flags.ts';
 import { isoDate, addDays, parseIsoDate, localMidnightUtc } from './time.ts';
-import { MASA_NAMES, tithiName } from './names.ts';
+import { MASA_NAMES, RASHI_NAMES, tithiName } from './names.ts';
 import F from './data/festivals.json' with { type: 'json' };
 
 export interface FestivalDef {
@@ -23,6 +23,8 @@ export interface FestivalResult {
   note?: string;
   diaspora?: { delhiDate: string; differs: boolean } | null;
   bhadraNote?: { until: Date } | null;
+  /** sankranti festivals: the ingress instant */
+  instant?: Date;
 }
 
 const DELHI: Place = { lat: 28.6139, lon: 77.209, tz: 'Asia/Kolkata', name: 'New Delhi' };
@@ -113,7 +115,7 @@ export function festivals(from: string, to: string, place: Place, opts: { region
           const win = t.getTime() >= day.sunset.getTime() || t.getTime() < day.sunrise.getTime()
             ? { start: day.sunrise, end: new Date(Math.min(day.sunset.getTime(), Math.max(punyaEnd.getTime(), day.sunrise.getTime() + 2 * 3600000))), label: 'punya_kaal' }
             : { start: t, end: new Date(Math.min(punyaEnd.getTime(), day.sunset.getTime())), label: 'punya_kaal' };
-          out.push({ id: def.id, names: def.names, date: day.date, deity: def.deity, rule: def.rule, source: def.source, window: win, note: def.note, tithiLabel: `${day.sunRashi.name} sankranti ${t.toISOString()}` });
+          out.push({ id: def.id, names: def.names, date: day.date, deity: def.deity, rule: def.rule, source: def.source, window: win, note: def.note, tithiLabel: `${RASHI_NAMES[def.rashi! - 1]} sankranti`, instant: t });
         }
         s = addDays(t, 300);
       }

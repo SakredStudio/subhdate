@@ -3,7 +3,7 @@
 
 import type { MuhurtaResult, Reason, DayResult } from './muhurta.ts';
 import type { PanchangDay } from './panchanga.ts';
-import { NAKSHATRA_NAMES, YOGA_NAMES, MASA_NAMES, RASHI_NAMES, SAMVATSARA_NAMES, tithiName } from './names.ts';
+import { NAKSHATRA_NAMES, YOGA_NAMES, MASA_NAMES, RASHI_NAMES, SAMVATSARA_NAMES, RITU_NAMES, tithiName } from './names.ts';
 import TERMS from '../i18n/terms.json' with { type: 'json' };
 import EN from '../i18n/en/reasons.json' with { type: 'json' };
 import HI from '../i18n/hi/reasons.json' with { type: 'json' };
@@ -26,7 +26,7 @@ export function term(kind: 'tithi' | 'paksha' | 'nakshatra' | 'yoga' | 'karana' 
   const table = T[kind]?.[l];
   if (!table) return String(value);
   if (Array.isArray(table)) {
-    const idx = typeof value === 'number' ? value - 1 : (kind === 'nakshatra' ? NAKSHATRA_NAMES.indexOf(value as any) : kind === 'yoga' ? YOGA_NAMES.indexOf(value as any) : kind === 'masa' ? MASA_NAMES.indexOf(value as any) : kind === 'rashi' ? RASHI_NAMES.indexOf(value as any) : kind === 'vara' ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(value as string) : -1);
+    const idx = typeof value === 'number' ? value - 1 : (kind === 'nakshatra' ? NAKSHATRA_NAMES.indexOf(value as any) : kind === 'yoga' ? YOGA_NAMES.indexOf(value as any) : kind === 'masa' ? MASA_NAMES.indexOf(value as any) : kind === 'rashi' ? RASHI_NAMES.indexOf(value as any) : kind === 'ritu' ? RITU_NAMES.indexOf(value as any) : kind === 'vara' ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(value as string) : -1);
     return idx >= 0 && table[idx] ? table[idx] : String(value);
   }
   return table[value as string] ?? String(value);

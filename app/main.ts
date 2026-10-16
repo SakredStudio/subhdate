@@ -36,7 +36,7 @@ export function t(key: string, params?: Record<string, string | number>): string
 const esc = (s: any) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
 const tz = () => S.city.tz;
 const fmtTime = (iso: string | null | undefined, zone = tz()) => iso ? new Intl.DateTimeFormat(S.lang === 'en' ? 'en-GB' : 'en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: zone }).format(new Date(iso)) : '—';
-const fmtTimeD = (iso: string | null | undefined, ref: string, zone = tz()) => { if (!iso) return '—'; const d = new Date(iso); const day = new Intl.DateTimeFormat('en-CA', { timeZone: zone }).format(d); return fmtTime(iso, zone) + (day !== ref ? ' (+1)' : ''); };
+const fmtTimeD = (iso: string | null | undefined, ref: string, zone = tz()) => { if (!iso) return '—'; const d = new Date(iso); const day = new Intl.DateTimeFormat('en-CA', { timeZone: zone }).format(d); const diff = Math.round((Date.parse(day) - Date.parse(ref)) / 86400000); return fmtTime(iso, zone) + (diff > 0 ? ' (+' + diff + ')' : diff < 0 ? ' (' + diff + ')' : ''); };
 const fmtDate = (iso: string) => { const [y, m, d] = iso.split('-').map(Number); return new Intl.DateTimeFormat(S.lang === 'hi' || S.lang === 'mr' ? 'hi-IN' : S.lang === 'gu' ? 'gu-IN' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(Date.UTC(y, m - 1, d, 12))); };
 const todayIso = () => new Intl.DateTimeFormat('en-CA', { timeZone: tz() }).format(new Date());
 const addIso = (iso: string, days: number) => { const [y, m, d] = iso.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10); };
@@ -221,7 +221,7 @@ async function renderFestivals() {
   let list: any[]; try { list = await festivalsFor(from, to); } catch (e: any) { view.innerHTML += `<div class="card">Error ${esc(e.message)}</div>`; return; }
   const main = list.filter(f => f.id !== 'ekadashi'); const ek = list.filter(f => f.id === 'ekadashi');
   view.innerHTML = `<h1>${t('fest.title')}</h1><p class="muted small">${t('fest.sub')} · ${esc(S.city.name)}</p>
-  ${main.map(f => `<div class="card"><div class="row" style="border:0"><span class="k"><b style="color:var(--gold-light)">${esc(fmtDate(f.date))}</b></span><span class="v small muted">${esc(f.deity ?? '')}</span></div><h2>${esc(f.name)}</h2><p class="small muted">${esc(f.tithiLabel ?? '')}</p>
+  ${main.map(f => `<div class="card"><div class="row" style="border:0"><span class="k"><b style="color:var(--gold-light)">${esc(fmtDate(f.date))}</b></span><span class="v small muted">${esc(f.deity ?? '')}</span></div><h2>${esc(f.name)}</h2><p class="small muted">${esc(f.tithiLabel ?? '')}${f.instant ? ' · ' + fmtTimeD(f.instant, f.date) : ''}</p>
     ${f.window ? `<div class="row"><span class="k">${t('fest.window')} (${esc(f.window.label)})</span><span class="v">${fmtTimeD(f.window.start, f.date)}–${fmtTimeD(f.window.end, f.date)}</span></div>` : ''}
     ${f.moonrise ? `<div class="row"><span class="k">${t('fest.moonrise')}</span><span class="v"><b>${fmtTime(f.moonrise)}</b></span></div>` : ''}
     ${f.bhadraNote ? `<p class="small">${t('fest.bhadra', { time: fmtTimeD(f.bhadraNote.until, f.date) })}</p>` : ''}

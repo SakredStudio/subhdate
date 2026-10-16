@@ -28,7 +28,7 @@ function dayPayload(date: string, place: any, opts: any, lang: Lang, birth?: any
     karana: p.karana.map(c => ({ name: c.name, label: L('karana', c.name), start: iso(c.start), end: iso(c.end) })),
     paksha: p.paksha, pakshaLabel: L('paksha', p.paksha),
     masa: { amanta: { ...p.masa.amanta, label: (p.masa.amanta.adhika ? 'Adhika ' : '') + L('masa', p.masa.amanta.name), start: iso(p.masa.amanta.start), end: iso(p.masa.amanta.end) }, purnimanta: { ...p.masa.purnimanta, label: (p.masa.purnimanta.adhika ? 'Adhika ' : '') + L('masa', p.masa.purnimanta.name), start: iso(p.masa.purnimanta.start), end: iso(p.masa.purnimanta.end) }, system: p.masa.system },
-    samvatsara: p.samvatsara, ritu: p.ritu, rituLabel: L('ritu', ['Vasanta', 'Grishma', 'Varsha', 'Sharad', 'Hemanta', 'Shishira'].indexOf(p.ritu) + 1), ayana: p.ayana, ayanaLabel: L('ayana', p.ayana),
+    samvatsara: p.samvatsara, ritu: p.ritu, rituLabel: L('ritu', p.ritu), ayana: p.ayana, ayanaLabel: L('ayana', p.ayana),
     moonRashi: { ...p.moonRashi, label: L('rashi', p.moonRashi.name) }, sunRashi: { ...p.sunRashi, label: L('rashi', p.sunRashi.name) },
     ayanamsa: ayanamsaAt(p.sunrise),
     kala: {
@@ -60,7 +60,7 @@ const ops: Record<string, (a: any) => any> = {
       rejected: ex.rejected.slice(0, 60),
     };
   },
-  festivals: ({ from, to, place, opts, lang }) => festivals(from, to, place, opts).map(f => ({ ...f, name: f.names[lang] ?? f.names.en, window: f.window ? { ...f.window, start: iso(f.window.start), end: iso(f.window.end) } : null, moonrise: iso(f.moonrise ?? null), bhadraNote: f.bhadraNote ? { until: iso(f.bhadraNote.until) } : null, noteText: f.note ? renderCaveat(f.note, lang) : null })),
+  festivals: ({ from, to, place, opts, lang }) => festivals(from, to, place, opts).map(f => ({ ...f, name: f.names[lang] ?? f.names.en, window: f.window ? { ...f.window, start: iso(f.window.start), end: iso(f.window.end) } : null, moonrise: iso(f.moonrise ?? null), bhadraNote: f.bhadraNote ? { until: iso(f.bhadraNote.until) } : null, instant: iso(f.instant ?? null), noteText: f.note ? renderCaveat(f.note, lang) : null })),
   packs: ({ lang }) => EVENT_IDS.map(id => { const p = loadPack(id); return { id, name: p.names[lang] ?? p.names.en, invocation: p.invocation, sources: p.sources }; }),
   janma: ({ birth, lang }) => { const j = janma(birth); return { ...j, candidates: j.candidates.map(c => ({ ...c, nakshatraLabel: term('nakshatra', c.nakshatraName, lang), rashiLabel: term('rashi', c.rashiName, lang) })) }; },
   scoreToday: ({ event, date, req }) => { const r = scoreDay(loadPack(event), date, req); return { score: r.score, windows: r.windows.map(w => ({ start: iso(w.start), end: iso(w.end), score: w.score })) }; },
