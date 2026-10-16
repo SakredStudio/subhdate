@@ -39,7 +39,7 @@ const frac = (p: PanchangDay, f: number) => new Date(p.sunrise.getTime() + f * p
 
 /** Does `p` qualify as the festival day under `rule` for `tithi`? Returns a score (higher = better) or 0. */
 function qualifies(p: PanchangDay, def: FestivalDef, tithi: number, prev: PanchangDay | null): number {
-  if (!occursInDay(p, tithi)) return 0;
+  if (def.rule !== 'ekadashi' && !occursInDay(p, tithi)) return 0;
   switch (def.rule) {
     case 'udaya': return p.tithi[0].num === tithi ? 2 : 1;
     case 'pradosha': { const k = kala(p); const mid = new Date((k.pradosha.start.getTime() + k.pradosha.end.getTime()) / 2); return prevailsAt(p, mid, tithi) ? 2 : (p.tithi.some(s => s.num === tithi && s.start.getTime() < k.pradosha.end.getTime() && s.end.getTime() > k.pradosha.start.getTime()) ? 1 : 0); }
