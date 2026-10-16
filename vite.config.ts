@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 
 // GitHub Pages serves the site at /subhdate/ ; local dev at /
-export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/subhdate/' : '/',
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? '/subhdate/' : '/',
   root: 'app',
   publicDir: '../public',
   build: {
