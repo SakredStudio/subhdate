@@ -48,11 +48,19 @@ function qualifies(p: PanchangDay, def: FestivalDef, tithi: number, prev: Pancha
     case 'purvahna': return prevailsAt(p, frac(p, 0.3), tithi) ? 2 : (p.tithi[0].num === tithi ? 1 : 0);
     case 'nishita': { const mid = new Date(p.sunset.getTime() + p.nightLength / 2); return prevailsAt(p, mid, tithi) ? 2 : 0; }
     case 'ekadashi': {
-      if (p.tithi[0].num !== tithi) return 0;
-      // Smarta: if Dashami still ran at arunodaya (sunrise - 96 min) the fast moves to the next day
+      // Smarta (Dharmasindhu): fast on the day Ekadashi holds at sunrise, unless Dashami still ran at arunodaya
+      // (sunrise - 96 min); then, or when Ekadashi is kshaya (touches no sunrise), the fast moves to the Dwadashi day.
       const arunodaya = new Date(p.sunrise.getTime() - 96 * 60000);
-      const dashamiAtArunodaya = p.tithi[0].start.getTime() > arunodaya.getTime();
-      return dashamiAtArunodaya ? 0 : 2;
+      if (p.tithi[0].num === tithi) return p.tithi[0].start.getTime() > arunodaya.getTime() ? 0 : 2;
+      const next = (tithi % 30) + 1;
+      if (p.tithi[0].num === next && prev) {
+        const ekAtPrevSunrise = prev.tithi[0].num === tithi;
+        const prevArunodaya = new Date(prev.sunrise.getTime() - 96 * 60000);
+        const viddha = ekAtPrevSunrise && prev.tithi[0].start.getTime() > prevArunodaya.getTime();
+        const kshaya = !ekAtPrevSunrise && prev.tithi.some(s => s.num === tithi);
+        return viddha || kshaya ? 2 : 0;
+      }
+      return 0;
     }
     default: return p.tithi[0].num === tithi ? 2 : 1;
   }
