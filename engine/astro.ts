@@ -103,8 +103,31 @@ export function riseSet(body: Body, place: Place, direction: 1 | -1, start: Date
 }
 export const sunrise = (place: Place, start: Date, conv: SunriseConvention = 'limb') => riseSet('Sun', place, 1, start, 1.2, conv);
 export const sunset = (place: Place, start: Date, conv: SunriseConvention = 'limb') => riseSet('Sun', place, -1, start, 1.2, conv);
-export const moonrise = (place: Place, start: Date) => riseSet('Moon', place, 1, start, 1.2, 'limb');
-export const moonset = (place: Place, start: Date) => riseSet('Moon', place, -1, start, 1.2, 'limb');
+/** Geocentric upper-limb moonrise/moonset (what SearchRiseSet gives; matches Swiss Ephemeris swe_rise_trans). */
+export const moonriseGeocentric = (place: Place, start: Date) => riseSet('Moon', place, 1, start, 1.2, 'limb');
+export const moonsetGeocentric = (place: Place, start: Date) => riseSet('Moon', place, -1, start, 1.2, 'limb');
+
+/**
+ * Topocentric moonrise/moonset: the Moon's upper limb on the apparent horizon as seen from the surface.
+ * The Moon's horizontal parallax (54'-61') lowers it by ~HP*cos(h); at the horizon the geocentric centre
+ * must therefore be at altitude  HP - refraction(34') - semidiameter(0.2725*HP). This is what printed
+ * panchangs (Drik Panchang) list and what Karwa Chauth needs; it is 4-6 minutes later than the
+ * geocentric value. One refinement pass on HP is enough (HP changes < 0.1' per hour).
+ */
+function moonRiseSetTopocentric(place: Place, direction: 1 | -1, start: Date): Date | null {
+  const obs = observer(place);
+  const altFor = (d: Date) => {
+    const distKm = A.EclipticGeoMoon(d).dist * A.KM_PER_AU;
+    const hp = Math.asin(6378.137 / distKm) * 180 / Math.PI;      // horizontal parallax, degrees
+    return hp * (1 - 0.2725) - 34 / 60;                             // degrees
+  };
+  let t = A.SearchAltitude(A.Body.Moon, obs, direction, start, 1.2, altFor(start));
+  if (!t) return null;
+  t = A.SearchAltitude(A.Body.Moon, obs, direction, start, 1.2, altFor(t.date));
+  return t ? t.date : null;
+}
+export const moonrise = (place: Place, start: Date) => moonRiseSetTopocentric(place, 1, start);
+export const moonset = (place: Place, start: Date) => moonRiseSetTopocentric(place, -1, start);
 
 /** Instant when the Sun's tropical longitude reaches `lon` (degrees), searching forward from `start`. */
 export function searchSunLongitude(lon: number, start: Date, limitDays = 400): Date | null {

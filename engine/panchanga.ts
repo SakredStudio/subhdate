@@ -54,7 +54,7 @@ export interface PanchangDay {
   karana: KaranaSpan[];
   paksha: 'Shukla' | 'Krishna';
   masa: { amanta: MasaInfo; purnimanta: MasaInfo; display: MasaInfo; system: MonthSystem };
-  samvatsara: { vikram: number; vikramGujarati: number; shaka: number; nameSouth: string; nameNorth: string };
+  samvatsara: { vikram: number; vikramGujarati: number; shaka: number; nameSouth: string; nameNorth: string; nameGujarati: string };
   ritu: string;
   ayana: 'Uttarayana' | 'Dakshinayana';
   moonRashi: { index: number; name: string };
@@ -141,10 +141,13 @@ function samvatsara(gregYear: number, gregMonth: number, amantaIndex: number) {
   const vikram = chaitradiBase + 57;
   const vikramGujarati = kartikadiBase + 57;
   const shaka = chaitradiBase - 78;
-  // Jovian names: south index = (shaka + 11) mod 60; north = south + 14 (UNVERIFIED offset, see data/calendar.json)
+  // Jovian names (research/02 §2.3 gives no table). South 0-based index = (shaka + 11) mod 60 (Shaka 1948 = Parabhava, Drik).
+  // North (Vikram, Chaitradi) = south + 13 (VS 2083 = Siddharthi, Drik 2026-10-20). Gujarati Samvat name lags the north
+  // name by one and by a further one while its year number is behind (VS 2082 Pingala, Drik) - UNVERIFIED past 2026.
   const south = ((shaka + 11) % 60 + 60) % 60;
-  const north = (south + 14) % 60;
-  return { vikram, vikramGujarati, shaka, nameSouth: SAMVATSARA_NAMES[south], nameNorth: SAMVATSARA_NAMES[north] };
+  const north = (south + 13) % 60;
+  const gujarati = ((north - 1 - (vikram - vikramGujarati)) % 60 + 60) % 60;
+  return { vikram, vikramGujarati, shaka, nameSouth: SAMVATSARA_NAMES[south], nameNorth: SAMVATSARA_NAMES[north], nameGujarati: SAMVATSARA_NAMES[gujarati] };
 }
 
 const cache = new Map<string, PanchangDay>();

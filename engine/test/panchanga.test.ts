@@ -45,6 +45,8 @@ describe('L1 panchanga: known anchors (research/01 §3 festival dates)', () => {
     expect(before.samvatsara.vikram).toBe(2083);
     expect(after.samvatsara.shaka).toBe(1948);
     expect(after.samvatsara.nameSouth).toBe('Parabhava');
+    expect(after.samvatsara.nameNorth).toBe('Siddharthi'); // Drik 2026-10-20
+    expect(before.samvatsara.nameGujarati).toBe('Pingala'); // Drik: Gujarati Samvat 2082 Pingala
     expect(after.masa.amanta.name).toBe('Kartika');
     expect(after.tithi[0].num).toBe(1);
   });
