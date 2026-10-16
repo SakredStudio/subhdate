@@ -1,26 +1,45 @@
 # ShubhDate night build — CHECKPOINT
 
-Updated: 2026-10-16 ~05:50 Toronto (run 1, Claude Fable 5.1)
+Updated: 2026-10-16 ~06:10 Toronto (run 1, Claude Fable 5.1). Status: **v1 shipped and live.**
 
-## Done (committed + pushed to https://github.com/SakredStudio/subhdate)
-- Steps 0–7 complete: scaffold, L0 astro, L1 panchanga, golden gate, L2 kala, L3 flags, L4 personal, L5 muhurta (12 packs), festivals by rule, L6 explain + i18n (EN/HI/Hinglish reasons; EN/HI/GU terms; sankalpa IAST + Devanagari).
-- Step 8 PWA in `app/`: Today (panchang, kala, choghadiya with "now", hora, flags, festival of the day, sankalpa, diaspora banner, personal bala), Find Muhurta (12 events, range, city, strictness, birth toggle), Result detail (windows, in-favour/against sentences, caveats, sources, Save / Share / .ics), Festivals (6 months, puja windows, moonrise, diaspora notes), Saved (IndexedDB), Settings (9 languages, region, month naming, sunrise convention, Abhijit-on-Wednesday, birth details with janma nakshatra, waitlist link), About/How we calculate, Privacy, first-run language+city screen. Engine runs in a Web Worker; day payloads cached in IndexedDB; service worker offline shell; manifest + generated PNG icons.
-- Verified in the browser (dev server): Today for Toronto 2026-10-16 (sunrise 07:33, tithi Shashthi till 20:24, Rahu 11:40–13:02 etc.), muhurta search Nov 18–Dec 15 Toronto vivaha (28 days, first wedding day Nov 20/21 after Devutthani), result detail, festivals list with diaspora notes, settings.
-- GitHub Pages enabled (build_type = workflow via gh api). Workflow `.github/workflows/deploy.yml`: tests + golden validation + typecheck + build + deploy. First run failed only because Pages was not yet enabled; second run triggered by the latest push.
+## Live
+- https://sakredstudio.github.io/subhdate/ (GitHub Pages via Actions on every push to `main`; repo https://github.com/SakredStudio/subhdate, public).
+- Verified on the live site: service worker registered at `/subhdate/`, cache `shubhdate-v1` holds the shell, both JS bundles, CSS, manifest, icons and fonts (offline after first load by construction); no console errors; Today for Toronto 2026-10-16 matches Drik Panchang (sunrise 07:33, sunset 18:32, moonrise 13:54, Shashthi till 20:24, Mula till 00:17, Shobhana till 12:35/36, Rahu 11:40–13:02/03, Abhijit 12:40–13:24; moonset 21:58 vs Drik 22:00). Mumbai Today renders with amanta naming.
 
-## Verified numbers
-- Oracle 7160/7161 (99.99%); Moon histogram p99 5.6"; Drik manual 220/220 (100%); kala vs Drik 65/65; 72 unit/golden tests green; typecheck clean; `vite build` OK (app 90 KB, worker 185 KB raw).
+## What was built (all committed + pushed)
+- `engine/` (MIT): L0 astro (astronomy-engine, Lahiri calibrated to Swiss Ephemeris 0.02", nutation, topocentric moonrise), L1 panchanga (five limbs with end instants, amanta/purnimanta, adhika, samvatsara), L2 kala (`data/kala.json`), L3 flags (`data/yogas.json`), L4 personal, L5 muhurta scorer + `rules/{vivaha,griha_pravesh,general}.json` (12 events), festivals by rule (`data/festivals.json`), L6 explain + sankalpa. Every rule row has a `source` (research/02 section + confidence tag) or UNVERIFIED.
+- `tools/oracle/` (dev-only, AGPL Swiss Ephemeris): golden generator, Moon histogram, ayanamsa calibration, sankranti check. Golden JSON committed; oracle never bundled.
+- `i18n/`: reasons EN/HI/Hinglish; terms EN/HI/GU; UI strings EN/HI/GU/Hinglish full, MR/TA/TE/BN/KN beta.
+- `app/` (proprietary): Today, Find Muhurta, Result (Save/Share/.ics), Festivals, Saved, Settings, About, Privacy, first-run screen; Web Worker, IndexedDB, hand-curated ~330-city list, SW, manifest, generated PNG icons.
 
-## Next step
-1. Confirm the Pages deploy (`gh run list`), load https://sakredstudio.github.io/subhdate/, check SW registration + offline reload, Today for Toronto and Mumbai vs Drik.
-2. Append the shipped line to C:\sakred-os\LIVE-GO-PLAN.md §4.1.
-3. Final CHECKPOINT with the morning report.
+## Validation numbers
+- Oracle (6 cities × 60 days, Swiss Ephemeris): 7160/7161 checks = 99.99% (the one miss is a sanity check on the parallax shift at a sunrise edge, not an astronomical error).
+- Moon longitude vs Swiss Ephemeris, hourly 2024–2030: p50 3.4", p99 5.6", max 6.4" (gate was 40"). Sun daily p99 1.4".
+- Drik Panchang hand sample: 17 rows (6 cities; Oct 16/20/29, Nov 8/10, Dec 15, Jan 14): 248/248 = 100% (sunrise/sunset ±1 min, moonrise/moonset ±2 min, tithi/nakshatra/yoga ends ±3 min, names, months, samvats); kala windows (Rahu/Gulika/Yama/Abhijit/Durmuhurta/Varjyam/Amrit) 73/73 within 1 min.
+- Festival anchors: Karwa Chauth 2026-10-29 Delhi (moonrise 20:17) / 10-28 Toronto; Dhanteras 11-06; Diwali 11-08 (pradosha 17:31–19:55 Delhi); Govardhan 11-10; Bhai Dooj 11-11; Devutthani Ekadashi 11-21 (kshaya Ekadashi, Smarta rule); Makar Sankranti 2027-01-15 Delhi / 01-14 Toronto.
+- 72 unit + golden tests green; typecheck clean; CI runs tests + golden validation + build on every push.
+
+## Top 5 next steps (for Sonnet)
+1. Replace `WAITLIST_URL` in `app/main.ts` with Soul's Google Form link; add a short "beta" ribbon and a feedback link.
+2. Lagna (ascendant) from sidereal time + sthira-lagna window for Diwali Lakshmi puja; then the 21-mahadosha lagna shuddhi for vivaha (research/02 §3.4).
+3. GeoNames `cities15000` import (CC BY) to replace the hand-curated list; add Hindi/Gujarati alternate names for the top 200 Indian cities.
+4. Pandit review of the UNVERIFIED rows (sagai/mundan/bhoomi lists, Monday 9th durmuhurta, Amrit-kaal offset, Bhai Dooj/Vasant Panchami day rules, Jovian name offsets beyond 2026) and tune the ten general-pack events into their own packs.
+5. Lighthouse PWA audit on a phone, Play TWA via the Swaiyu recipe (minSdk 24, target 36, assetlinks on the Pages domain), then Play Billing for the Wedding Report.
+
+## 3 questions for Soul
+1. Default calendar for the app's first screen: keep "North (purnimanta)" for India timezones and "Diaspora" elsewhere, or default to Gujarati/amanta (your family) everywhere?
+2. Drik's Lahiri runs ~16" ahead of Swiss Ephemeris (sankranti instants differ by ~4 min). Follow Swiss Ephemeris (current, documented in About) or match Drik numerically?
+3. Should the Pushya-for-marriage penalty and the North-Indian Panchaka penalty be switched off automatically for the South preset (Tamil/Kannada practice differs), or stay as caveats?
 
 ## Known gaps / UNVERIFIED (also marked in data files)
-- Service worker: in the Vite dev server the registration logs "unknown error fetching the script"; to be confirmed on the production build / live site.
-- Drik's Lahiri runs ~16" ahead of SE's; sankranti instants differ by ~4 min (Makara 2027: SE 21:10 IST, Drik 21:14).
-- Jovian samvatsara names beyond 2026, Amrit kaal offset, sagai/mundan/bhoomi lists, Monday 9th durmuhurta, Bhai Dooj/Vasant Panchami day rules: UNVERIFIED.
-- Night Rahu kaal, lagna/sthira-lagna, Vakya mode, partner bala: not in v1.
-- Waitlist URL is a placeholder constant `WAITLIST_URL` in app/main.ts (Soul to replace with the Google Form link).
-- City list is hand-curated (~330 cities); GeoNames import planned.
-- Beta languages (MR/TA/TE/BN/KN) have ~30 UI strings each; reasons fall back to English.
+- Drik Lahiri offset (above); Jovian samvatsara names beyond 2026; Amrit kaal = Varjyam + 24 ghatis beyond Swati/Bharani/Krittika; sagai/mundan/bhoomi nakshatra and month lists [M]; Monday 9th durmuhurta [S1]; Bhai Dooj aparahna and Vasant Panchami purvahna rules [M].
+- Not in v1: night Rahu kaal (South), lagna and sthira lagna, Vakya mode, partner bala, Vaishnava/ISKCON Ekadashi, kshaya masa (untested path).
+- Beta languages have ~30 UI strings; reason sentences fall back to English.
+- Business docs (NIGHT-BUILD-BRIEF, ROADMAP, research/01) are gitignored and not in the public repo; flip `.gitignore` if you want them published.
+
+## Morning report (Soul)
+1. **Live:** https://sakredstudio.github.io/subhdate/ (installable PWA, works offline after the first open; source at github.com/SakredStudio/subhdate).
+2. **What works:** Today panchang for any city (tithi/nakshatra/yoga/karana with end times, Rahu kaal and friends, Choghadiya with "now", Hora, yogas/doshas, festival of the day, your sankalpa in Devanagari/IAST), Find Muhurta for 12 events with reasons in EN/HI/Hinglish, Festivals Oct–Mar with diaspora notes, Save/Share/.ics, Settings with the Gujarati/amanta preset and on-device birth details.
+3. **Validated:** 100% vs Swiss Ephemeris on 7,160 checks (Moon within 6", gate was 40") and 100% vs 17 hand-read Drik Panchang pages, including moonrise to the minute after fixing lunar parallax.
+4. **Not done / unverified:** lagna (so no sthira-lagna Diwali window and no 21-dosha check), night Rahu kaal, pandit review of the rows marked UNVERIFIED, Play build, waitlist link is a placeholder; Drik's ayanamsa is 16" ahead of ours (4 min on sankranti).
+5. **Tap first:** open the link on your phone, pick ગુજરાતી + Ahmedabad (region "Gujarat / Maharashtra (amanta)"), check Diwali on the Festivals tab (Nov 8, Ashwina Vad Amas, pradosha window), then Find Muhurta → Wedding → Nov 18 to Dec 15 → compare the top days with your family panchang.
