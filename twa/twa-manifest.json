@@ -1,0 +1,65 @@
+{
+  "packageId": "com.sakredstudio.shubhdate",
+  "host": "sakredstudio.github.io",
+  "name": "ShubhDate",
+  "launcherName": "ShubhDate",
+  "display": "standalone",
+  "orientation": "portrait",
+  "themeColor": "#F7F0E3",
+  "themeColorDark": "#0B1020",
+  "navigationColor": "#FFFDF8",
+  "navigationColorDark": "#0B1020",
+  "navigationDividerColor": "#DCCFB4",
+  "navigationDividerColorDark": "#1A2440",
+  "backgroundColor": "#F7F0E3",
+  "enableNotifications": true,
+  "startUrl": "/subhdate/",
+  "iconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-512.png",
+  "maskableIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "C:\\sakred-os\\projects\\shubhdate-twa\\android.keystore",
+    "alias": "shubhdate"
+  },
+  "appVersionName": "1.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Today's panchang",
+      "short_name": "Today",
+      "url": "/subhdate/#/today",
+      "chosenIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-192.png"
+    },
+    {
+      "name": "Find a muhurta",
+      "short_name": "Muhurta",
+      "url": "/subhdate/#/muhurta",
+      "chosenIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-192.png"
+    },
+    {
+      "name": "Festivals",
+      "short_name": "Festivals",
+      "url": "/subhdate/#/festivals",
+      "chosenIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://sakredstudio.github.io/subhdate/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://sakredstudio.github.io/subhdate/",
+  "minSdkVersion": 24,
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": []
+}

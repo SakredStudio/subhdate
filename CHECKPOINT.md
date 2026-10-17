@@ -8,7 +8,8 @@ Updated: 2026-10-17 (run 2, in progress, branch `v2-night-2`). Status: **v1 live
 - Step 2 (GeoNames cities): done. `tools/dev/import-cities.mjs` (downloads cities15000.zip, or `--input` a local .zip/.txt; minimal zip reader in node:zlib) → `app/data/cities.json` (3,599 rows, 188 KB raw: all IN/NP/LK/BD/BT/MU/FJ/TT/GY/SR + ≥100k diaspora countries + the 369 curated v1 rows merged; native-script names for the top 200 Indian cities). `app/cities.ts` loads it; `engine/test/cities.test.ts` (4 tests). CC BY 4.0 line in About and README. **Sandbox note:** download.geonames.org is blocked by this sandbox's egress policy (403), so the JSON was built from the GeoNames file inside the npm package `cities15000@0.0.1` (vintage: latest row 2017-02-06). Soul: rerun `node tools/dev/import-cities.mjs` on the PC for a fresh list; the format is identical.
 - Step 3 (Gujarati reasons): done. `i18n/gu/reasons.json` (78 reasons + 18 caveats, same `{param}` placeholders, verified by script), `'gu'` in `REASON_LANGS`, explain test covers gu. The report and Find Muhurta now speak Gujarati end to end.
 - Step 4 (UNVERIFIED rows): no rule row changed (research/02 cannot settle any of them). `docs/PANDIT-REVIEW.md` lists 20 rows (file › key, what the engine does, the exact question, what would change); the report's pandit page links to it.
-- Next: Step 5, assetlinks placeholder, TWA manifest, PLAY-TWA.md, privacy.html.
+- Step 5 (Play prep): done. `public/.well-known/assetlinks.json` placeholder + README (the real file is on the Pages origin root, see `docs/PLAY-TWA.md` §5), `twa/twa-manifest.json` (Bubblewrap, Play Billing + notification delegation on, minSdk 24, 3 shortcuts; shortcuts also added to the web manifest), `docs/PLAY-TWA.md` (keystore, init/update, manual Gradle build, signing, Play Console, asset links), `public/privacy.html` (static policy incl. the reminders and purchases sections).
+- Next: Step 6, entitlement/billing interfaces + Worker skeleton.
 
 ---
 
