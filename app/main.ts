@@ -5,6 +5,8 @@ import { call, dayCached } from './engine-client.ts';
 import { db, type SavedItem } from './db.ts';
 import { aboutHtml, privacyHtml } from './screens/about.ts';
 import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
+import { renderReport } from './screens/report.ts';
+import './report.css';
 const ENGINE_VERSION = '0.1.0';
 const BASE = import.meta.env.BASE_URL;
 
@@ -187,7 +189,7 @@ async function renderMuhurta() {
 }
 function renderResults(root: Element) {
   const r = lastResult;
-  root.innerHTML = `<h2 class="mt">${t('muhurta.results')}</h2><p class="small muted">${r.evaluatedDays} ${t('muhurta.evaluated')} · ${t('muhurta.confidence')}: ${r.confidence}${r.fallback ? ' · EN' : ''}</p>
+  root.innerHTML = `<div class="row" style="border:0;align-items:center"><h2 class="mt">${t('muhurta.results')}</h2>${r.days.length ? `<a class="btn btn-outline btn-small" href="#/report">📄 ${t('report.open')}</a>` : ''}</div><p class="small muted">${r.evaluatedDays} ${t('muhurta.evaluated')} · ${t('muhurta.confidence')}: ${r.confidence}${r.fallback ? ' · EN' : ''}</p>
   ${r.invocation ? `<div class="card"><div class="label">${t('muhurta.invocation')} · ${esc(r.invocation.deity)}</div><p class="sankalpa">${esc(r.invocation.line)}</p></div>` : ''}
   ${r.days.length ? r.days.map((d: any, i: number) => `<div class="card list-item" data-i="${i}" style="align-items:center">${scoreRing(d.score)}<div class="body"><div class="title">${esc(fmtDate(d.date))}</div><div class="sub">${esc(d.headline)}</div><div class="sub">${t('muhurta.topWindow')}: ${d.windows.map((w: any) => fmtTime(w.start) + '–' + fmtTime(w.end)).join(', ')}</div></div><span class="chev">›</span></div>`).join('') : `<div class="card"><p>${t('muhurta.none')}</p></div>`}
   ${r.rejected.length ? `<details class="card"><summary class="label">${t('muhurta.rejectedHdr')}</summary>${r.rejected.map((x: any) => `<div class="row"><span class="k">${esc(fmtDate(x.date))}</span><span class="v small">${x.sentences.map(esc).join('<br>')}</span></div>`).join('')}</details>` : ''}
@@ -199,7 +201,7 @@ async function renderResult(idx: number) {
   const r = lastResult; const d = r.days[idx]; if (!d) { location.hash = '#/muhurta'; return; }
   const saved = await db.listSaved();
   const idOf = (w: any) => `${lastReq.event}|${d.date}|${w.start}`;
-  view.innerHTML = `<a href="#/muhurta" class="small">‹ ${t('result.back')}</a>
+  view.innerHTML = `<div class="row" style="border:0"><a href="#/muhurta" class="small">‹ ${t('result.back')}</a><a class="btn btn-outline btn-small" href="#/report">📄 ${t('report.open')}</a></div>
   <div class="hero"><div class="label">${EVENT_ICONS[lastReq.event] ?? ''} ${esc(r.packName)}</div><h1>${esc(fmtDate(d.date))}</h1><p class="muted small">${esc(d.headline)}</p>${scoreRing(d.score)}</div>
   ${d.summary ? `<div class="card"><p class="small">${esc(d.summary)}</p></div>` : ''}
   <h2>${t('result.windows')}</h2>
@@ -297,6 +299,13 @@ function renderWelcome() {
   view.querySelector('#w-go')!.addEventListener('click', () => { S.onboarded = true; saveSettings(); location.hash = '#/today'; });
 }
 
+// ---------- Report gate ----------
+// Full report: Play entitlement (app/entitlement.ts, step 6) or the dev/QA flag. The flag is never shown in the UI.
+async function isReportUnlocked(): Promise<boolean> {
+  if (localStorage.getItem('shubhdate.devReport') === '1') return true;
+  return false;
+}
+
 // ---------- Router ----------
 function updateChrome() {
   document.documentElement.lang = S.lang === 'hinglish' ? 'en' : S.lang;
@@ -308,12 +317,14 @@ function route() {
   const [, path, arg] = hash.split('/');
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active', (a as HTMLElement).dataset.tab === path));
   document.getElementById('tabbar')!.style.display = S.onboarded ? '' : 'none';
+  document.body.dataset.route = path || 'today';
   closeSheet();
   if (!S.onboarded && path !== 'about' && path !== 'privacy') return renderWelcome();
   window.scrollTo(0, 0);
   switch (path) {
     case 'muhurta': return renderMuhurta();
     case 'result': return renderResult(Number(arg));
+    case 'report': return renderReport(view, { t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, isUnlocked: isReportUnlocked });
     case 'festivals': return renderFestivals();
     case 'saved': return renderSaved();
     case 'settings': return renderSettings();
