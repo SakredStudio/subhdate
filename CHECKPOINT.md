@@ -5,7 +5,7 @@ Updated: 2026-10-17 (run 2, Claude in a Claude Code cloud session, unattended). 
 ## Live
 - Web app: https://sakredstudio.github.io/subhdate/ (still v1 until the PR is merged; GitHub Actions deploys `main` on every push).
 - Branch: `v2-night-2` (9 commits on top of `main`, every step committed and pushed separately).
-- PR: see the link in the "Morning report" at the bottom (one PR to `main`, titled "v2 night build 2: report, cities, Gujarati, Play listing"; **not merged**, merging deploys).
+- PR: https://github.com/SakredStudio/subhdate/pull/1 ("v2 night build 2: report, cities, Gujarati, Play listing", draft, **not merged**; merging deploys).
 - Run 1 (v1) checkpoint is preserved in git history (`c6d092d`); its validation numbers are unchanged and repeated below.
 
 ## What was built this run (per step, with commit hashes)
@@ -51,7 +51,7 @@ Updated: 2026-10-17 (run 2, Claude in a Claude Code cloud session, unattended). 
 Once Soul confirms the Play Console app and the two products exist (and the Worker is deployed with its secrets), implement `purchase()` in `app/billing.ts` (PaymentRequest `show()` → purchase token → `POST /v1/entitlement/claim` → `cacheEntitlement()`, plus DGA `consume()` for `report_single` after the token is issued), `/v1/entitlement/claim` in `worker/src/index.ts` with the Play Developer API (`purchases.products.get` for `report_single`, `purchases.subscriptionsv2.get` for `family_annual`, service-account JWT via WebCrypto RS256, `packageName`/`purchaseState` checks, insert into `entitlements`, acknowledge/consume), RTDN processing (revoke on cancel/refund/void, extend on renewal, idempotent by `message_id`), `/v1/entitlement/refresh` and the PWA's 7-day refresh when online (`loadEntitlement().stale`), then `sendPush()` (RFC 8291/8292 with WebCrypto) so the reminders cron actually delivers; re-run `store-shots.mjs` once prices show in the Report screen so the EN screenshot 06 can show the Play price. Then the "finish early" list: household profiles, static SEO pages, Marathi.
 
 ## Morning report (Soul, on the phone)
-1. Open the PR "v2 night build 2: report, cities, Gujarati, Play listing" on github.com/SakredStudio/subhdate (branch `v2-night-2` → `main`). Checks: 75 + 8 tests, typecheck, build all green locally; CI runs the same. It is a draft: tap "Ready for review", then merge when you are happy. Merging deploys the web app.
+1. Open the PR https://github.com/SakredStudio/subhdate/pull/1 (branch `v2-night-2` → `main`). Checks: 75 + 8 tests, typecheck, build all green locally; CI runs the same. It is a draft: tap "Ready for review", then merge when you are happy. Merging deploys the web app.
 2. Look at `store/screenshots/en/` (8 framed shots), `store/feature-graphic.png` and `store/icon-512.png`: these go straight into the Play Console; `store/README.md` says which field takes which file.
 3. After merging, open https://sakredstudio.github.io/subhdate/, find a wedding muhurta (Nov 21–Dec 15, Delhi, Hindi), tap "मुहूर्त रिपोर्ट", then in Chrome DevTools set `localStorage['shubhdate.devReport']='1'` and reload `#/report` to see the full 21-page report; "Download PDF" → Save as PDF.
 4. Read `docs/PANDIT-REVIEW.md` once: it is the list of 20 questions to send to a pandit; nothing in the rules changed tonight.
