@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>ShubhDate</title>
   <meta name="description" content="ShubhDate: an honest Vedic panchang and muhurta app. The right moment, the reason why, and your sankalpa, for your city and your family's calendar. No ads, no account." />
-  <meta name="theme-color" content="#0B1020" />
-  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#F7F0E3" id="theme-color" />
+  <meta name="color-scheme" content="light dark" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="icons/icon-192.png" type="image/png" />
+  <link rel="preload" as="image" href="hero.webp" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="ShubhDate" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,7 +22,7 @@
 <body>
   <div class="stars" aria-hidden="true"></div>
   <header class="topbar">
-    <a href="#/today" class="brand"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">ShubhDate</span></a>
+    <a href="#/today" class="brand"><img class="brand-mark" src="icons/mark-84.png" width="28" height="28" alt="" aria-hidden="true"><span class="brand-name">ShubhDate</span></a>
     <button class="city-chip" id="city-chip" type="button" aria-label="Change city"></button>
   </header>
   <main id="view" class="view" aria-live="polite"></main>

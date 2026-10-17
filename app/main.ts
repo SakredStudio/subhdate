@@ -11,7 +11,7 @@ const BASE = import.meta.env.BASE_URL;
 
 type Lang = 'en' | 'hi' | 'hinglish' | 'gu' | 'mr' | 'ta' | 'te' | 'bn' | 'kn';
 interface Birth { date: string; time: string | null; city: City; }
-interface Settings { lang: Lang; region: 'north' | 'west' | 'south' | 'east' | 'diaspora'; monthSystem: 'amanta' | 'purnimanta'; sunrise: 'limb' | 'center'; abhijitWed: boolean; city: City; birth: Birth | null; sankalpaScript: 'deva' | 'iast'; onboarded: boolean; }
+interface Settings { lang: Lang; region: 'north' | 'west' | 'south' | 'east' | 'diaspora'; monthSystem: 'amanta' | 'purnimanta'; sunrise: 'limb' | 'center'; abhijitWed: boolean; city: City; birth: Birth | null; sankalpaScript: 'deva' | 'iast'; onboarded: boolean; theme: 'paper' | 'night'; }
 
 const DEFAULT_CITY = CITIES[0];
 function loadSettings(): Settings {
@@ -22,10 +22,16 @@ function defaults(): Settings {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const guess = CITIES.find(c => c.tz === tz) ?? DEFAULT_CITY;
   const lang = (navigator.language || 'en').startsWith('hi') ? 'hi' : (navigator.language || '').startsWith('gu') ? 'gu' : 'en';
-  return { lang: lang as Lang, region: tz === 'Asia/Kolkata' ? 'north' : 'diaspora', monthSystem: tz === 'Asia/Kolkata' ? 'purnimanta' : 'purnimanta', sunrise: 'limb', abhijitWed: false, city: guess, birth: null, sankalpaScript: 'deva', onboarded: false };
+  return { lang: lang as Lang, region: tz === 'Asia/Kolkata' ? 'north' : 'diaspora', monthSystem: tz === 'Asia/Kolkata' ? 'purnimanta' : 'purnimanta', sunrise: 'limb', abhijitWed: false, city: guess, birth: null, sankalpaScript: 'deva', onboarded: false, theme: 'paper' };
 }
 let S = loadSettings();
 function saveSettings() { localStorage.setItem('shubhdate.settings', JSON.stringify(S)); }
+function applyTheme() {
+  const night = S.theme === 'night';
+  if (night) document.documentElement.dataset.theme = 'dark'; else delete document.documentElement.dataset.theme;
+  const meta = document.getElementById('theme-color') as HTMLMetaElement | null; if (meta) meta.content = night ? '#0B1020' : '#F7F0E3';
+}
+applyTheme();
 
 const U = UI as any;
 export function t(key: string, params?: Record<string, string | number>): string {
@@ -54,7 +60,8 @@ function sheet(html: string, onMount?: (root: HTMLElement) => void) {
 }
 function closeSheet() { document.getElementById('sheet-root')!.innerHTML = ''; }
 function scoreRing(score: number) { const r = 24, c = 2 * Math.PI * r; return `<svg class="score" viewBox="0 0 56 56"><circle class="track" cx="28" cy="28" r="${r}" fill="none" stroke-width="3"/><circle class="fill" cx="28" cy="28" r="${r}" fill="none" stroke-width="3" stroke-dasharray="${(score / 100 * c).toFixed(1)} ${c.toFixed(1)}"/><text x="28" y="33" text-anchor="middle">${score}</text></svg>`; }
-const mandala = `<svg class="mandala" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="#D4A84F" stroke-width="1"><circle cx="60" cy="60" r="56" opacity=".5"/><circle cx="60" cy="60" r="46" stroke="#E6C97A" opacity=".6"/><circle cx="60" cy="60" r="34" opacity=".5"/><circle cx="60" cy="60" r="22" stroke="#E6C97A" opacity=".6"/><circle cx="60" cy="60" r="10" opacity=".5"/>${Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6; return `<line x1="${60 + 22 * Math.cos(a)}" y1="${60 + 22 * Math.sin(a)}" x2="${60 + 56 * Math.cos(a)}" y2="${60 + 56 * Math.sin(a)}" opacity=".5"/><circle cx="${60 + 56 * Math.cos(a)}" cy="${60 + 56 * Math.sin(a)}" r="2" fill="#E6C97A" stroke="none"/>`; }).join('')}${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4 + Math.PI / 8; const x = 60 + 28 * Math.cos(a), y = 60 + 28 * Math.sin(a); return `<path d="M${x} ${y - 7} L${x + 5} ${y} L${x} ${y + 7} L${x - 5} ${y} Z" stroke="#E6C97A" opacity=".7"/>`; }).join('')}</g><circle cx="60" cy="60" r="3.5" fill="#D4A84F" opacity=".8"/></svg>`;
+const heroArt = `<picture><source srcset="${BASE}hero.webp" type="image/webp"><img class="hero-art" src="${BASE}hero.png" width="180" height="180" alt="" aria-hidden="true"></picture>`;
+const mandala = `<svg class="mandala" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="60" cy="60" r="56" opacity=".5"/><circle cx="60" cy="60" r="46" opacity=".6"/><circle cx="60" cy="60" r="34" opacity=".5"/><circle cx="60" cy="60" r="22" opacity=".6"/><circle cx="60" cy="60" r="10" opacity=".5"/>${Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6; return `<line x1="${60 + 22 * Math.cos(a)}" y1="${60 + 22 * Math.sin(a)}" x2="${60 + 56 * Math.cos(a)}" y2="${60 + 56 * Math.sin(a)}" opacity=".5"/><circle cx="${60 + 56 * Math.cos(a)}" cy="${60 + 56 * Math.sin(a)}" r="2" fill="currentColor" stroke="none"/>`; }).join('')}${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4 + Math.PI / 8; const x = 60 + 28 * Math.cos(a), y = 60 + 28 * Math.sin(a); return `<path d="M${x} ${y - 7} L${x + 5} ${y} L${x} ${y + 7} L${x - 5} ${y} Z" opacity=".7"/>`; }).join('')}</g><circle cx="60" cy="60" r="3.5" fill="currentColor" opacity=".8"/></svg>`;
 
 // ---------- City picker ----------
 function cityPicker(onPick: (c: City) => void) {
@@ -81,7 +88,7 @@ async function festivalsFor(from: string, to: string) {
 }
 async function renderToday() {
   const date = todayDate;
-  view.innerHTML = `<div class="hero">${mandala}<h1>${esc(fmtDate(date))}</h1><p class="muted small">${esc(S.city.name)}</p></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
+  view.innerHTML = `<div class="hero">${heroArt}<h1>${esc(fmtDate(date))}</h1><p class="muted small">${esc(S.city.name)}</p></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
   let d: any;
   try { d = await dayCached(date, place(), engineOpts(), S.lang, birthReq()); } catch (e: any) { view.innerHTML = `<div class="card">Error: ${esc(e.message)}</div>`; return; }
   const fests = await festivalsFor(addIso(date, -1), addIso(date, 1)).catch(() => []);
@@ -98,7 +105,7 @@ async function renderToday() {
   const sank = d.sankalpa;
   const bala = d.personal ? `<div class="card"><div class="label">${t('today.yourBala')}</div>${d.personal.atSunrise.map((a: any, i: number) => `<div class="row"><span class="k">${esc(d.personal.candidates[i].nakshatra)} · ${esc(d.personal.candidates[i].rashi)}</span><span class="v"><span class="pill ${a.tara.good ? 'good' : 'avoid'}">${t('today.tara')} ${a.tara.tara} ${esc(a.tara.name)}</span><span class="pill ${a.chandra.quality === 'good' ? 'good' : a.chandra.quality === 'avoid' ? 'avoid' : 'info'}">${t('today.chandra')} ${a.chandra.house} · ${t('today.' + (a.chandra.quality === 'weak' ? 'weak' : a.chandra.quality === 'good' ? 'good' : 'bad'))}${a.chandra.chandrashtama ? ' · Chandrashtama' : ''}</span></span></div>`).join('')}${d.personal.ambiguous ? `<p class="small muted">${esc(U.en['settings.timeUnknown'])}: ${d.personal.candidates.length} candidates.</p>` : ''}</div>` : '';
   view.innerHTML = `
-  <div class="hero">${mandala}<h1>${esc(fmtDate(date))}</h1><p class="muted small">${esc(d.vara.label)} · ${esc(S.city.name)}</p>
+  <div class="hero">${heroArt}<h1>${esc(fmtDate(date))}</h1><p class="muted small">${esc(d.vara.label)} · ${esc(S.city.name)}</p>
     <div class="row" style="justify-content:center;gap:8px;border:0"><button class="btn btn-outline btn-small" id="prev">‹ ${t('today.prev')}</button><button class="btn btn-outline btn-small" id="tod">${t('today.todayBtn')}</button><button class="btn btn-outline btn-small" id="next">${t('today.next')} ›</button></div></div>
   ${isDiaspora ? `<div class="banner">🌏 ${t('today.diaspora')}</div>` : ''}
   ${todayFests.length ? `<div class="card gold"><div class="label">${t('today.festival')}</div>${todayFests.map((f: any) => `<h2>${esc(f.name)}</h2><p class="small muted">${esc(f.tithiLabel ?? '')}${f.window ? ` · ${t('fest.window')} ${fmtTime(f.window.start)}–${fmtTime(f.window.end)}` : ''}${f.moonrise ? ` · ${t('fest.moonrise')} ${fmtTime(f.moonrise)}` : ''}${f.diaspora?.differs ? `<br>${t('fest.differs', { date: fmtDate(f.diaspora.delhiDate) })}` : ''}${f.noteText ? `<br>${esc(f.noteText)}` : ''}</p>`).join('')}</div>` : ''}
@@ -249,6 +256,7 @@ async function renderSettings() {
     <div class="field"><label>${t('settings.month')}</label><select id="month"><option value="purnimanta" ${S.monthSystem === 'purnimanta' ? 'selected' : ''}>${t('today.purnimanta')}</option><option value="amanta" ${S.monthSystem === 'amanta' ? 'selected' : ''}>${t('today.amanta')}</option></select></div>
     <div class="field"><label>${t('settings.sunrise')}</label><select id="sunrise"><option value="limb" ${S.sunrise === 'limb' ? 'selected' : ''}>${t('settings.limb')}</option><option value="center" ${S.sunrise === 'center' ? 'selected' : ''}>${t('settings.center')}</option></select></div>
     <div class="toggle"><span>${t('settings.abhijitWed')}</span><div class="switch ${S.abhijitWed ? 'on' : ''}" id="abhijit"></div></div></div>
+  <div class="card"><div class="field"><label>${t('settings.theme')}</label><select id="theme"><option value="paper" ${S.theme !== 'night' ? 'selected' : ''}>${t('theme.paper')}</option><option value="night" ${S.theme === 'night' ? 'selected' : ''}>${t('theme.night')}</option></select></div></div>
   <div class="card"><div class="label">${t('settings.birth')}</div><p class="small muted">🔒 ${t('settings.birthNote')}</p>
     <div class="field"><label>${t('settings.birthDate')}</label><input id="bdate" type="date" value="${S.birth?.date ?? ''}"></div>
     <div class="field"><label>${t('settings.birthTime')}</label><input id="btime" type="time" value="${S.birth?.time ?? ''}" ${S.birth && S.birth.time === null ? 'disabled' : ''}></div>
@@ -265,6 +273,7 @@ async function renderSettings() {
   view.querySelector('#month')!.addEventListener('change', e => { S.monthSystem = (e.target as HTMLSelectElement).value as any; saveSettings(); });
   view.querySelector('#sunrise')!.addEventListener('change', e => { S.sunrise = (e.target as HTMLSelectElement).value as any; saveSettings(); festCache = null; });
   view.querySelector('#abhijit')!.addEventListener('click', e => { S.abhijitWed = !S.abhijitWed; (e.target as HTMLElement).classList.toggle('on', S.abhijitWed); saveSettings(); });
+  view.querySelector('#theme')!.addEventListener('change', e => { S.theme = (e.target as HTMLSelectElement).value as any; saveSettings(); applyTheme(); });
   let bcity: City = S.birth?.city ?? S.city;
   view.querySelector('#bcity')!.addEventListener('click', () => cityPicker(c => { bcity = c; (view.querySelector('#bcity') as HTMLElement).textContent = c.name; }));
   const tunk = view.querySelector('#tunk')!; tunk.addEventListener('click', () => { tunk.classList.toggle('on'); (view.querySelector('#btime') as HTMLInputElement).disabled = tunk.classList.contains('on'); });
@@ -277,7 +286,7 @@ async function renderSettings() {
 // ---------- Onboarding (first run: language + city) ----------
 function renderWelcome() {
   const langs = U.languages as { code: Lang; native: string; en: string; beta?: boolean }[];
-  view.innerHTML = `<div class="hero">${mandala}<h1 style="font-weight:300;font-size:32px">ShubhDate</h1><p class="muted small">${t('settings.language')}</p></div>
+  view.innerHTML = `<div class="hero">${heroArt}<h1 style="font-weight:300;font-size:32px">ShubhDate</h1><p class="muted small">${t('settings.language')}</p></div>
   <div class="lang-grid">${langs.map(l => `<div class="lang-cell ${S.lang === l.code ? 'selected' : ''}" data-lang="${l.code}"><div class="native">${esc(l.native)}</div><div class="en">${esc(l.en)}${l.beta ? ` <span class="beta">beta</span>` : ''}</div></div>`).join('')}</div>
   <div class="card mt"><div class="label">${t('settings.city')}</div><button class="btn btn-outline" id="w-city">${esc(S.city.name)} · ${esc(S.city.region)}</button></div>
   <div class="card"><div class="field"><label>${t('settings.region')}</label><select id="w-region">${(['north', 'west', 'south', 'east', 'diaspora'] as const).map(r => `<option value="${r}" ${S.region === r ? 'selected' : ''}>${t('settings.' + r)}</option>`).join('')}</select></div></div>
