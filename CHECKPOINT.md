@@ -7,7 +7,8 @@ Updated: 2026-10-17 (run 2, in progress, branch `v2-night-2`). Status: **v1 live
 - Step 1 (Muhurta Report): done. `engine/report.ts` (`buildReport`, MIT, 4 tests), worker op `report`, screen `#/report` (`app/screens/report.ts`), print stylesheet `app/report.css` (A4, page-margin running head/footer, blurred preview). Entry buttons on the results header and the Result screen. Dev/QA flag: `localStorage['shubhdate.devReport']='1'` unlocks the full report (never shown in UI). Verified in headless Chromium: 21-page Hindi PDF (Devanagari + IAST shaped correctly), no console errors.
 - Step 2 (GeoNames cities): done. `tools/dev/import-cities.mjs` (downloads cities15000.zip, or `--input` a local .zip/.txt; minimal zip reader in node:zlib) → `app/data/cities.json` (3,599 rows, 188 KB raw: all IN/NP/LK/BD/BT/MU/FJ/TT/GY/SR + ≥100k diaspora countries + the 369 curated v1 rows merged; native-script names for the top 200 Indian cities). `app/cities.ts` loads it; `engine/test/cities.test.ts` (4 tests). CC BY 4.0 line in About and README. **Sandbox note:** download.geonames.org is blocked by this sandbox's egress policy (403), so the JSON was built from the GeoNames file inside the npm package `cities15000@0.0.1` (vintage: latest row 2017-02-06). Soul: rerun `node tools/dev/import-cities.mjs` on the PC for a fresh list; the format is identical.
 - Step 3 (Gujarati reasons): done. `i18n/gu/reasons.json` (78 reasons + 18 caveats, same `{param}` placeholders, verified by script), `'gu'` in `REASON_LANGS`, explain test covers gu. The report and Find Muhurta now speak Gujarati end to end.
-- Next: Step 4, docs/PANDIT-REVIEW.md.
+- Step 4 (UNVERIFIED rows): no rule row changed (research/02 cannot settle any of them). `docs/PANDIT-REVIEW.md` lists 20 rows (file › key, what the engine does, the exact question, what would change); the report's pandit page links to it.
+- Next: Step 5, assetlinks placeholder, TWA manifest, PLAY-TWA.md, privacy.html.
 
 ---
 
