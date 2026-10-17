@@ -10,6 +10,7 @@ tools/oracle/out/
 
 # business-internal docs stay out of the public repo (Soul can flip this)
 NIGHT-BUILD-BRIEF.md
+NIGHT-BUILD-BRIEF-2.md
 docs/ROADMAP-V1-V3.md
 research/01-users-market.md
 research/04-global-market.md

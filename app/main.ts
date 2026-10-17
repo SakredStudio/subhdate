@@ -4,8 +4,7 @@ import { CITIES, searchCities, nearestCity, type City } from './cities.ts';
 import { call, dayCached } from './engine-client.ts';
 import { db, type SavedItem } from './db.ts';
 import { aboutHtml, privacyHtml } from './screens/about.ts';
-
-export const WAITLIST_URL = 'https://forms.gle/REPLACE_WITH_SOUL_FORM'; // Soul fills this (Google Form placeholder)
+import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
 const ENGINE_VERSION = '0.1.0';
 const BASE = import.meta.env.BASE_URL;
 
@@ -264,7 +263,7 @@ async function renderSettings() {
     <div class="field"><label>${t('settings.birthCity')}</label><button class="btn btn-outline" id="bcity" type="button">${esc((S.birth?.city ?? S.city).name)}</button></div>
     ${janma ? `<p class="small">${t('settings.janma')}: ${janma.candidates.map((c: any) => `<b>${esc(c.nakshatraLabel)}</b> (${esc(c.rashiLabel)}, pada ${c.pada})`).join(' / ')}${janma.ambiguous ? ` · ${t('settings.timeUnknown')}` : ''}</p>` : ''}
     <div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="bsave">${t('settings.saveBirth')}</button><button class="btn btn-outline btn-small" id="bclear">${t('settings.clearBirth')}</button></div></div>
-  <div class="card"><a class="btn btn-outline" href="${WAITLIST_URL}" target="_blank" rel="noopener">💌 ${t('settings.waitlist')}</a></div>
+  ${IS_PLACEHOLDER(WAITLIST_URL) ? '' : `<div class="card"><a class="btn btn-outline" href="${WAITLIST_URL}" target="_blank" rel="noopener">💌 ${t('settings.waitlist')}</a></div>`}
   <div class="card"><div class="list-item" id="about"><span class="ico">📖</span><div class="body"><div class="title">${t('settings.about')}</div></div><span class="chev">›</span></div><div class="list-item" id="privacy"><span class="ico">🔒</span><div class="body"><div class="title">${t('settings.privacy')}</div></div><span class="chev">›</span></div></div>
   <p class="small dim center">${t('settings.version')} ${ENGINE_VERSION} · <a href="https://github.com/SakredStudio/subhdate" target="_blank" rel="noopener">github.com/SakredStudio/subhdate</a></p>`;
   view.querySelectorAll('[data-lang]').forEach(el => el.addEventListener('click', () => { S.lang = (el as HTMLElement).dataset.lang as Lang; saveSettings(); festCache = null; updateChrome(); renderSettings(); }));

@@ -1,5 +1,15 @@
 # ShubhDate night build — CHECKPOINT
 
+Updated: 2026-10-17 (run 2, in progress, branch `v2-night-2`). Status: **v1 live; v2 night build 2 running.**
+
+## Run 2 progress (rewritten at every step boundary)
+- Step 0 (setup): done. Baseline on `main` before any change: 64 unit tests, 8 golden tests, typecheck clean, build 185.5 kB worker + 90.6 kB app (29.2 kB gz). `app/config.ts` holds every deployment placeholder (`WAITLIST_URL`, `WORKER_URL`, `ENTITLEMENT_PUBLIC_KEY_JWK`, `VAPID_PUBLIC_KEY`, `PLAY_LISTING_URL`); `IS_PLACEHOLDER()` hides the waitlist button until Soul fills the Form link.
+- Next: Step 1, `engine/report.ts` + `#/report` screen + print stylesheet.
+
+---
+
+# ShubhDate night build — CHECKPOINT
+
 Updated: 2026-10-16 ~06:10 Toronto (run 1, Claude Fable 5.1). Status: **v1 shipped and live.**
 
 ## Live
