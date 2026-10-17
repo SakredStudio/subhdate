@@ -84,6 +84,8 @@ p { line-height: 1.5; }
 .pill.avoid { border-color: var(--avoid); color: var(--avoid); }
 .pill.info { color: var(--neutral); }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid2 > * { min-width: 0; }
+input[type="date"], input[type="time"] { min-width: 0; max-width: 100%; -webkit-appearance: none; appearance: none; }
 .field { margin: 10px 0; }
 .field label { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 6px; }
 input, select, textarea { width: 100%; font: inherit; font-size: 14px; color: var(--text); background: var(--input-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px 14px; outline: none; }
