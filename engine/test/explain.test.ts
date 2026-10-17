@@ -8,10 +8,10 @@ const DELHI = { lat: 28.6139, lon: 77.209, tz: 'Asia/Kolkata', name: 'New Delhi'
 const AHMEDABAD = { lat: 23.0225, lon: 72.5714, tz: 'Asia/Kolkata', name: 'Ahmedabad' };
 
 describe('L6 explain', () => {
-  it('every rule code in every pack has an EN, HI and Hinglish sentence', () => {
+  it('every rule code in every pack has an EN, HI, Hinglish and GU sentence', () => {
     const codes = new Set<string>();
     for (const ev of EVENT_IDS) for (const r of [...loadPack(ev).hard, ...loadPack(ev).soft]) { codes.add(r.code); if (r.elseCode) codes.add(r.elseCode); }
-    for (const lang of ['en', 'hi', 'hinglish'] as const) {
+    for (const lang of ['en', 'hi', 'hinglish', 'gu'] as const) {
       const d = JSON.parse(readFileSync(new URL(`../../i18n/${lang}/reasons.json`, import.meta.url), 'utf8'));
       for (const c of codes) expect(d.reasons[c], `${lang}:${c}`).toBeTruthy();
     }
@@ -31,6 +31,9 @@ describe('L6 explain', () => {
     expect(hi.days[0].headline).toMatch(/[ऀ-ॿ]/);
     expect(hi.days[0].windows[0].sentences.length).toBeGreaterThan(0);
     expect(hi.caveats.length).toBeGreaterThan(0);
+    const gu = explain(r, 'gu');
+    expect(gu.fallback).toBe(false);
+    expect(gu.days[0].windows[0].sentences[0]).toMatch(/[\u0A80-\u0AFF]/);
     const ta = explain(r, 'ta');
     expect(ta.fallback).toBe(true);
     expect(ta.days[0].windows[0].sentences[0]).toMatch(/[A-Za-z]/);

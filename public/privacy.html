@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShubhDate · Privacy policy</title>
+  <meta name="description" content="ShubhDate privacy policy: no account, no analytics, no ads; birth data stays on your device.">
+  <meta name="theme-color" content="#F7F0E3">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <style>
+    :root { --bg-0: #F7F0E3; --bg-1: #FFFDF8; --gold: #BC8B2C; --gold-light: #946916; --maroon: #7E2D3D; --text: #251C30; --muted: rgba(37,28,48,0.64); --border: #DCCFB4; }
+    * { box-sizing: border-box; }
+    html { background: var(--bg-0); color: var(--text); font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+    body { margin: 0; background: radial-gradient(1200px 600px at 50% -10%, #FDF8EE 0%, #F7F0E3 60%); min-height: 100vh; }
+    main { max-width: 640px; margin: 0 auto; padding: 24px 24px 48px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); margin-bottom: 18px; }
+    .brand img { width: 32px; height: 32px; border-radius: 8px; }
+    .brand span { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; }
+    h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 30px; margin: 0 0 6px; }
+    h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 20px; margin: 0 0 8px; color: var(--maroon); }
+    .card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; margin: 12px 0; box-shadow: 0 2px 12px rgba(37,28,48,0.07); }
+    ul { padding-left: 18px; margin: 6px 0; font-size: 14px; line-height: 1.55; }
+    li { margin: 6px 0; }
+    p { line-height: 1.5; font-size: 14px; }
+    .muted { color: var(--muted); } .small { font-size: 12px; }
+    a { color: var(--gold-light); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 6px 4px; border-bottom: 1px solid rgba(37,28,48,0.08); vertical-align: top; }
+    th { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-light); font-weight: 500; }
+  </style>
+</head>
+<body>
+<main>
+  <a class="brand" href="./"><img src="icons/mark-84.png" alt=""><span>ShubhDate</span></a>
+  <h1>Privacy policy</h1>
+  <p class="muted small">ShubhDate by Sakred Studio (1789918 Canada Inc.), Toronto. Effective 2026-10-17. Applies to the web app at sakredstudio.github.io/subhdate and the Android app (package com.sakredstudio.shubhdate), which is the same web app in a Trusted Web Activity.</p>
+
+  <div class="card">
+    <h2>The short version</h2>
+    <ul>
+      <li>There is <b>no account</b>, no analytics, no advertising SDK and no tracking of any kind.</li>
+      <li>Every panchang and muhurta is <b>computed on your device</b>. Your searches never leave it.</li>
+      <li><b>Birth details</b> (date, time, place) are stored only in your browser's local storage and are never transmitted.</li>
+      <li>The only network requests the app makes are for its own files, the Google Fonts stylesheet, and the two optional features below, which you turn on yourself.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>What stays on your device</h2>
+    <ul>
+      <li><b>Birth details</b> are used only to compute your janma nakshatra, Tara bala and Chandra bala on this device. Clear them any time in Settings.</li>
+      <li><b>Saved dates</b>, names typed on a report cover, and computed days are cached in this browser's IndexedDB and local storage so the app works offline.</li>
+      <li><b>Location</b> is used only if you tap "Use my location", only to pick the nearest city, and is not stored beyond the chosen coordinates.</li>
+      <li><b>Sharing</b> a muhurta or a report uses your device's share sheet or WhatsApp; the text is composed on your device.</li>
+      <li><b>Printing</b> a Muhurta Report uses your device's print dialog ("Save as PDF"); the PDF is made on your device.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Festival and vrat reminders (optional; off by default)</h2>
+    <p>If you turn on reminders in Settings, your device subscribes to Web Push and the app sends the following to the ShubhDate reminder server (a Cloudflare Worker) so that it can compute and send your reminders:</p>
+    <table>
+      <tr><th>Data</th><th>Why</th><th>Kept</th></tr>
+      <tr><td>Push subscription endpoint and keys (an anonymous device identifier issued by your browser)</td><td>To deliver the notification to this device</td><td>Until you turn reminders off or the subscription expires</td></tr>
+      <tr><td>City coordinates and time zone of your chosen home city (not GPS)</td><td>Festival dates depend on local sunrise</td><td>Same</td></tr>
+      <tr><td>Language, region preset and the reminder topics you chose</td><td>To write the reminder in your language and tradition</td><td>Same</td></tr>
+    </table>
+    <p class="small muted">Birth details are never sent, even with reminders on. Turning the toggle off deletes the subscription from the server. No reminder feature is active until the server exists; the toggle is hidden until then.</p>
+  </div>
+
+  <div class="card">
+    <h2>Purchases (Android app only)</h2>
+    <p>The full Muhurta Report and the Family Annual plan can be bought in the Android app through <b>Google Play Billing</b>. Google handles the payment and your payment details; ShubhDate never sees them. To unlock the purchase on your device, the app sends Google's purchase token and an anonymous device id (a random UUID created on first use) to the ShubhDate server, which keeps only a one-way hash of the token and that id. No name, email or phone number is collected. The web app sells nothing and never asks for payment.</p>
+  </div>
+
+  <div class="card">
+    <h2>Children</h2>
+    <p>ShubhDate is not designed for children and is rated for adults; it collects no personal information from anyone.</p>
+  </div>
+
+  <div class="card">
+    <h2>Your choices and contact</h2>
+    <ul>
+      <li>Clear birth details, saved dates and reminders in Settings; uninstalling the app or clearing site data removes everything.</li>
+      <li>Questions: open an issue at <a href="https://github.com/SakredStudio/subhdate">github.com/SakredStudio/subhdate</a> or email <a href="mailto:hello@sakredstudio.ca">hello@sakredstudio.ca</a>.</li>
+      <li>Changes to this policy are published at this address with a new effective date.</li>
+    </ul>
+  </div>
+  <p class="small muted">The ShubhDate engine is open source (MIT) so anyone can verify that it computes locally: <a href="https://github.com/SakredStudio/subhdate">github.com/SakredStudio/subhdate</a>.</p>
+</main>
+</body>
+</html>

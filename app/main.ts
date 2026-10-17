@@ -4,8 +4,11 @@ import { CITIES, searchCities, nearestCity, type City } from './cities.ts';
 import { call, dayCached } from './engine-client.ts';
 import { db, type SavedItem } from './db.ts';
 import { aboutHtml, privacyHtml } from './screens/about.ts';
-
-export const WAITLIST_URL = 'https://forms.gle/REPLACE_WITH_SOUL_FORM'; // Soul fills this (Google Form placeholder)
+import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
+import { renderReport } from './screens/report.ts';
+import { isEntitled, useStore, consumeReport } from './entitlement.ts';
+import { pushAvailable, enableReminders, disableReminders, remindersOn } from './push.ts';
+import './report.css';
 const ENGINE_VERSION = '0.1.0';
 const BASE = import.meta.env.BASE_URL;
 
@@ -188,7 +191,7 @@ async function renderMuhurta() {
 }
 function renderResults(root: Element) {
   const r = lastResult;
-  root.innerHTML = `<h2 class="mt">${t('muhurta.results')}</h2><p class="small muted">${r.evaluatedDays} ${t('muhurta.evaluated')} · ${t('muhurta.confidence')}: ${r.confidence}${r.fallback ? ' · EN' : ''}</p>
+  root.innerHTML = `<div class="row" style="border:0;align-items:center"><h2 class="mt">${t('muhurta.results')}</h2>${r.days.length ? `<a class="btn btn-outline btn-small" href="#/report">📄 ${t('report.open')}</a>` : ''}</div><p class="small muted">${r.evaluatedDays} ${t('muhurta.evaluated')} · ${t('muhurta.confidence')}: ${r.confidence}${r.fallback ? ' · EN' : ''}</p>
   ${r.invocation ? `<div class="card"><div class="label">${t('muhurta.invocation')} · ${esc(r.invocation.deity)}</div><p class="sankalpa">${esc(r.invocation.line)}</p></div>` : ''}
   ${r.days.length ? r.days.map((d: any, i: number) => `<div class="card list-item" data-i="${i}" style="align-items:center">${scoreRing(d.score)}<div class="body"><div class="title">${esc(fmtDate(d.date))}</div><div class="sub">${esc(d.headline)}</div><div class="sub">${t('muhurta.topWindow')}: ${d.windows.map((w: any) => fmtTime(w.start) + '–' + fmtTime(w.end)).join(', ')}</div></div><span class="chev">›</span></div>`).join('') : `<div class="card"><p>${t('muhurta.none')}</p></div>`}
   ${r.rejected.length ? `<details class="card"><summary class="label">${t('muhurta.rejectedHdr')}</summary>${r.rejected.map((x: any) => `<div class="row"><span class="k">${esc(fmtDate(x.date))}</span><span class="v small">${x.sentences.map(esc).join('<br>')}</span></div>`).join('')}</details>` : ''}
@@ -200,7 +203,7 @@ async function renderResult(idx: number) {
   const r = lastResult; const d = r.days[idx]; if (!d) { location.hash = '#/muhurta'; return; }
   const saved = await db.listSaved();
   const idOf = (w: any) => `${lastReq.event}|${d.date}|${w.start}`;
-  view.innerHTML = `<a href="#/muhurta" class="small">‹ ${t('result.back')}</a>
+  view.innerHTML = `<div class="row" style="border:0"><a href="#/muhurta" class="small">‹ ${t('result.back')}</a><a class="btn btn-outline btn-small" href="#/report">📄 ${t('report.open')}</a></div>
   <div class="hero"><div class="label">${EVENT_ICONS[lastReq.event] ?? ''} ${esc(r.packName)}</div><h1>${esc(fmtDate(d.date))}</h1><p class="muted small">${esc(d.headline)}</p>${scoreRing(d.score)}</div>
   ${d.summary ? `<div class="card"><p class="small">${esc(d.summary)}</p></div>` : ''}
   <h2>${t('result.windows')}</h2>
@@ -256,6 +259,7 @@ async function renderSettings() {
     <div class="field"><label>${t('settings.month')}</label><select id="month"><option value="purnimanta" ${S.monthSystem === 'purnimanta' ? 'selected' : ''}>${t('today.purnimanta')}</option><option value="amanta" ${S.monthSystem === 'amanta' ? 'selected' : ''}>${t('today.amanta')}</option></select></div>
     <div class="field"><label>${t('settings.sunrise')}</label><select id="sunrise"><option value="limb" ${S.sunrise === 'limb' ? 'selected' : ''}>${t('settings.limb')}</option><option value="center" ${S.sunrise === 'center' ? 'selected' : ''}>${t('settings.center')}</option></select></div>
     <div class="toggle"><span>${t('settings.abhijitWed')}</span><div class="switch ${S.abhijitWed ? 'on' : ''}" id="abhijit"></div></div></div>
+  ${pushAvailable() ? `<div class="card"><div class="toggle"><span>${t('settings.reminders')}</span><div class="switch ${remindersOn() ? 'on' : ''}" id="reminders"></div></div><p class="small muted">${t('settings.remindersNote')}</p></div>` : ''}
   <div class="card"><div class="field"><label>${t('settings.theme')}</label><select id="theme"><option value="paper" ${S.theme !== 'night' ? 'selected' : ''}>${t('theme.paper')}</option><option value="night" ${S.theme === 'night' ? 'selected' : ''}>${t('theme.night')}</option></select></div></div>
   <div class="card"><div class="label">${t('settings.birth')}</div><p class="small muted">🔒 ${t('settings.birthNote')}</p>
     <div class="field"><label>${t('settings.birthDate')}</label><input id="bdate" type="date" value="${S.birth?.date ?? ''}"></div>
@@ -264,7 +268,7 @@ async function renderSettings() {
     <div class="field"><label>${t('settings.birthCity')}</label><button class="btn btn-outline" id="bcity" type="button">${esc((S.birth?.city ?? S.city).name)}</button></div>
     ${janma ? `<p class="small">${t('settings.janma')}: ${janma.candidates.map((c: any) => `<b>${esc(c.nakshatraLabel)}</b> (${esc(c.rashiLabel)}, pada ${c.pada})`).join(' / ')}${janma.ambiguous ? ` · ${t('settings.timeUnknown')}` : ''}</p>` : ''}
     <div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="bsave">${t('settings.saveBirth')}</button><button class="btn btn-outline btn-small" id="bclear">${t('settings.clearBirth')}</button></div></div>
-  <div class="card"><a class="btn btn-outline" href="${WAITLIST_URL}" target="_blank" rel="noopener">💌 ${t('settings.waitlist')}</a></div>
+  ${IS_PLACEHOLDER(WAITLIST_URL) ? '' : `<div class="card"><a class="btn btn-outline" href="${WAITLIST_URL}" target="_blank" rel="noopener">💌 ${t('settings.waitlist')}</a></div>`}
   <div class="card"><div class="list-item" id="about"><span class="ico">📖</span><div class="body"><div class="title">${t('settings.about')}</div></div><span class="chev">›</span></div><div class="list-item" id="privacy"><span class="ico">🔒</span><div class="body"><div class="title">${t('settings.privacy')}</div></div><span class="chev">›</span></div></div>
   <p class="small dim center">${t('settings.version')} ${ENGINE_VERSION} · <a href="https://github.com/SakredStudio/subhdate" target="_blank" rel="noopener">github.com/SakredStudio/subhdate</a></p>`;
   view.querySelectorAll('[data-lang]').forEach(el => el.addEventListener('click', () => { S.lang = (el as HTMLElement).dataset.lang as Lang; saveSettings(); festCache = null; updateChrome(); renderSettings(); }));
@@ -273,6 +277,12 @@ async function renderSettings() {
   view.querySelector('#month')!.addEventListener('change', e => { S.monthSystem = (e.target as HTMLSelectElement).value as any; saveSettings(); });
   view.querySelector('#sunrise')!.addEventListener('change', e => { S.sunrise = (e.target as HTMLSelectElement).value as any; saveSettings(); festCache = null; });
   view.querySelector('#abhijit')!.addEventListener('click', e => { S.abhijitWed = !S.abhijitWed; (e.target as HTMLElement).classList.toggle('on', S.abhijitWed); saveSettings(); });
+  view.querySelector('#reminders')?.addEventListener('click', async e => {
+    const el = e.target as HTMLElement;
+    if (el.classList.contains('on')) { await disableReminders(); el.classList.remove('on'); toast(t('settings.remindersOff')); return; }
+    const ok = await enableReminders({ lat: S.city.lat, lon: S.city.lon, tz: S.city.tz }, S.lang, S.region, ['festivals', 'ekadashi', 'saved']).catch(() => false);
+    if (ok) { el.classList.add('on'); toast(t('settings.remindersOn')); } else toast(Notification.permission === 'denied' ? t('settings.remindersDenied') : t('settings.remindersOff'));
+  });
   view.querySelector('#theme')!.addEventListener('change', e => { S.theme = (e.target as HTMLSelectElement).value as any; saveSettings(); applyTheme(); });
   let bcity: City = S.birth?.city ?? S.city;
   view.querySelector('#bcity')!.addEventListener('click', () => cityPicker(c => { bcity = c; (view.querySelector('#bcity') as HTMLElement).textContent = c.name; }));
@@ -298,6 +308,15 @@ function renderWelcome() {
   view.querySelector('#w-go')!.addEventListener('click', () => { S.onboarded = true; saveSettings(); location.hash = '#/today'; });
 }
 
+// ---------- Report gate ----------
+// Full report: Play entitlement (app/entitlement.ts, step 6) or the dev/QA flag. The flag is never shown in the UI.
+useStore({ get: k => db.cacheGet(k), set: (k, v) => db.cacheSet(k, v) });
+async function isReportUnlocked(): Promise<boolean> {
+  if (localStorage.getItem('shubhdate.devReport') === '1') return true;
+  return isEntitled(['report_single', 'family_annual']);
+}
+const reportKey = () => lastReq ? `${lastReq.event}|${lastReq.from}|${lastReq.to}|${lastReq.place.lat.toFixed(2)},${lastReq.place.lon.toFixed(2)}` : '';
+
 // ---------- Router ----------
 function updateChrome() {
   document.documentElement.lang = S.lang === 'hinglish' ? 'en' : S.lang;
@@ -309,12 +328,14 @@ function route() {
   const [, path, arg] = hash.split('/');
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active', (a as HTMLElement).dataset.tab === path));
   document.getElementById('tabbar')!.style.display = S.onboarded ? '' : 'none';
+  document.body.dataset.route = path || 'today';
   closeSheet();
   if (!S.onboarded && path !== 'about' && path !== 'privacy') return renderWelcome();
   window.scrollTo(0, 0);
   switch (path) {
     case 'muhurta': return renderMuhurta();
     case 'result': return renderResult(Number(arg));
+    case 'report': return renderReport(view, { t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, isUnlocked: isReportUnlocked, onFirstFullRender: () => { consumeReport(reportKey()).catch(() => null); } });
     case 'festivals': return renderFestivals();
     case 'saved': return renderSaved();
     case 'settings': return renderSettings();

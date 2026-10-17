@@ -8,13 +8,14 @@ import TERMS from '../i18n/terms.json' with { type: 'json' };
 import EN from '../i18n/en/reasons.json' with { type: 'json' };
 import HI from '../i18n/hi/reasons.json' with { type: 'json' };
 import HINGLISH from '../i18n/hinglish/reasons.json' with { type: 'json' };
+import GU from '../i18n/gu/reasons.json' with { type: 'json' };
 
 export type Lang = 'en' | 'hi' | 'hinglish' | 'gu' | 'mr' | 'ta' | 'te' | 'bn' | 'kn';
-const DICT: Record<string, any> = { en: EN, hi: HI, hinglish: HINGLISH };
+const DICT: Record<string, any> = { en: EN, hi: HI, hinglish: HINGLISH, gu: GU };
 const T = TERMS as any;
 
 /** Languages with full reason dictionaries. Others fall back to English sentences (UI strings may still be localised). */
-export const REASON_LANGS: Lang[] = ['en', 'hi', 'hinglish'];
+export const REASON_LANGS: Lang[] = ['en', 'hi', 'hinglish', 'gu'];
 
 function termLang(lang: Lang): 'en' | 'hi' | 'gu' {
   return lang === 'hi' || lang === 'mr' ? 'hi' : lang === 'gu' ? 'gu' : 'en';

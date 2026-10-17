@@ -8,6 +8,7 @@ import { explain, sankalpa, renderReason, renderCaveat, term, type Lang } from '
 import { festivals } from '../engine/festivals.ts';
 import { personal, janma } from '../engine/personal.ts';
 import { ayanamsaAt } from '../engine/astro.ts';
+import { buildReport } from '../engine/report.ts';
 
 const iso = (d: Date | null | undefined) => d ? d.toISOString() : null;
 const win = (w: { start: Date; end: Date } | null | undefined) => w ? { start: w.start.toISOString(), end: w.end.toISOString() } : null;
@@ -63,6 +64,7 @@ const ops: Record<string, (a: any) => any> = {
   festivals: ({ from, to, place, opts, lang }) => festivals(from, to, place, opts).map(f => ({ ...f, name: f.names[lang] ?? f.names.en, window: f.window ? { ...f.window, start: iso(f.window.start), end: iso(f.window.end) } : null, moonrise: iso(f.moonrise ?? null), bhadraNote: f.bhadraNote ? { until: iso(f.bhadraNote.until) } : null, instant: iso(f.instant ?? null), noteText: f.note ? renderCaveat(f.note, lang) : null })),
   packs: ({ lang }) => EVENT_IDS.map(id => { const p = loadPack(id); return { id, name: p.names[lang] ?? p.names.en, invocation: p.invocation, sources: p.sources }; }),
   janma: ({ birth, lang }) => { const j = janma(birth); return { ...j, candidates: j.candidates.map(c => ({ ...c, nakshatraLabel: term('nakshatra', c.nakshatraName, lang), rashiLabel: term('rashi', c.rashiName, lang) })) }; },
+  report: ({ req, lang, family, names }) => buildReport(req, { lang: lang ?? 'en', family, names }),
   scoreToday: ({ event, date, req }) => { const r = scoreDay(loadPack(event), date, req); return { score: r.score, windows: r.windows.map(w => ({ start: iso(w.start), end: iso(w.end), score: w.score })) }; },
 };
 

@@ -17,6 +17,7 @@ Live: https://sakredstudio.github.io/subhdate/
 | `app/` | The ShubhDate PWA (screens, copy, artwork, service worker). | **Proprietary** (`app/LICENSE`) |
 | `i18n/` | UI strings and reason-code dictionaries (EN, HI, Hinglish, GU first). | Proprietary |
 | `docs/ENGINE-DESIGN.md`, `research/02-*.md`, `research/03-*.md` | The design spec and the sourced knowledge base the rules are encoded from. | CC BY 4.0 |
+| `app/data/cities.json` | City list derived from [GeoNames](https://www.geonames.org/) cities15000 via `tools/dev/import-cities.mjs`, plus hand-curated rows. | CC BY 4.0 (GeoNames) |
 
 The engine is MIT so that anyone (including the pandit checking your date) can read exactly how
 a tithi or a muhurta was computed. The app folder is proprietary.
