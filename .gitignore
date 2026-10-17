@@ -7,6 +7,7 @@ Thumbs.db
 
 # never ship the AGPL oracle output of every run; golden JSON is committed on purpose
 tools/oracle/out/
+tools/dev/out/
 
 # business-internal docs stay out of the public repo (Soul can flip this)
 NIGHT-BUILD-BRIEF.md

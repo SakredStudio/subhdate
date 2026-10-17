@@ -16,7 +16,7 @@ export function aboutHtml(t: (k: string) => string): string {
     <li>Scores are 50 ± the weights of the rules that hold at that moment, never a prediction. "Auspicious" here means "aligned with the tradition's rules", nothing more.</li>
   </ul></div>
   <div class="card"><h3>Verification</h3><p class="small">6 cities × 60 days checked against Swiss Ephemeris (7,160 checks, 100% within tolerance) and 15 hand-read Drik Panchang pages (sunrise, moonrise, tithi/nakshatra/yoga ends, Rahu kaal, Choghadiya all within a minute). Regional disagreement between panchangs is normal: sunrise convention, ayanamsa variant and amanta/purnimanta naming explain nearly all of it.</p></div>
-  <div class="card"><h3>Open source</h3><p class="small">The engine is MIT-licensed: <a href="https://github.com/SakredStudio/subhdate" target="_blank" rel="noopener">github.com/SakredStudio/subhdate</a>. The app's design and copy are proprietary. City coordinates are hand-curated.</p></div>
+  <div class="card"><h3>Open source</h3><p class="small">The engine is MIT-licensed: <a href="https://github.com/SakredStudio/subhdate" target="_blank" rel="noopener">github.com/SakredStudio/subhdate</a>. The app's design and copy are proprietary.</p><p class="small">City list: <a href="https://www.geonames.org/" target="_blank" rel="noopener">GeoNames</a> (cities15000), licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, with hand-curated additions.</p></div>
   <p class="small dim">ShubhDate by Sakred Studio (1789918 Canada Inc.), Toronto. No ads, no account, no tracking.</p>`;
 }
 export function privacyHtml(t: (k: string) => string): string {
