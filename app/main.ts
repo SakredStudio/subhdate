@@ -7,6 +7,7 @@ import { aboutHtml, privacyHtml } from './screens/about.ts';
 import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
 import { renderReport } from './screens/report.ts';
 import { isEntitled, useStore, consumeReport } from './entitlement.ts';
+import { pushAvailable, enableReminders, disableReminders, remindersOn } from './push.ts';
 import './report.css';
 const ENGINE_VERSION = '0.1.0';
 const BASE = import.meta.env.BASE_URL;
@@ -258,6 +259,7 @@ async function renderSettings() {
     <div class="field"><label>${t('settings.month')}</label><select id="month"><option value="purnimanta" ${S.monthSystem === 'purnimanta' ? 'selected' : ''}>${t('today.purnimanta')}</option><option value="amanta" ${S.monthSystem === 'amanta' ? 'selected' : ''}>${t('today.amanta')}</option></select></div>
     <div class="field"><label>${t('settings.sunrise')}</label><select id="sunrise"><option value="limb" ${S.sunrise === 'limb' ? 'selected' : ''}>${t('settings.limb')}</option><option value="center" ${S.sunrise === 'center' ? 'selected' : ''}>${t('settings.center')}</option></select></div>
     <div class="toggle"><span>${t('settings.abhijitWed')}</span><div class="switch ${S.abhijitWed ? 'on' : ''}" id="abhijit"></div></div></div>
+  ${pushAvailable() ? `<div class="card"><div class="toggle"><span>${t('settings.reminders')}</span><div class="switch ${remindersOn() ? 'on' : ''}" id="reminders"></div></div><p class="small muted">${t('settings.remindersNote')}</p></div>` : ''}
   <div class="card"><div class="field"><label>${t('settings.theme')}</label><select id="theme"><option value="paper" ${S.theme !== 'night' ? 'selected' : ''}>${t('theme.paper')}</option><option value="night" ${S.theme === 'night' ? 'selected' : ''}>${t('theme.night')}</option></select></div></div>
   <div class="card"><div class="label">${t('settings.birth')}</div><p class="small muted">🔒 ${t('settings.birthNote')}</p>
     <div class="field"><label>${t('settings.birthDate')}</label><input id="bdate" type="date" value="${S.birth?.date ?? ''}"></div>
@@ -275,6 +277,12 @@ async function renderSettings() {
   view.querySelector('#month')!.addEventListener('change', e => { S.monthSystem = (e.target as HTMLSelectElement).value as any; saveSettings(); });
   view.querySelector('#sunrise')!.addEventListener('change', e => { S.sunrise = (e.target as HTMLSelectElement).value as any; saveSettings(); festCache = null; });
   view.querySelector('#abhijit')!.addEventListener('click', e => { S.abhijitWed = !S.abhijitWed; (e.target as HTMLElement).classList.toggle('on', S.abhijitWed); saveSettings(); });
+  view.querySelector('#reminders')?.addEventListener('click', async e => {
+    const el = e.target as HTMLElement;
+    if (el.classList.contains('on')) { await disableReminders(); el.classList.remove('on'); toast(t('settings.remindersOff')); return; }
+    const ok = await enableReminders({ lat: S.city.lat, lon: S.city.lon, tz: S.city.tz }, S.lang, S.region, ['festivals', 'ekadashi', 'saved']).catch(() => false);
+    if (ok) { el.classList.add('on'); toast(t('settings.remindersOn')); } else toast(Notification.permission === 'denied' ? t('settings.remindersDenied') : t('settings.remindersOff'));
+  });
   view.querySelector('#theme')!.addEventListener('change', e => { S.theme = (e.target as HTMLSelectElement).value as any; saveSettings(); applyTheme(); });
   let bcity: City = S.birth?.city ?? S.city;
   view.querySelector('#bcity')!.addEventListener('click', () => cityPicker(c => { bcity = c; (view.querySelector('#bcity') as HTMLElement).textContent = c.name; }));

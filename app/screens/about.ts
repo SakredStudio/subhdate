@@ -25,8 +25,11 @@ export function privacyHtml(t: (k: string) => string): string {
     <li><b>Birth details</b> (date, time, place) are stored only in this browser's local storage and used only to compute your janma nakshatra, Tara bala and Chandra bala on this device. They are never transmitted. Clear them any time in Settings.</li>
     <li><b>Saved dates</b> and computed days are cached in this browser's IndexedDB so the app works offline.</li>
     <li><b>Location</b> is used only if you tap "Use my location", only to pick the nearest city, and is not stored beyond the chosen coordinates.</li>
-    <li>There is <b>no server</b>, no analytics, no advertising SDK and no account. The only network requests are for the app files, the Google Fonts stylesheet, and the optional waitlist form link you choose to open.</li>
-    <li>Sharing a muhurta uses your device's share sheet or WhatsApp; the text is composed on your device.</li>
+    <li>There is <b>no account</b>, no analytics and no advertising SDK. The only network requests are for the app files, the Google Fonts stylesheet, and the two optional features below, which you turn on yourself.</li>
+    <li>Sharing a muhurta or printing a report uses your device's share sheet, WhatsApp or print dialog; the text and the PDF are composed on your device.</li>
+    <li><b>Festival and vrat reminders</b> (optional, off by default): when you turn them on in Settings, the app sends your push endpoint, your home city's coordinates and time zone, your language, region and chosen topics to the ShubhDate reminder server (a Cloudflare Worker) so it can send the notifications. Birth details are never sent. Turning the toggle off deletes the subscription from the server.</li>
+    <li><b>Purchases</b> (Android app only): Google Play Billing handles the payment; ShubhDate never sees your payment details. The app sends Google's purchase token and an anonymous device id to the ShubhDate server, which stores a hash of the token and that id, never a name or email. The web app sells nothing.</li>
   </ul></div>
+  <p class="small"><a href="privacy.html" target="_blank" rel="noopener">Full privacy policy</a></p>
   <p class="small dim">Questions: open an issue at github.com/SakredStudio/subhdate.</p>`;
 }

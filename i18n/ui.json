@@ -273,7 +273,12 @@
     "report.gujaratiYear": "Gujarati Vikram Samvat",
     "report.vikramYear": "Vikram Samvat",
     "report.shakaYear": "Shaka Samvat",
-    "today.vara": "Weekday"
+    "today.vara": "Weekday",
+    "settings.reminders": "Festival and vrat reminders",
+    "settings.remindersNote": "A notification the evening before each festival and Ekadashi for your city. Stores your push endpoint, city coordinates and language on the ShubhDate server; nothing else.",
+    "settings.remindersDenied": "Notifications are blocked for this site in your browser settings.",
+    "settings.remindersOn": "Reminders on",
+    "settings.remindersOff": "Reminders off"
   },
   "hi": {
     "nav.today": "आज",
@@ -496,7 +501,12 @@
     "report.gujaratiYear": "गुजराती विक्रम संवत्",
     "report.vikramYear": "विक्रम संवत्",
     "report.shakaYear": "शक संवत्",
-    "today.vara": "वार"
+    "today.vara": "वार",
+    "settings.reminders": "त्योहार और व्रत की याद दिलाएँ",
+    "settings.remindersNote": "आपके नगर के हर त्योहार और एकादशी से एक शाम पहले सूचना। ShubhDate सर्वर पर केवल आपका पुश एंडपॉइंट, नगर के निर्देशांक और भाषा रखी जाती है; और कुछ नहीं।",
+    "settings.remindersDenied": "आपके ब्राउज़र की सेटिंग में इस साइट के लिए सूचनाएँ बंद हैं।",
+    "settings.remindersOn": "याद दिलाना चालू",
+    "settings.remindersOff": "याद दिलाना बंद"
   },
   "gu": {
     "nav.today": "આજ",
@@ -719,7 +729,12 @@
     "report.gujaratiYear": "ગુજરાતી વિક્રમ સંવત",
     "report.vikramYear": "વિક્રમ સંવત",
     "report.shakaYear": "શક સંવત",
-    "today.vara": "વાર"
+    "today.vara": "વાર",
+    "settings.reminders": "તહેવાર અને વ્રતની યાદ અપાવો",
+    "settings.remindersNote": "તમારા શહેરના દરેક તહેવાર અને અગિયારસની આગલી સાંજે સૂચના. ShubhDate સર્વર પર ફક્ત તમારો પુશ એન્ડપોઇન્ટ, શહેરના અક્ષાંશ-રેખાંશ અને ભાષા રખાય છે; બીજું કંઈ નહીં.",
+    "settings.remindersDenied": "તમારા બ્રાઉઝરની સેટિંગમાં આ સાઇટ માટે સૂચનાઓ બંધ છે.",
+    "settings.remindersOn": "યાદ અપાવવું ચાલુ",
+    "settings.remindersOff": "યાદ અપાવવું બંધ"
   },
   "hinglish": {
     "nav.today": "Aaj",
@@ -794,7 +809,12 @@
     "settings.theme": "Look",
     "theme.paper": "Paper (light)",
     "theme.night": "Night (dark)",
-    "today.vara": "Vaar"
+    "today.vara": "Vaar",
+    "settings.reminders": "Tyohaar aur vrat reminders",
+    "settings.remindersNote": "Har tyohaar aur Ekadashi se ek shaam pehle notification, aapke sheher ke liye. ShubhDate server par sirf push endpoint, sheher ke coordinates aur bhasha rakhi jaati hai; aur kuch nahi.",
+    "settings.remindersDenied": "Browser settings mein is site ke liye notifications band hain.",
+    "settings.remindersOn": "Reminders on",
+    "settings.remindersOff": "Reminders off"
   },
   "mr": {
     "nav.today": "आज",
