@@ -9,7 +9,8 @@ Updated: 2026-10-17 (run 2, in progress, branch `v2-night-2`). Status: **v1 live
 - Step 3 (Gujarati reasons): done. `i18n/gu/reasons.json` (78 reasons + 18 caveats, same `{param}` placeholders, verified by script), `'gu'` in `REASON_LANGS`, explain test covers gu. The report and Find Muhurta now speak Gujarati end to end.
 - Step 4 (UNVERIFIED rows): no rule row changed (research/02 cannot settle any of them). `docs/PANDIT-REVIEW.md` lists 20 rows (file › key, what the engine does, the exact question, what would change); the report's pandit page links to it.
 - Step 5 (Play prep): done. `public/.well-known/assetlinks.json` placeholder + README (the real file is on the Pages origin root, see `docs/PLAY-TWA.md` §5), `twa/twa-manifest.json` (Bubblewrap, Play Billing + notification delegation on, minSdk 24, 3 shortcuts; shortcuts also added to the web manifest), `docs/PLAY-TWA.md` (keystore, init/update, manual Gradle build, signing, Play Console, asset links), `public/privacy.html` (static policy incl. the reminders and purchases sections).
-- Next: Step 6, entitlement/billing interfaces + Worker skeleton.
+- Step 6 (entitlements/billing, interfaces only): done. `app/entitlement.ts` (ES256 JWS verify via WebCrypto, device UUID, IndexedDB cache honoured 7 days past iat, `isEntitled`, `consumeReport`; 3 tests with a generated key pair), `app/billing.ts` (Digital Goods API detection, `listProducts`, `purchase()` builds the PaymentRequest then throws NotImplemented; claim contract documented), `worker/` (wrangler.toml, schema.sql with the 4 tables, `src/index.ts`: claim/refresh 501, rtdn stores envelopes, push subscribe/unsubscribe implemented, cron `runReminders()` uses the engine's `festivals()`, `sendPush()` stub), `docs/WORKER.md`, `tools/dev/gen-keys.mjs`. `npm run typecheck` now also checks `worker/`. The report gate = dev flag OR entitlement.
+- Next: Step 7, Web Push in the PWA.
 
 ---
 

@@ -1,0 +1,25 @@
+# ShubhDate API: entitlements (Play purchases -> signed tokens) and festival/vrat reminders (Web Push via cron).
+# $0 infra: Workers free plan + D1 free tier. Deploy: `wrangler deploy` from this folder (docs/WORKER.md).
+name = "shubhdate-api"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "shubhdate"
+database_id = "REPLACE_WITH_wrangler_d1_create_shubhdate_OUTPUT"
+
+[triggers]
+crons = ["0 */6 * * *"]
+
+[vars]
+PACKAGE_NAME = "com.sakredstudio.shubhdate"
+ALLOWED_ORIGIN = "https://sakredstudio.github.io"
+
+# Secrets (wrangler secret put <NAME>), never in this file:
+#   ENTITLEMENT_PRIVATE_KEY_JWK   ES256 private key (JWK JSON) that signs entitlement tokens; its public half goes to app/config.ts
+#   VAPID_PRIVATE_KEY             Web Push VAPID private key (base64url); public half goes to app/config.ts
+#   VAPID_PUBLIC_KEY              Web Push VAPID public key (base64url)
+#   PLAY_SERVICE_ACCOUNT          Google service-account JSON for the Play Developer API (purchases.products.get / subscriptionsv2.get)
+#   RTDN_TOKEN                    shared secret in the Pub/Sub push subscription URL (?token=...) so only Google can post to /v1/rtdn

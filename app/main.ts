@@ -6,6 +6,7 @@ import { db, type SavedItem } from './db.ts';
 import { aboutHtml, privacyHtml } from './screens/about.ts';
 import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
 import { renderReport } from './screens/report.ts';
+import { isEntitled, useStore, consumeReport } from './entitlement.ts';
 import './report.css';
 const ENGINE_VERSION = '0.1.0';
 const BASE = import.meta.env.BASE_URL;
@@ -301,10 +302,12 @@ function renderWelcome() {
 
 // ---------- Report gate ----------
 // Full report: Play entitlement (app/entitlement.ts, step 6) or the dev/QA flag. The flag is never shown in the UI.
+useStore({ get: k => db.cacheGet(k), set: (k, v) => db.cacheSet(k, v) });
 async function isReportUnlocked(): Promise<boolean> {
   if (localStorage.getItem('shubhdate.devReport') === '1') return true;
-  return false;
+  return isEntitled(['report_single', 'family_annual']);
 }
+const reportKey = () => lastReq ? `${lastReq.event}|${lastReq.from}|${lastReq.to}|${lastReq.place.lat.toFixed(2)},${lastReq.place.lon.toFixed(2)}` : '';
 
 // ---------- Router ----------
 function updateChrome() {
@@ -324,7 +327,7 @@ function route() {
   switch (path) {
     case 'muhurta': return renderMuhurta();
     case 'result': return renderResult(Number(arg));
-    case 'report': return renderReport(view, { t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, isUnlocked: isReportUnlocked });
+    case 'report': return renderReport(view, { t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, isUnlocked: isReportUnlocked, onFirstFullRender: () => { consumeReport(reportKey()).catch(() => null); } });
     case 'festivals': return renderFestivals();
     case 'saved': return renderSaved();
     case 'settings': return renderSettings();
