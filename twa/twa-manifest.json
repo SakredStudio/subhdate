@@ -59,7 +59,10 @@
   "isMetaQuest": false,
   "fullScopeUrl": "https://sakredstudio.github.io/subhdate/",
   "minSdkVersion": 24,
-  "fingerprints": [],
+  "fingerprints": [
+    { "name": "Play App Signing", "value": "02:3D:F3:9A:4C:D6:19:6C:A0:92:36:5C:2E:53:63:DF:3A:C6:F1:74:20:F5:06:80:DB:CB:DC:53:E3:F3:CC:3D" },
+    { "name": "Upload key", "value": "EC:A6:3C:1F:C3:01:62:D2:6D:DA:6C:3E:B9:79:43:FB:E2:49:71:AF:63:0A:DF:E9:AB:FB:A2:07:8C:64:9C:CB" }
+  ],
   "additionalTrustedOrigins": [],
   "retainedBundles": []
 }
