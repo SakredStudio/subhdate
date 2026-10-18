@@ -1,6 +1,7 @@
 // Muhurta Report screen (#/report): renders engine/report.ts's model as A4 pages; print = PDF.
 // Free preview: cover + best window + its sankalpa; the rest is blurred until the device is entitled
 // (Play Billing, see entitlement.ts) or the dev/QA flag localStorage['shubhdate.devReport']==='1' is set.
+import { humanSource } from '../format.ts';
 import type { ReportModel, ReportDay, ReportWindow } from '../../engine/report.ts';
 
 export interface ReportCtx {
@@ -98,7 +99,7 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
         <div>${row(t('today.rahu'), `<span class="pill avoid">${W(d.kala.rahuKaal)}</span>`)}${row(t('today.yama'), W(d.kala.yamaganda))}${row(t('today.gulika'), W(d.kala.gulika))}${row(t('today.abhijit'), d.kala.abhijit ? `<span class="pill good">${W(d.kala.abhijit)}</span>` : t('today.abhijitWed'))}${row(t('today.brahma'), WD(d.kala.brahmaMuhurta, d.date))}</div>
         <div>${row(t('today.durmuhurta'), d.kala.durmuhurta.map(W).join('<br>'))}${row(t('today.varjyam'), d.kala.varjyam.length ? d.kala.varjyam.map(w => WD(w, d.date)).join('<br>') : '—')}${row(t('today.amrit'), d.kala.amritKaal.length ? d.kala.amritKaal.map(w => WD(w, d.date)).join('<br>') : '—')}${row(t('today.pradosha'), W(d.kala.pradosha))}</div>
       </div>
-      <h3>${t('today.choghadiya')} · ${t('today.day')}</h3>${chog(d.choghadiya.day)}<h3>${t('today.night')}</h3>${chog(d.choghadiya.night)}
+      <h3>${t('today.choghadiya')} · ${t('today.day')}</h3>${chog(d.choghadiya.day)}<h3>${t('today.choghadiya')} · ${t('today.night')}</h3>${chog(d.choghadiya.night)}
       <h3>${onlyBest ? t('report.windowOf') : t('report.windows')}</h3>${wins.map(windowHtml).join('')}
       ${d.flags.length ? `<h3>${t('report.flags')}</h3><div class="rp-flags">${d.flags.map(f => `<span class="pill ${f.kind === 'auspicious' ? 'good' : f.kind === 'inauspicious' ? 'avoid' : 'info'}" >${esc(f.text)}${f.window ? ` · ${WD(f.window, d.date)}` : ''}</span>`).join('')}</div>` : ''}`);
   };
@@ -113,7 +114,7 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
       <table class="rp-table rp-limbs"><thead><tr><th>${t('report.limb')}</th><th>${t('report.deva')}</th><th>${t('report.iast')}</th><th></th></tr></thead><tbody>${mo.limbs.map(l => `<tr><td class="muted">${t(LIMB_KEY[l.kind] ?? l.kind)}</td><td class="rp-deva">${esc(l.deva)}</td><td class="rp-iast">${esc(l.iast)}</td><td class="small">${esc(l.en)}</td></tr>`).join('')}</tbody></table>`).join('')}
     <h3>${t('report.rules')}</h3>
     <table class="rp-table rp-rules"><thead><tr><th>${t('report.col.date')}</th><th>${t('report.rule')}</th><th>${t('report.weight')}</th><th>${t('report.source')}</th></tr></thead><tbody>
-    ${m.pandit.rules.map(r => `<tr class="${r.flagged ? 'flag' : ''}"><td>${esc(D(r.date))}</td><td>${r.flagged ? '⚠ ' : ''}<code>${esc(r.code)}</code><br><span class="small">${esc(r.sentence)}</span></td><td class="${r.weight > 0 ? 'good' : 'avoid'}">${r.weight > 0 ? '+' : ''}${r.weight}</td><td class="small">${esc(r.source)}</td></tr>`).join('')}
+    ${m.pandit.rules.map(r => `<tr class="${r.flagged ? 'flag' : ''}"><td>${esc(D(r.date))}</td><td>${r.flagged ? '⚠ ' : ''}<code>${esc(r.code)}</code><br><span class="small">${esc(r.sentence)}</span></td><td class="${r.weight > 0 ? 'good' : 'avoid'}">${r.weight > 0 ? '+' : ''}${r.weight}</td><td class="small">${esc(humanSource(r.source))}</td></tr>`).join('')}
     </tbody></table>
     <p class="small muted">${m.pandit.unverified.length ? t('report.unverified') : t('report.noUnverified')}</p>
     <h3>${t('report.conventions')}</h3>

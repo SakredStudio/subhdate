@@ -40,8 +40,9 @@ html[data-theme="dark"] .rp-page { background: #FFFDF8; color: #251C30; }
 .rp-rules code { font-size: 11px; background: rgba(37,28,48,0.05); padding: 1px 4px; border-radius: 4px; }
 /* day */
 .rp-dayhead { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-.rp-chog { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; font-size: 10.5px; }
-.rp-c { border: 1px solid #DCCFB4; border-radius: 6px; padding: 4px 5px; text-align: center; }
+.rp-chog { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; font-size: 10.5px; }
+@media (min-width: 560px) { .rp-chog { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+.rp-c { border: 1px solid #DCCFB4; border-radius: 6px; padding: 4px 5px; text-align: center; min-width: 0; overflow-wrap: anywhere; }
 .rp-c.good, .rp-c.verygood { border-color: #3E7A55; } .rp-c.avoid, .rp-c.bad { border-color: #A33D3D; }
 .rp-window { border-left: 2px solid #BC8B2C; padding: 4px 12px; margin: 8px 0; }
 .rp-wtime { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #946916; }
@@ -70,6 +71,7 @@ html[data-theme="dark"] .rp-page { background: #FFFDF8; color: #251C30; }
   .rp-head { display: block; }
   .rp-foot { margin-top: 10mm; }
   .rp-window, .rp-row, .rp-table tr { page-break-inside: avoid; break-inside: avoid; }
+  .rp-chog { grid-template-columns: repeat(8, minmax(0, 1fr)); }
   .rp-cover { padding-top: 0; }
   .rp-cover .rp-mark { margin-top: 40mm; }
   a { color: inherit; text-decoration: none; }

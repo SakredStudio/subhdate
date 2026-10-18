@@ -6,6 +6,7 @@ import { db, type SavedItem } from './db.ts';
 import { aboutHtml, privacyHtml } from './screens/about.ts';
 import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
 import { renderReport } from './screens/report.ts';
+import { humanSource } from './format.ts';
 import { isEntitled, useStore, consumeReport } from './entitlement.ts';
 import { pushAvailable, enableReminders, disableReminders, remindersOn } from './push.ts';
 import './report.css';
@@ -141,7 +142,7 @@ async function renderToday() {
     <div class="row"><span class="k">${t('today.amrit')}</span><span class="v">${d.kala.amritKaal.length ? d.kala.amritKaal.map((w: any) => `${fmtTimeD(w.start, date)}–${fmtTimeD(w.end, date)}`).join('<br>') : '—'}</span></div>
     <div class="row"><span class="k">${t('today.pradosha')}</span><span class="v">${win(d.kala.pradosha)}</span></div>
   </div>
-  <div class="card"><div class="label">${t('today.choghadiya')} · ${t('today.day')}</div>${chog(d.kala.choghadiya.day)}<div class="label">${t('today.night')}</div>${chog(d.kala.choghadiya.night)}</div>
+  <div class="card"><div class="label">${t('today.choghadiya')} · ${t('today.day')}</div>${chog(d.kala.choghadiya.day)}<div class="label">${t('today.choghadiya')} · ${t('today.night')}</div>${chog(d.kala.choghadiya.night)}</div>
   <div class="card"><div class="label">${t('today.hora')}</div><div class="strip">${[...d.kala.hora.day, ...d.kala.hora.night].map((h: any) => `<div class="chog ${h.quality} ${inWin(h) ? 'now' : ''}"><div class="n">${esc(h.label)}</div><div class="t">${fmtTime(h.start)}</div></div>`).join('')}</div></div>
   ${bala}
   <div class="card"><div class="label">${t('today.flags')}</div>${flagsHtml}</div>
@@ -212,7 +213,7 @@ async function renderResult(idx: number) {
     ${w.avoid.length ? `<div class="label">${t('result.avoid')}</div><ul class="reasons">${w.avoid.map((s: string) => `<li class="avoid">${esc(s)}</li>`).join('')}</ul>` : ''}
     <div class="row" style="border:0;justify-content:flex-start;gap:8px"><button class="btn btn-gold btn-small" data-save="${j}">${saved.some(s => s.id === idOf(w)) ? t('result.saved') : '❀ ' + t('result.save')}</button><button class="btn btn-outline btn-small" data-share="${j}">${t('result.share')}</button><button class="btn btn-outline btn-small" data-ics="${j}">${t('result.ics')}</button></div></div>`).join('')}
   <div class="card"><div class="label">${t('result.caveats')}</div><ul class="reasons">${r.caveats.map((c: string) => `<li>${esc(c)}</li>`).join('')}</ul></div>
-  <div class="card"><div class="label">${t('result.sources')}</div><ul class="reasons">${r.sources.map((s: string) => `<li>${esc(s)}</li>`).join('')}</ul><p class="small dim">ShubhDate engine ${r.engineVersion} · MIT</p></div>`;
+  <div class="card"><div class="label">${t('result.sources')}</div><ul class="reasons">${r.sources.map((s: string) => `<li>${esc(humanSource(s))}</li>`).join('')}</ul><p class="small dim">ShubhDate engine ${r.engineVersion} · MIT</p></div>`;
   const shareText = (w: any) => t('result.shareText', { event: r.packName, date: fmtDate(d.date), start: fmtTime(w.start), end: fmtTime(w.end), city: S.city.name, score: w.score, headline: d.headline }) + '\n' + location.origin + BASE;
   view.querySelectorAll('[data-save]').forEach(b => b.addEventListener('click', async () => { const w = d.windows[Number((b as HTMLElement).dataset.save)]; const item: SavedItem = { id: idOf(w), event: lastReq.event, eventName: r.packName, date: d.date, start: w.start, end: w.end, score: w.score, place: place(), reasons: w.keep, createdAt: new Date().toISOString(), lang: S.lang }; await db.save(item); (b as HTMLElement).textContent = t('result.saved'); toast(t('result.saved')); }));
   view.querySelectorAll('[data-share]').forEach(b => b.addEventListener('click', async () => { const w = d.windows[Number((b as HTMLElement).dataset.share)]; const text = shareText(w); if (navigator.share) { try { await navigator.share({ title: 'ShubhDate', text }); } catch { /* cancelled */ } } else { window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank'); } }));
@@ -237,7 +238,7 @@ async function renderFestivals() {
     ${f.bhadraNote ? `<p class="small">${t('fest.bhadra', { time: fmtTimeD(f.bhadraNote.until, f.date) })}</p>` : ''}
     ${f.diaspora ? `<p class="small ${f.diaspora.differs ? '' : 'muted'}">${f.diaspora.differs ? '🌏 ' + t('fest.differs', { date: fmtDate(f.diaspora.delhiDate) }) : t('fest.same')}</p>` : ''}
     ${f.noteText ? `<p class="small muted">${esc(f.noteText)}</p>` : ''}
-    <p class="small dim">${esc(f.source)}</p></div>`).join('')}
+    <p class="small dim">${esc(humanSource(f.source))}</p></div>`).join('')}
   <details class="card"><summary class="label">Ekadashi (Smarta) · ${ek.length}</summary>${ek.map(f => `<div class="row"><span class="k">${esc(fmtDate(f.date))}</span><span class="v small">${esc(f.tithiLabel)}</span></div>`).join('')}</details>`;
 }
 
