@@ -26,19 +26,19 @@
   "shortcuts": [
     {
       "name": "Today's panchang",
-      "short_name": "Today",
+      "shortName": "Today",
       "url": "/subhdate/#/today",
       "chosenIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-192.png"
     },
     {
       "name": "Find a muhurta",
-      "short_name": "Muhurta",
+      "shortName": "Muhurta",
       "url": "/subhdate/#/muhurta",
       "chosenIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-192.png"
     },
     {
       "name": "Festivals",
-      "short_name": "Festivals",
+      "shortName": "Festivals",
       "url": "/subhdate/#/festivals",
       "chosenIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-192.png"
     }
