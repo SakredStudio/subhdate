@@ -211,7 +211,7 @@
     "report.previewNote": "The preview shows the cover, the best window and its sankalpa.",
     "report.fullContains": "The full report contains",
     "report.fullList": "All five ranked days with every window · the complete panchanga of each day (sun, moon, tithi, nakshatra, yoga, karana with end times) · Rahu kaal, Yamaganda, Gulika, Abhijit, Brahma muhurta, durmuhurta, varjyam, amrit kaal and pradosha · choghadiya for day and night · a sankalpa for each day in Devanagari and IAST · a page for your pandit listing every rule that applied, with its source and every unverified row flagged.",
-    "report.playOnly": "The full report is in the ShubhDate app on Google Play.",
+    "report.playOnly": "The full report arrives in a coming update as an optional purchase. The free preview stays free.",
     "report.download": "Download PDF",
     "report.share": "Share",
     "report.back": "Back to results",
@@ -439,7 +439,7 @@
     "report.previewNote": "पूर्वावलोकन में मुखपृष्ठ, सर्वोत्तम मुहूर्त और उसका संकल्प दिखता है।",
     "report.fullContains": "पूरी रिपोर्ट में",
     "report.fullList": "पाँचों चुने हुए दिन और हर मुहूर्त · हर दिन का पूरा पंचांग (सूर्य, चन्द्र, तिथि, नक्षत्र, योग, करण समाप्ति समय सहित) · राहु काल, यमगण्ड, गुलिक, अभिजित, ब्रह्म मुहूर्त, दुर्मुहूर्त, वर्ज्यम्, अमृत काल और प्रदोष · दिन-रात का चौघड़िया · हर दिन का संकल्प देवनागरी और IAST में · आपके पंडित जी के लिए पृष्ठ: लागू हुआ हर नियम, उसका स्रोत, और हर असत्यापित पंक्ति चिह्नित।",
-    "report.playOnly": "पूरी रिपोर्ट Google Play पर ShubhDate ऐप में उपलब्ध है।",
+    "report.playOnly": "पूरी रिपोर्ट आने वाले अपडेट में वैकल्पिक खरीद के रूप में उपलब्ध होगी। मुफ़्त पूर्वावलोकन मुफ़्त ही रहेगा।",
     "report.download": "PDF डाउनलोड करें",
     "report.share": "साझा करें",
     "report.back": "परिणामों पर लौटें",
@@ -667,7 +667,7 @@
     "report.previewNote": "પૂર્વદર્શનમાં મુખપૃષ્ઠ, શ્રેષ્ઠ મુહૂર્ત અને તેનો સંકલ્પ દેખાય છે.",
     "report.fullContains": "પૂરી રિપોર્ટમાં",
     "report.fullList": "પાંચેય પસંદ કરેલા દિવસો અને દરેક મુહૂર્ત · દરેક દિવસનું પૂરું પંચાંગ (સૂર્ય, ચંદ્ર, તિથિ, નક્ષત્ર, યોગ, કરણ પૂર્ણ થવાના સમય સાથે) · રાહુ કાળ, યમઘંટ, ગુલિક, અભિજિત, બ્રહ્મ મુહૂર્ત, દુર્મુહૂર્ત, વર્જ્ય, અમૃત કાળ અને પ્રદોષ · દિવસ-રાતના ચોઘડિયાં · દરેક દિવસનો સંકલ્પ દેવનાગરી અને IAST માં · તમારા ગોર મહારાજ માટે પાનું: લાગુ થયેલો દરેક નિયમ, તેનો સ્રોત, અને દરેક અચકાસેલી પંક્તિ ચિહ્નિત.",
-    "report.playOnly": "પૂરી રિપોર્ટ Google Play પરની ShubhDate એપમાં ઉપલબ્ધ છે.",
+    "report.playOnly": "પૂરી રિપોર્ટ આવનારા અપડેટમાં વૈકલ્પિક ખરીદી તરીકે મળશે. મફત પૂર્વાવલોકન મફત જ રહેશે.",
     "report.download": "PDF ડાઉનલોડ કરો",
     "report.share": "શેર કરો",
     "report.back": "પરિણામો પર પાછા",
@@ -814,7 +814,8 @@
     "settings.remindersNote": "Har tyohaar aur Ekadashi se ek shaam pehle notification, aapke sheher ke liye. ShubhDate server par sirf push endpoint, sheher ke coordinates aur bhasha rakhi jaati hai; aur kuch nahi.",
     "settings.remindersDenied": "Browser settings mein is site ke liye notifications band hain.",
     "settings.remindersOn": "Reminders on",
-    "settings.remindersOff": "Reminders off"
+    "settings.remindersOff": "Reminders off",
+    "report.playOnly": "Poori report agle update mein optional purchase ke roop mein aayegi. Free preview free hi rahega."
   },
   "mr": {
     "nav.today": "आज",
