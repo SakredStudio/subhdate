@@ -125,7 +125,7 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
     <h3>${t('report.caveats')}</h3><ul class="reasons">${m.pandit.caveats.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`);
 
   // 6. Sources
-  const sources = page('rp-sources', `<h2>${t('report.sourcesPage')}</h2><h3>${t('report.classical')}</h3><ul class="reasons">${m.pandit.classicalSources.map(s => `<li>${esc(s)}</li>`).join('')}</ul>
+  const sources = page('rp-sources', `<h2>${t('report.sourcesPage')}</h2><h3>${t('report.classical')}</h3><ul class="reasons">${m.pandit.classicalSources.map(s => `<li>${esc(humanSource(s))}</li>`).join('')}</ul>
     <p class="small">${esc(t('report.engineNote', { v: m.engineVersion, url: m.footer.engineUrl }))}</p>
     <p class="small"><a href="${esc(m.pandit.reviewDoc)}">docs/PANDIT-REVIEW.md</a></p>
     <p class="rp-final">${esc(m.footer.line)}</p>`);
