@@ -278,7 +278,14 @@
     "settings.remindersNote": "A notification the evening before each festival and Ekadashi for your city. Stores your push endpoint, city coordinates and language on the ShubhDate server; nothing else.",
     "settings.remindersDenied": "Notifications are blocked for this site in your browser settings.",
     "settings.remindersOn": "Reminders on",
-    "settings.remindersOff": "Reminders off"
+    "settings.remindersOff": "Reminders off",
+    "report.buyReport": "Unlock this report · {price}",
+    "report.buyFamily": "Family plan · {price} / year",
+    "report.restore": "Restore purchases",
+    "report.unlocked": "Unlocked. Thank you.",
+    "report.buyFailed": "Purchase did not complete ({err}). Nothing was charged unless Google Play shows a receipt.",
+    "report.restored": "{n} purchase(s) restored",
+    "report.playNote": "Billed by Google Play. The one-time report unlocks this event; the Family plan unlocks every report for a year."
   },
   "hi": {
     "nav.today": "आज",
@@ -506,7 +513,14 @@
     "settings.remindersNote": "आपके नगर के हर त्योहार और एकादशी से एक शाम पहले सूचना। ShubhDate सर्वर पर केवल आपका पुश एंडपॉइंट, नगर के निर्देशांक और भाषा रखी जाती है; और कुछ नहीं।",
     "settings.remindersDenied": "आपके ब्राउज़र की सेटिंग में इस साइट के लिए सूचनाएँ बंद हैं।",
     "settings.remindersOn": "याद दिलाना चालू",
-    "settings.remindersOff": "याद दिलाना बंद"
+    "settings.remindersOff": "याद दिलाना बंद",
+    "report.buyReport": "यह रिपोर्ट अनलॉक करें · {price}",
+    "report.buyFamily": "परिवार योजना · {price} / वर्ष",
+    "report.restore": "खरीद पुनर्स्थापित करें",
+    "report.unlocked": "अनलॉक हो गया। धन्यवाद।",
+    "report.buyFailed": "खरीद पूरी नहीं हुई ({err})। Google Play की रसीद न हो तो कोई शुल्क नहीं लगा।",
+    "report.restored": "{n} खरीद पुनर्स्थापित",
+    "report.playNote": "भुगतान Google Play द्वारा। एक बार की रिपोर्ट इस आयोजन को खोलती है; परिवार योजना एक वर्ष की हर रिपोर्ट खोलती है।"
   },
   "gu": {
     "nav.today": "આજ",
@@ -734,7 +748,14 @@
     "settings.remindersNote": "તમારા શહેરના દરેક તહેવાર અને અગિયારસની આગલી સાંજે સૂચના. ShubhDate સર્વર પર ફક્ત તમારો પુશ એન્ડપોઇન્ટ, શહેરના અક્ષાંશ-રેખાંશ અને ભાષા રખાય છે; બીજું કંઈ નહીં.",
     "settings.remindersDenied": "તમારા બ્રાઉઝરની સેટિંગમાં આ સાઇટ માટે સૂચનાઓ બંધ છે.",
     "settings.remindersOn": "યાદ અપાવવું ચાલુ",
-    "settings.remindersOff": "યાદ અપાવવું બંધ"
+    "settings.remindersOff": "યાદ અપાવવું બંધ",
+    "report.buyReport": "આ રિપોર્ટ અનલૉક કરો · {price}",
+    "report.buyFamily": "પરિવાર યોજના · {price} / વર્ષ",
+    "report.restore": "ખરીદી પાછી મેળવો",
+    "report.unlocked": "અનલૉક થયું. આભાર.",
+    "report.buyFailed": "ખરીદી પૂરી ન થઈ ({err}). Google Play ની રસીદ ન હોય તો કોઈ ચાર્જ નથી.",
+    "report.restored": "{n} ખરીદી પાછી મળી",
+    "report.playNote": "ચુકવણી Google Play દ્વારા. એક વારની રિપોર્ટ આ પ્રસંગ ખોલે છે; પરિવાર યોજના એક વર્ષની દરેક રિપોર્ટ ખોલે છે."
   },
   "hinglish": {
     "nav.today": "Aaj",
@@ -815,7 +836,14 @@
     "settings.remindersDenied": "Browser settings mein is site ke liye notifications band hain.",
     "settings.remindersOn": "Reminders on",
     "settings.remindersOff": "Reminders off",
-    "report.playOnly": "Poori report agle update mein optional purchase ke roop mein aayegi. Free preview free hi rahega."
+    "report.playOnly": "Poori report agle update mein optional purchase ke roop mein aayegi. Free preview free hi rahega.",
+    "report.buyReport": "Yeh report unlock karein · {price}",
+    "report.buyFamily": "Family plan · {price} / saal",
+    "report.restore": "Purchases restore karein",
+    "report.unlocked": "Unlock ho gaya. Dhanyavaad.",
+    "report.buyFailed": "Purchase poori nahin hui ({err}). Google Play receipt na ho to koi charge nahin.",
+    "report.restored": "{n} purchase restore hui",
+    "report.playNote": "Billing Google Play se. Ek baar ki report is event ko kholti hai; Family plan saal bhar ki har report kholta hai."
   },
   "mr": {
     "nav.today": "आज",

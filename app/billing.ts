@@ -1,11 +1,12 @@
 // Google Play Billing through the Digital Goods API + Payment Request, available only inside the Play-installed TWA
 // (Chrome 101+ with the androidbrowserhelper billing bridge). Everything is feature-detected; on the web nothing is
-// sold and nothing links to a paywall (Play policy §4). `purchase()` is deliberately unfinished until Soul confirms
-// the Play Console app and the two products exist (CHECKPOINT.md, "Steps only Soul can do" #5).
+// sold and nothing links to a paywall (Play policy §4). Flow: PaymentRequest.show() -> purchaseToken ->
+// Worker /v1/entitlement/claim (verifies with the Play Developer API, acknowledges/consumes) -> signed token cached locally.
 import { WORKER_URL, IS_PLACEHOLDER } from './config.ts';
-import { getDeviceId, type Sku } from './entitlement.ts';
+import { getDeviceId, cacheEntitlement, verifyToken, loadEntitlement, type Sku, type Entitlement } from './entitlement.ts';
 
 export const PLAY_BILLING_METHOD = 'https://play.google.com/billing';
+export const PACKAGE_NAME = 'com.sakredstudio.shubhdate';
 export const SKUS: Sku[] = ['report_single', 'family_annual'];
 
 export interface ProductDetails { itemId: Sku; title: string; description: string; price: { currency: string; value: string }; type?: string; subscriptionPeriod?: string; }
@@ -30,32 +31,72 @@ export async function listProducts(): Promise<ProductDetails[]> {
   const s = await service(); if (!s) return [];
   try { return await s.getDetails(SKUS); } catch { return []; }
 }
-/** Purchases Play still holds for this account (used by the refresh flow later). */
 export async function listPurchases(): Promise<{ itemId: string; purchaseToken: string }[]> {
   const s = await service(); if (!s) return [];
   try { return await s.listPurchases(); } catch { return []; }
 }
+export function formatPrice(p: ProductDetails): string {
+  try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: p.price.currency }).format(Number(p.price.value)); } catch { return `${p.price.currency} ${p.price.value}`; }
+}
 
-/**
- * Buy a SKU. Builds the PaymentRequest for the Play billing method and then STOPS: the show() / claim / consume
- * steps are not implemented until the Play Console app and products exist.
- *
- * Claim step (interface only, see worker/src/index.ts POST /v1/entitlement/claim):
- *   const res = await paymentRequest.show();            // { details: { purchaseToken } }
- *   await res.complete('success');
- *   POST `${WORKER_URL}/v1/entitlement/claim`
- *     body: { purchaseToken: string, sku: Sku, dev: getDeviceId(), packageName: 'com.sakredstudio.shubhdate' }
- *     200: { token: string (ES256 JWS, see entitlement.ts), entitlement: Entitlement }
- *     402: { error: 'not_purchased' | 'pending' }   409: { error: 'claimed_by_other_device' }   501: not implemented yet
- *   then cacheEntitlement(token, entitlement); for report_single the Worker consumes/acknowledges via the Play Developer API.
- */
-export async function purchase(sku: Sku): Promise<never> {
-  if (!(await isPlayBillingAvailable())) throw new Error('PlayBillingUnavailable');
-  if (IS_PLACEHOLDER(WORKER_URL)) throw new Error('WorkerNotConfigured');
+export class PurchaseError extends Error { constructor(public code: string, message?: string) { super(message ?? code); } }
+
+/** Send a purchase token to the Worker; returns the verified entitlement after caching its token. */
+export async function claim(sku: Sku, purchaseToken: string): Promise<Entitlement> {
+  if (IS_PLACEHOLDER(WORKER_URL)) throw new PurchaseError('WorkerNotConfigured');
+  const res = await fetch(`${WORKER_URL}/v1/entitlement/claim`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ purchaseToken, sku, dev: getDeviceId(), packageName: PACKAGE_NAME }) });
+  const body: any = await res.json().catch(() => ({}));
+  if (!res.ok) throw new PurchaseError(body.error ?? `http_${res.status}`);
+  const payload = await verifyToken(body.token);
+  if (!payload) throw new PurchaseError('bad_token');
+  await cacheEntitlement(body.token, payload);
+  return payload;
+}
+
+/** Buy a SKU inside the Play app. Resolves with the entitlement once the Worker has verified the purchase. */
+export async function purchase(sku: Sku): Promise<Entitlement> {
+  if (!(await isPlayBillingAvailable())) throw new PurchaseError('PlayBillingUnavailable');
+  if (IS_PLACEHOLDER(WORKER_URL)) throw new PurchaseError('WorkerNotConfigured');
   const request = new PaymentRequest(
     [{ supportedMethods: PLAY_BILLING_METHOD, data: { sku } }],
     { total: { label: sku, amount: { currency: 'INR', value: '0' } } }, // Play ignores the total; it uses the Console price
   );
-  void request; void getDeviceId;
-  throw new Error('NotImplemented: purchase flow waits for the Play Console app and products (CHECKPOINT.md §Steps only Soul can do #5)');
+  let response: PaymentResponse;
+  try { response = await request.show(); }
+  catch (e: any) { throw new PurchaseError(e?.name === 'AbortError' ? 'cancelled' : 'show_failed', e?.message); }
+  const token: string | undefined = (response.details as any)?.purchaseToken ?? (response.details as any)?.token;
+  if (!token) { await response.complete('fail'); throw new PurchaseError('no_token'); }
+  try {
+    const ent = await claim(sku, token);
+    await response.complete('success');
+    if (sku === 'report_single') { const s = await service(); try { await s?.consume?.(token); } catch { /* the Worker already consumed it server-side */ } }
+    return ent;
+  } catch (e) {
+    await response.complete('fail').catch(() => null);
+    throw e;
+  }
+}
+
+/** Re-claim purchases Play still holds for this Google account (new phone, reinstall). Returns how many were restored. */
+export async function restorePurchases(): Promise<number> {
+  const list = await listPurchases(); let n = 0;
+  for (const p of list) {
+    if (!SKUS.includes(p.itemId as Sku)) continue;
+    try { await claim(p.itemId as Sku, p.purchaseToken); n++; } catch { /* already claimed by another device or voided */ }
+  }
+  return n;
+}
+
+/** When the cached token is older than the offline grace period and we are online, fetch a fresh one. */
+export async function refreshIfStale(): Promise<void> {
+  if (IS_PLACEHOLDER(WORKER_URL) || typeof navigator !== 'undefined' && !navigator.onLine) return;
+  const cur = await loadEntitlement();
+  if (!cur || !cur.stale) return;
+  try {
+    const res = await fetch(`${WORKER_URL}/v1/entitlement/refresh`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ dev: getDeviceId() }) });
+    if (!res.ok) return;
+    const body: any = await res.json();
+    const payload = await verifyToken(body.token);
+    if (payload) await cacheEntitlement(body.token, payload);
+  } catch { /* offline or Worker down: keep honouring the cached token until it expires */ }
 }

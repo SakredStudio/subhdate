@@ -8,6 +8,7 @@ import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
 import { renderReport } from './screens/report.ts';
 import { humanSource } from './format.ts';
 import { isEntitled, useStore, consumeReport } from './entitlement.ts';
+import { refreshIfStale } from './billing.ts';
 import { pushAvailable, enableReminders, disableReminders, remindersOn } from './push.ts';
 import './report.css';
 const ENGINE_VERSION = '0.1.0';
@@ -349,5 +350,7 @@ window.addEventListener('hashchange', route);
 document.getElementById('city-chip')!.addEventListener('click', () => cityPicker(setCity));
 updateChrome();
 route();
+// A cached entitlement older than the offline grace period is refreshed from the Worker (no-op on the web / offline).
+refreshIfStale().then(() => { if (location.hash.startsWith('#/report')) route(); }).catch(() => null);
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register(`${BASE}sw.js`).catch(() => null); }); }
 if ('storage' in navigator && 'persist' in navigator.storage) navigator.storage.persist().catch(() => null);

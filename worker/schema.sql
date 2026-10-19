@@ -43,3 +43,9 @@ CREATE TABLE IF NOT EXISTS reminders_sent (
   sent_at INTEGER NOT NULL,
   PRIMARY KEY (sub_id, key)
 );
+
+CREATE TABLE IF NOT EXISTS claim_log (
+  device_id TEXT NOT NULL,
+  at INTEGER NOT NULL                      -- unix seconds; used only to rate-limit /v1/entitlement/claim
+);
+CREATE INDEX IF NOT EXISTS claim_log_device ON claim_log(device_id, at);

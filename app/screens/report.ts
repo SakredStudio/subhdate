@@ -2,6 +2,8 @@
 // Free preview: cover + best window + its sankalpa; the rest is blurred until the device is entitled
 // (Play Billing, see entitlement.ts) or the dev/QA flag localStorage['shubhdate.devReport']==='1' is set.
 import { humanSource } from '../format.ts';
+import { isPlayBillingAvailable, listProducts, purchase, restorePurchases, formatPrice, PurchaseError, type ProductDetails } from '../billing.ts';
+import type { Sku } from '../entitlement.ts';
 import type { ReportModel, ReportDay, ReportWindow } from '../../engine/report.ts';
 
 export interface ReportCtx {
@@ -128,7 +130,14 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
     <p class="small"><a href="${esc(m.pandit.reviewDoc)}">docs/PANDIT-REVIEW.md</a></p>
     <p class="rp-final">${esc(m.footer.line)}</p>`);
 
-  const lockedCard = unlocked ? '' : `<div class="card gold rp-lockcard"><div class="label">${t('report.lockedTitle')}</div><p class="small">${t('report.previewNote')}</p><p class="small"><b>${t('report.fullContains')}:</b> ${t('report.fullList')}</p><p class="small muted">${t('report.playOnly')}</p></div>`;
+  // Inside the Play app the lock card sells the two products through Play Billing; on the web it only explains.
+  let products: ProductDetails[] = [];
+  if (!unlocked) { try { if (await isPlayBillingAvailable()) products = await listProducts(); } catch { products = []; } }
+  const skuSingle = products.find(p => p.itemId === 'report_single'), skuFamily = products.find(p => p.itemId === 'family_annual');
+  const buyButtons = products.length
+    ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start;margin-top:8px">${skuSingle ? `<button class="btn btn-gold btn-small" data-buy="report_single">${t('report.buyReport', { price: formatPrice(skuSingle) })}</button>` : ''}${skuFamily ? `<button class="btn btn-outline btn-small" data-buy="family_annual">${t('report.buyFamily', { price: formatPrice(skuFamily) })}</button>` : ''}<button class="btn btn-outline btn-small" id="rp-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>`
+    : `<p class="small muted">${t('report.playOnly')}</p>`;
+  const lockedCard = unlocked ? '' : `<div class="card gold rp-lockcard"><div class="label">${t('report.lockedTitle')}</div><p class="small">${t('report.previewNote')}</p><p class="small"><b>${t('report.fullContains')}:</b> ${t('report.fullList')}</p>${buyButtons}</div>`;
   const toolbar = `<div class="rp-toolbar"><a href="#/muhurta" class="small">‹ ${t('report.back')}</a><h1>${t('report.title')}</h1>${unlocked ? '' : `<span class="pill info">${t('report.preview')}</span>`}
     <div class="row" style="border:0;gap:8px;justify-content:flex-start"><button class="btn btn-gold btn-small" id="rp-print">⬇ ${t('report.download')}</button><button class="btn btn-outline btn-small" id="rp-share">${t('report.share')}</button></div>
     <details class="card"><summary class="label">${t('report.namesLabel')}</summary><div class="grid2"><div class="field"><label>${t('report.name1')}</label><input id="rp-n1" value="${esc(names.person1 ?? '')}"></div><div class="field"><label>${t('report.name2')}</label><input id="rp-n2" value="${esc(names.person2 ?? '')}"></div></div></details></div>`;
@@ -149,6 +158,18 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
     const text = [t('report.shareText', { event: m.cover.event.local, city: m.cover.city, from: D(m.cover.from), to: D(m.cover.to) }), ...m.summary.map(s => `• ${D(s.date)} ${T(s.start)}–${T(s.end)} (${s.score}/100): ${s.headline}`), m.footer.line, location.origin + c.base].join('\n');
     if (navigator.share) { try { await navigator.share({ title: 'ShubhDate', text }); } catch { /* cancelled */ } }
     else { try { await navigator.clipboard?.writeText(text); c.toast(t('common.copied')); } catch { window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank'); } }
+  });
+  // Play Billing (only rendered inside the Play app): buy -> Worker claim -> cached token -> re-render unlocked.
+  for (const btn of Array.from(view.querySelectorAll<HTMLButtonElement>('[data-buy]'))) btn.addEventListener('click', async () => {
+    const sku = btn.dataset.buy as Sku; btn.disabled = true;
+    try { await purchase(sku); c.toast(t('report.unlocked')); renderReport(view, c); }
+    catch (e: any) {
+      btn.disabled = false;
+      if (!(e instanceof PurchaseError && e.code === 'cancelled')) c.toast(t('report.buyFailed', { err: String(e?.code ?? e?.message ?? 'error') }));
+    }
+  });
+  view.querySelector('#rp-restore')?.addEventListener('click', async () => {
+    const n = await restorePurchases(); c.toast(t('report.restored', { n: String(n) })); if (n) renderReport(view, c);
   });
   const saveNames = () => { const n1 = (view.querySelector('#rp-n1') as HTMLInputElement).value.trim(), n2 = (view.querySelector('#rp-n2') as HTMLInputElement).value.trim(); localStorage.setItem(NAMES_KEY, JSON.stringify({ person1: n1 || undefined, person2: n2 || undefined })); };
   for (const id of ['#rp-n1', '#rp-n2']) view.querySelector(id)!.addEventListener('change', () => { saveNames(); renderReport(view, c); });

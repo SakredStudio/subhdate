@@ -8,7 +8,7 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "shubhdate"
-database_id = "REPLACE_WITH_wrangler_d1_create_shubhdate_OUTPUT"
+database_id = "775e542c-d60d-4b38-905d-de84c57a9830"
 
 [triggers]
 crons = ["0 */6 * * *"]

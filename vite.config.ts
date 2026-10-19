@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => ({
   worker: { format: 'es' },
   test: {
     root: '.',
-    include: ['engine/test/**/*.test.ts'],
+    include: ['engine/test/**/*.test.ts', 'worker/test/**/*.test.ts'],
     testTimeout: 120000,
   },
 }));
