@@ -85,3 +85,21 @@ html[data-theme="dark"] .rp-page { background: #FFFDF8; color: #251C30; }
 .rp-rules td { overflow-wrap: anywhere; word-break: break-word; }
 .rp-rules code { white-space: normal; overflow-wrap: anywhere; }
 .rp-sources li, .rp-pandit li { overflow-wrap: anywhere; }
+
+/* Phone preview: nothing may be wider than the page card. */
+.rp-page { overflow-wrap: anywhere; }
+.rp-page table { max-width: 100%; }
+/* Five-best-windows table becomes stacked cards under 560px (6 columns do not fit a phone). */
+@media screen and (max-width: 560px) {
+  .rp-sumtable, .rp-sumtable tbody { display: block; }
+  .rp-sumtable thead { display: none; }
+  .rp-sumtable tr { display: grid; grid-template-columns: 1fr auto; column-gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(37,28,48,0.08); }
+  .rp-sumtable td { display: block; border: 0; padding: 1px 0; min-width: 0; }
+  .rp-sumtable td.sd { grid-column: 1; grid-row: 1; }
+  .rp-sumtable td.sw { grid-column: 1; grid-row: 2; font-size: 13px; }
+  .rp-sumtable td.ss { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .rp-sumtable td[data-l] { grid-column: 1 / -1; font-size: 11.5px; }
+  .rp-sumtable td[data-l]::before { content: attr(data-l) ": "; color: rgba(37,28,48,0.64); }
+  .rp-chog { font-size: 10px; gap: 3px; }
+  .rp-c { padding: 3px 2px; }
+}

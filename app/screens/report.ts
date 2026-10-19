@@ -75,8 +75,8 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
 
   // 2. Summary
   const summary = page('rp-summary', `<h2>${t('report.summary')}</h2>
-    <table class="rp-table"><thead><tr><th>${t('report.col.date')}</th><th>${t('report.col.window')}</th><th>${t('report.col.score')}</th><th>${t('report.col.nakshatra')}</th><th>${t('report.col.tithi')}</th><th>${t('report.col.choghadiya')}</th></tr></thead><tbody>
-    ${m.summary.map(s => `<tr><td><b>${esc(D(s.date))}</b></td><td>${T(s.start)}–${T(s.end)}</td><td>${c.scoreRing(s.score)}</td><td>${esc(s.nakshatra)}</td><td>${esc(s.tithi)}</td><td>${esc(s.choghadiya ?? '—')}</td></tr>`).join('')}
+    <table class="rp-table rp-sumtable"><thead><tr><th>${t('report.col.date')}</th><th>${t('report.col.window')}</th><th>${t('report.col.score')}</th><th>${t('report.col.nakshatra')}</th><th>${t('report.col.tithi')}</th><th>${t('report.col.choghadiya')}</th></tr></thead><tbody>
+    ${m.summary.map(s => `<tr><td class="sd"><b>${esc(D(s.date))}</b></td><td class="sw">${T(s.start)}–${T(s.end)}</td><td class="ss">${c.scoreRing(s.score)}</td><td data-l="${esc(t('report.col.nakshatra'))}">${esc(s.nakshatra)}</td><td data-l="${esc(t('report.col.tithi'))}">${esc(s.tithi)}</td><td data-l="${esc(t('report.col.choghadiya'))}">${esc(s.choghadiya ?? '—')}</td></tr>`).join('')}
     </tbody></table>
     ${m.summary.map(s => `<p class="small muted">${esc(D(s.date))}: ${esc(s.headline)}</p>`).join('')}`);
 
