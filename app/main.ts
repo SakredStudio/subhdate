@@ -352,5 +352,14 @@ updateChrome();
 route();
 // A cached entitlement older than the offline grace period is refreshed from the Worker (no-op on the web / offline).
 refreshIfStale().then(() => { if (location.hash.startsWith('#/report')) route(); }).catch(() => null);
-if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register(`${BASE}sw.js`).catch(() => null); }); }
+if ('serviceWorker' in navigator) {
+  // When a new service worker takes over (new deploy), reload once so the page and its assets match the new build.
+  const hadController = !!navigator.serviceWorker.controller; let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadController && !reloaded) { reloaded = true; location.reload(); } });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(`${BASE}sw.js`, { updateViaCache: 'none' }).then(reg => {
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => null); });
+    }).catch(() => null);
+  });
+}
 if ('storage' in navigator && 'persist' in navigator.storage) navigator.storage.persist().catch(() => null);
