@@ -3,7 +3,7 @@
 import { festivals } from '../../engine/festivals.ts';
 import { sha256b64u } from './jws.ts';
 import { acknowledgeProduct, acknowledgeSubscription, consumeProduct, getProduct, getSubscription, subscriptionExpiry, type ServiceAccount } from './play.ts';
-import { SKUS, issueToken, judgeProduct, judgeSubscription, payloadFor, rtdnAction, type EntRow, type Sku } from './entitle.ts';
+import { SKUS, CONSUMABLE, issueToken, judgeProduct, judgeSubscription, payloadFor, rtdnAction, type EntRow, type Sku } from './entitle.ts';
 import { sendWebPush } from './webpush.ts';
 
 export interface Env {
@@ -60,7 +60,7 @@ async function claim(req: Request, env: Env): Promise<Response> {
   if (!sa) return json({ error: 'play_api_not_configured' }, 503, cors(env));
 
   let orderId: string | null = null, expiresAt: number | null = null;
-  if (sku === 'report_single') {
+  if (CONSUMABLE.includes(sku)) {
     const r = await getProduct(sa, env.PACKAGE_NAME, sku, b.purchaseToken);
     if (r.status === 404 || r.status === 400) return json({ error: 'not_purchased' }, 402, cors(env));
     if (!r.purchase) return json({ error: 'play_api_error', detail: r.error }, 502, cors(env));
@@ -79,7 +79,7 @@ async function claim(req: Request, env: Env): Promise<Response> {
     .bind(crypto.randomUUID(), sku, 'play', dev, hash, orderId, expiresAt, now).run();
   // Acknowledge (Play refunds unacknowledged purchases after 3 days). Consume the report credit server-side so it can be bought again.
   try {
-    if (sku === 'report_single') { await acknowledgeProduct(sa, env.PACKAGE_NAME, sku, b.purchaseToken).catch(() => false); await consumeProduct(sa, env.PACKAGE_NAME, sku, b.purchaseToken); }
+    if (CONSUMABLE.includes(sku)) { await acknowledgeProduct(sa, env.PACKAGE_NAME, sku, b.purchaseToken).catch(() => false); await consumeProduct(sa, env.PACKAGE_NAME, sku, b.purchaseToken); }
     else await acknowledgeSubscription(sa, env.PACKAGE_NAME, sku, b.purchaseToken);
   } catch { /* the token was issued; acknowledgement is retried by a later refresh if Play still reports it pending */ }
   return tokenResponse(env, dev, 200);

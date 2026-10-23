@@ -9,6 +9,7 @@ import { festivals } from '../engine/festivals.ts';
 import { personal, janma } from '../engine/personal.ts';
 import { ayanamsaAt } from '../engine/astro.ts';
 import { buildReport } from '../engine/report.ts';
+import { naam } from '../engine/namakarana.ts';
 
 const iso = (d: Date | null | undefined) => d ? d.toISOString() : null;
 const win = (w: { start: Date; end: Date } | null | undefined) => w ? { start: w.start.toISOString(), end: w.end.toISOString() } : null;
@@ -64,6 +65,17 @@ const ops: Record<string, (a: any) => any> = {
   festivals: ({ from, to, place, opts, lang }) => festivals(from, to, place, opts).map(f => ({ ...f, name: f.names[lang] ?? f.names.en, window: f.window ? { ...f.window, start: iso(f.window.start), end: iso(f.window.end) } : null, moonrise: iso(f.moonrise ?? null), bhadraNote: f.bhadraNote ? { until: iso(f.bhadraNote.until) } : null, instant: iso(f.instant ?? null), noteText: f.note ? renderCaveat(f.note, lang) : null })),
   packs: ({ lang }) => EVENT_IDS.map(id => { const p = loadPack(id); return { id, name: p.names[lang] ?? p.names.en, invocation: p.invocation, sources: p.sources }; }),
   janma: ({ birth, lang }) => { const j = janma(birth); return { ...j, candidates: j.candidates.map(c => ({ ...c, nakshatraLabel: term('nakshatra', c.nakshatraName, lang), rashiLabel: term('rashi', c.rashiName, lang) })) }; },
+  naam: ({ req, lang }) => {
+    const r = naam(req);
+    const ex = explain(r.muhurta, lang);
+    return {
+      janma: { ambiguous: r.janma.ambiguous, birthTimeKnown: r.janma.birthTimeKnown },
+      candidates: r.candidates.map(c => ({ ...c, nakshatraLabel: term('nakshatra', c.nakshatraName, lang), rashiLabel: term('rashi', c.rashiName, lang) })),
+      from: r.from, to: r.to, sources: r.sources, engineVersion: r.muhurta.engineVersion, confidence: r.muhurta.confidence, packName: ex.packName, caveats: ex.caveats,
+      days: r.muhurta.days.map((d, i) => ({ date: d.date, score: d.score, vara: d.vara, tithi: d.tithi, nakshatra: d.nakshatra, headline: ex.days[i].headline, summary: ex.days[i].summary,
+        windows: d.windows.map((w, j) => ({ start: iso(w.start), end: iso(w.end), score: w.score, choghadiya: w.choghadiya, nakshatra: w.nakshatra, tithi: w.tithi, keep: ex.days[i].windows[j].keep, avoid: ex.days[i].windows[j].avoid })) })),
+    };
+  },
   report: ({ req, lang, family, names }) => buildReport(req, { lang: lang ?? 'en', family, names }),
   scoreToday: ({ event, date, req }) => { const r = scoreDay(loadPack(event), date, req); return { score: r.score, windows: r.windows.map(w => ({ start: iso(w.start), end: iso(w.end), score: w.score })) }; },
 };

@@ -7,7 +7,7 @@ import { getDeviceId, cacheEntitlement, verifyToken, loadEntitlement, type Sku, 
 
 export const PLAY_BILLING_METHOD = 'https://play.google.com/billing';
 export const PACKAGE_NAME = 'com.sakredstudio.shubhdate';
-export const SKUS: Sku[] = ['report_single', 'family_annual'];
+export const SKUS: Sku[] = ['report_single', 'family_annual', 'naam_report'];
 
 export interface ProductDetails { itemId: Sku; title: string; description: string; price: { currency: string; value: string }; type?: string; subscriptionPeriod?: string; }
 interface DigitalGoodsService { getDetails(ids: string[]): Promise<ProductDetails[]>; listPurchases(): Promise<{ itemId: string; purchaseToken: string }[]>; consume?(purchaseToken: string): Promise<void>; }
@@ -69,7 +69,7 @@ export async function purchase(sku: Sku): Promise<Entitlement> {
   try {
     const ent = await claim(sku, token);
     await response.complete('success');
-    if (sku === 'report_single') { const s = await service(); try { await s?.consume?.(token); } catch { /* the Worker already consumed it server-side */ } }
+    if (sku === 'report_single' || sku === 'naam_report') { const s = await service(); try { await s?.consume?.(token); } catch { /* the Worker already consumed it server-side */ } }
     return ent;
   } catch (e) {
     await response.complete('fail').catch(() => null);

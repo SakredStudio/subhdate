@@ -1,0 +1,2452 @@
+{
+ "_about": "Curated baby names by naming syllable (nama-akshara). Editorial list by Sakred Studio, not scripture: each name's first syllable was matched by hand to the pada syllable; meanings are short dictionary glosses. Hindi and Gujarati spellings follow common usage. Names are suggestions; families finalise with their pandit. Review flag: Gujarati spellings of rarer names are UNVERIFIED by a native reader. Syllable keys merge the retroflex/dental pairs (ट/त, ड/द, ण/न, ष/श, ठ/थ, ढ/ध) the way printed name lists do; the Devanagari syllable shown on screen keeps the classical letter.",
+ "boys": {
+  "Chu": [{"en": "Chudamani",
+    "hi": "चूड़ामणि",
+    "gu": "ચૂડામણિ",
+    "m": "crest jewel"
+   }
+  ],
+  "Che": [{"en": "Chetan",
+    "hi": "चेतन",
+    "gu": "ચેતન",
+    "m": "consciousness, alive"
+   },{"en": "Chetas",
+    "hi": "चेतस",
+    "gu": "ચેતસ",
+    "m": "mind, heart"
+   }
+  ],
+  "Cho": [],
+  "La": [{"en": "Lakshya",
+    "hi": "लक्ष्य",
+    "gu": "લક્ષ્ય",
+    "m": "aim, goal"
+   },{"en": "Lakshit",
+    "hi": "लक्षित",
+    "gu": "લક્ષિત",
+    "m": "distinguished"
+   },{"en": "Lalit",
+    "hi": "ललित",
+    "gu": "લલિત",
+    "m": "graceful, charming"
+   },{"en": "Laksh",
+    "hi": "लक्ष",
+    "gu": "લક્ષ",
+    "m": "target"
+   },{"en": "Lavish",
+    "hi": "लविश",
+    "gu": "લવિશ",
+    "m": "of Lava, Rama's son"
+   }
+  ],
+  "Li": [{"en": "Likhit",
+    "hi": "लिखित",
+    "gu": "લિખિત",
+    "m": "written, destined"
+   },{"en": "Lingesh",
+    "hi": "लिंगेश",
+    "gu": "લિંગેશ",
+    "m": "Shiva"
+   }
+  ],
+  "Lu": [],
+  "Le": [{"en": "Lekhit",
+    "hi": "लेखित",
+    "gu": "લેખિત",
+    "m": "written"
+   },{"en": "Lekhraj",
+    "hi": "लेखराज",
+    "gu": "લેખરાજ",
+    "m": "king of writing"
+   }
+  ],
+  "Lo": [{"en": "Lokesh",
+    "hi": "लोकेश",
+    "gu": "લોકેશ",
+    "m": "lord of the worlds"
+   },{"en": "Lokit",
+    "hi": "लोकित",
+    "gu": "લોકિત",
+    "m": "seen, illuminated"
+   },{"en": "Lohit",
+    "hi": "लोहित",
+    "gu": "લોહિત",
+    "m": "red, Mars"
+   }
+  ],
+  "A": [{"en": "Aarav",
+    "hi": "आरव",
+    "gu": "આરવ",
+    "m": "peaceful sound"
+   },{"en": "Advait",
+    "hi": "अद्वैत",
+    "gu": "અદ્વૈત",
+    "m": "non-dual, unique"
+   },{"en": "Arjun",
+    "hi": "अर्जुन",
+    "gu": "અર્જુન",
+    "m": "bright, the Pandava"
+   },{"en": "Aditya",
+    "hi": "आदित्य",
+    "gu": "આદિત્ય",
+    "m": "the Sun"
+   },{"en": "Atharv",
+    "hi": "अथर्व",
+    "gu": "અથર્વ",
+    "m": "the fourth Veda"
+   },{"en": "Aryan",
+    "hi": "आर्यन",
+    "gu": "આર્યન",
+    "m": "noble"
+   },{"en": "Anay",
+    "hi": "अनय",
+    "gu": "અનય",
+    "m": "without a superior"
+   }
+  ],
+  "I": [{"en": "Ishaan",
+    "hi": "ईशान",
+    "gu": "ઈશાન",
+    "m": "Shiva, the north-east"
+   },{"en": "Ishwar",
+    "hi": "ईश्वर",
+    "gu": "ઈશ્વર",
+    "m": "the Lord"
+   },{"en": "Idhant",
+    "hi": "इधांत",
+    "gu": "ઇધાંત",
+    "m": "luminous"
+   },{"en": "Indra",
+    "hi": "इंद्र",
+    "gu": "ઇન્દ્ર",
+    "m": "king of the gods"
+   }
+  ],
+  "U": [{"en": "Utkarsh",
+    "hi": "उत्कर्ष",
+    "gu": "ઉત્કર્ષ",
+    "m": "prosperity, rise"
+   },{"en": "Uday",
+    "hi": "उदय",
+    "gu": "ઉદય",
+    "m": "sunrise"
+   },{"en": "Umang",
+    "hi": "उमंग",
+    "gu": "ઉમંગ",
+    "m": "enthusiasm"
+   },{"en": "Utsav",
+    "hi": "उत्सव",
+    "gu": "ઉત્સવ",
+    "m": "festival"
+   }
+  ],
+  "E": [{"en": "Ekansh",
+    "hi": "एकांश",
+    "gu": "એકાંશ",
+    "m": "whole, one part"
+   },{"en": "Ekalavya",
+    "hi": "एकलव्य",
+    "gu": "એકલવ્ય",
+    "m": "the devoted archer"
+   },{"en": "Eshan",
+    "hi": "एशान",
+    "gu": "એશાન",
+    "m": "Shiva"
+   }
+  ],
+  "O": [{"en": "Om",
+    "hi": "ओम",
+    "gu": "ઓમ",
+    "m": "the sacred syllable"
+   },{"en": "Omkar",
+    "hi": "ओंकार",
+    "gu": "ઓમકાર",
+    "m": "the sound Om"
+   },{"en": "Ojas",
+    "hi": "ओजस",
+    "gu": "ઓજસ",
+    "m": "vitality, lustre"
+   }
+  ],
+  "Va": [{"en": "Vaibhav",
+    "hi": "वैभव",
+    "gu": "વૈભવ",
+    "m": "glory, wealth"
+   },{"en": "Vatsal",
+    "hi": "वत्सल",
+    "gu": "વત્સલ",
+    "m": "affectionate"
+   },{"en": "Varun",
+    "hi": "वरुण",
+    "gu": "વરુણ",
+    "m": "lord of waters"
+   },{"en": "Vansh",
+    "hi": "वंश",
+    "gu": "વંશ",
+    "m": "lineage"
+   }
+  ],
+  "Vi": [{"en": "Vivaan",
+    "hi": "विवान",
+    "gu": "વિવાન",
+    "m": "full of life"
+   },{"en": "Vihaan",
+    "hi": "विहान",
+    "gu": "વિહાન",
+    "m": "dawn"
+   },{"en": "Vikram",
+    "hi": "विक्रम",
+    "gu": "વિક્રમ",
+    "m": "valour"
+   },{"en": "Vinay",
+    "hi": "विनय",
+    "gu": "વિનય",
+    "m": "humility"
+   },{"en": "Vishal",
+    "hi": "विशाल",
+    "gu": "વિશાલ",
+    "m": "vast"
+   }
+  ],
+  "Vu": [{"en": "Vrund",
+    "hi": "वृंद",
+    "gu": "વૃંદ",
+    "m": "group, Tulsi"
+   }
+  ],
+  "Ve": [{"en": "Ved",
+    "hi": "वेद",
+    "gu": "વેદ",
+    "m": "sacred knowledge"
+   },{"en": "Vedant",
+    "hi": "वेदांत",
+    "gu": "વેદાંત",
+    "m": "end of the Vedas"
+   },{"en": "Venkat",
+    "hi": "वेंकट",
+    "gu": "વેંકટ",
+    "m": "Vishnu of Tirupati"
+   }
+  ],
+  "Vo": [],
+  "Ka": [{"en": "Kabir",
+    "hi": "कबीर",
+    "gu": "કબીર",
+    "m": "great; the poet-saint"
+   },{"en": "Kartik",
+    "hi": "कार्तिक",
+    "gu": "કાર્તિક",
+    "m": "Kartikeya; the month"
+   },{"en": "Karan",
+    "hi": "करण",
+    "gu": "કરણ",
+    "m": "instrument; the warrior"
+   },{"en": "Kanishk",
+    "hi": "कनिष्क",
+    "gu": "કનિષ્ક",
+    "m": "the Kushan king"
+   },{"en": "Kavish",
+    "hi": "कविश",
+    "gu": "કવિશ",
+    "m": "lord of poets"
+   }
+  ],
+  "Ki": [{"en": "Kian",
+    "hi": "कियान",
+    "gu": "કિયાન",
+    "m": "grace of God"
+   },{"en": "Kirtan",
+    "hi": "कीर्तन",
+    "gu": "કીર્તન",
+    "m": "devotional song"
+   },{"en": "Kishan",
+    "hi": "किशन",
+    "gu": "કિશન",
+    "m": "Krishna"
+   },{"en": "Kirit",
+    "hi": "किरीट",
+    "gu": "કિરીટ",
+    "m": "crown"
+   }
+  ],
+  "Ku": [{"en": "Kunal",
+    "hi": "कुणाल",
+    "gu": "કુણાલ",
+    "m": "lotus; Ashoka's son"
+   },{"en": "Kush",
+    "hi": "कुश",
+    "gu": "કુશ",
+    "m": "sacred grass; Rama's son"
+   },{"en": "Kuber",
+    "hi": "कुबेर",
+    "gu": "કુબેર",
+    "m": "lord of wealth"
+   },{"en": "Kuldeep",
+    "hi": "कुलदीप",
+    "gu": "કુલદીપ",
+    "m": "lamp of the family"
+   }
+  ],
+  "Gha": [{"en": "Ghanshyam",
+    "hi": "घनश्याम",
+    "gu": "ઘનશ્યામ",
+    "m": "dark as a cloud, Krishna"
+   }
+  ],
+  "Nga": [],
+  "Chha": [],
+  "Ke": [{"en": "Keshav",
+    "hi": "केशव",
+    "gu": "કેશવ",
+    "m": "Krishna"
+   },{"en": "Ketan",
+    "hi": "केतन",
+    "gu": "કેતન",
+    "m": "banner, home"
+   },{"en": "Kedar",
+    "hi": "केदार",
+    "gu": "કેદાર",
+    "m": "Shiva of Kedarnath"
+   }
+  ],
+  "Ko": [{"en": "Kovid",
+    "hi": "कोविद",
+    "gu": "કોવિદ",
+    "m": "learned"
+   },{"en": "Koushik",
+    "hi": "कौशिक",
+    "gu": "કૌશિક",
+    "m": "sage Vishvamitra"
+   }
+  ],
+  "Ha": [{"en": "Harsh",
+    "hi": "हर्ष",
+    "gu": "હર્ષ",
+    "m": "joy"
+   },{"en": "Hardik",
+    "hi": "हार्दिक",
+    "gu": "હાર્દિક",
+    "m": "heartfelt"
+   },{"en": "Hari",
+    "hi": "हरि",
+    "gu": "હરિ",
+    "m": "Vishnu"
+   },{"en": "Hansh",
+    "hi": "हंश",
+    "gu": "હંશ",
+    "m": "swan, soul"
+   },{"en": "Harshil",
+    "hi": "हर्षिल",
+    "gu": "હર્ષિલ",
+    "m": "joyful"
+   }
+  ],
+  "Hi": [{"en": "Himanshu",
+    "hi": "हिमांशु",
+    "gu": "હિમાંશુ",
+    "m": "the Moon"
+   },{"en": "Hiren",
+    "hi": "हिरेन",
+    "gu": "હિરેન",
+    "m": "lord of diamonds"
+   },{"en": "Hitesh",
+    "hi": "हितेश",
+    "gu": "હિતેશ",
+    "m": "lord of goodness"
+   },{"en": "Hitarth",
+    "hi": "हितार्थ",
+    "gu": "હિતાર્થ",
+    "m": "for the good of others"
+   }
+  ],
+  "Hu": [{"en": "Hunar",
+    "hi": "हुनर",
+    "gu": "હુનર",
+    "m": "skill"
+   }
+  ],
+  "He": [{"en": "Hemant",
+    "hi": "हेमंत",
+    "gu": "હેમંત",
+    "m": "early winter"
+   },{"en": "Hemang",
+    "hi": "हेमांग",
+    "gu": "હેમાંગ",
+    "m": "golden-bodied"
+   },{"en": "Het",
+    "hi": "हेत",
+    "gu": "હેત",
+    "m": "love"
+   },{"en": "Heramb",
+    "hi": "हेरंब",
+    "gu": "હેરંબ",
+    "m": "Ganesha"
+   }
+  ],
+  "Ho": [],
+  "Da": [{"en": "Daksh",
+    "hi": "दक्ष",
+    "gu": "દક્ષ",
+    "m": "able, skilled"
+   },{"en": "Darsh",
+    "hi": "दर्श",
+    "gu": "દર્શ",
+    "m": "sight, Krishna"
+   },{"en": "Daman",
+    "hi": "दमन",
+    "gu": "દમન",
+    "m": "self-control"
+   },{"en": "Darshan",
+    "hi": "दर्शन",
+    "gu": "દર્શન",
+    "m": "vision, seeing the divine"
+   }
+  ],
+  "Di": [{"en": "Divyansh",
+    "hi": "दिव्यांश",
+    "gu": "દિવ્યાંશ",
+    "m": "part of the divine"
+   },{"en": "Dishant",
+    "hi": "दिशांत",
+    "gu": "દિશાંત",
+    "m": "horizon"
+   },{"en": "Dinesh",
+    "hi": "दिनेश",
+    "gu": "દિનેશ",
+    "m": "the Sun"
+   },{"en": "Divit",
+    "hi": "दिवित",
+    "gu": "દિવિત",
+    "m": "immortal"
+   }
+  ],
+  "Du": [{"en": "Durgesh",
+    "hi": "दुर्गेश",
+    "gu": "દુર્ગેશ",
+    "m": "lord of the fort"
+   },{"en": "Dushyant",
+    "hi": "दुष्यंत",
+    "gu": "દુષ્યંત",
+    "m": "the king, Shakuntala's husband"
+   }
+  ],
+  "De": [{"en": "Dev",
+    "hi": "देव",
+    "gu": "દેવ",
+    "m": "god"
+   },{"en": "Devansh",
+    "hi": "देवांश",
+    "gu": "દેવાંશ",
+    "m": "part of God"
+   },{"en": "Devarsh",
+    "hi": "देवर्ष",
+    "gu": "દેવર્ષ",
+    "m": "divine sage"
+   },{"en": "Deepak",
+    "hi": "दीपक",
+    "gu": "દીપક",
+    "m": "lamp"
+   }
+  ],
+  "Do": [],
+  "Ma": [{"en": "Manav",
+    "hi": "मानव",
+    "gu": "માનવ",
+    "m": "human, of Manu"
+   },{"en": "Madhav",
+    "hi": "माधव",
+    "gu": "માધવ",
+    "m": "Krishna"
+   },{"en": "Manan",
+    "hi": "मनन",
+    "gu": "મનન",
+    "m": "reflection"
+   },{"en": "Mahir",
+    "hi": "माहिर",
+    "gu": "માહિર",
+    "m": "expert"
+   },{"en": "Mayank",
+    "hi": "मयंक",
+    "gu": "મયંક",
+    "m": "the Moon"
+   }
+  ],
+  "Mi": [{"en": "Mihir",
+    "hi": "मिहिर",
+    "gu": "મિહિર",
+    "m": "the Sun"
+   },{"en": "Mitesh",
+    "hi": "मितेश",
+    "gu": "મિતેશ",
+    "m": "one with few desires"
+   },{"en": "Milan",
+    "hi": "मिलन",
+    "gu": "મિલન",
+    "m": "union"
+   },{"en": "Mitansh",
+    "hi": "मितांश",
+    "gu": "મિતાંશ",
+    "m": "friend's part"
+   }
+  ],
+  "Mu": [{"en": "Mukul",
+    "hi": "मुकुल",
+    "gu": "મુકુલ",
+    "m": "bud"
+   },{"en": "Mukund",
+    "hi": "मुकुंद",
+    "gu": "મુકુંદ",
+    "m": "Krishna, giver of liberation"
+   },{"en": "Mudit",
+    "hi": "मुदित",
+    "gu": "મુદિત",
+    "m": "happy"
+   }
+  ],
+  "Me": [{"en": "Meet",
+    "hi": "मीत",
+    "gu": "મીત",
+    "m": "friend"
+   },{"en": "Megh",
+    "hi": "मेघ",
+    "gu": "મેઘ",
+    "m": "cloud"
+   },{"en": "Medhansh",
+    "hi": "मेधांश",
+    "gu": "મેધાંશ",
+    "m": "born of intellect"
+   }
+  ],
+  "Mo": [{"en": "Mohit",
+    "hi": "मोहित",
+    "gu": "મોહિત",
+    "m": "enchanted"
+   },{"en": "Mohan",
+    "hi": "मोहन",
+    "gu": "મોહન",
+    "m": "charming, Krishna"
+   },{"en": "Moksh",
+    "hi": "मोक्ष",
+    "gu": "મોક્ષ",
+    "m": "liberation"
+   }
+  ],
+  "Ta": [{"en": "Tanish",
+    "hi": "तनिष",
+    "gu": "તનિષ",
+    "m": "ambition"
+   },{"en": "Tanay",
+    "hi": "तनय",
+    "gu": "તનય",
+    "m": "son"
+   },{"en": "Tarun",
+    "hi": "तरुण",
+    "gu": "તરુણ",
+    "m": "young"
+   },{"en": "Tapan",
+    "hi": "तपन",
+    "gu": "તપન",
+    "m": "the Sun"
+   },{"en": "Tanmay",
+    "hi": "तन्मय",
+    "gu": "તન્મય",
+    "m": "absorbed"
+   }
+  ],
+  "Ti": [{"en": "Tilak",
+    "hi": "तिलक",
+    "gu": "તિલક",
+    "m": "sacred mark"
+   },{"en": "Tirth",
+    "hi": "तीर्थ",
+    "gu": "તીર્થ",
+    "m": "holy place"
+   },{"en": "Timir",
+    "hi": "तिमिर",
+    "gu": "તિમિર",
+    "m": "darkness (before dawn)"
+   }
+  ],
+  "Tu": [{"en": "Tushar",
+    "hi": "तुषार",
+    "gu": "તુષાર",
+    "m": "snow, frost"
+   },{"en": "Tulsidas",
+    "hi": "तुलसीदास",
+    "gu": "તુલસીદાસ",
+    "m": "servant of Tulsi"
+   }
+  ],
+  "Te": [{"en": "Tejas",
+    "hi": "तेजस",
+    "gu": "તેજસ",
+    "m": "brilliance"
+   },{"en": "Tej",
+    "hi": "तेज",
+    "gu": "તેજ",
+    "m": "radiance"
+   },{"en": "Tejash",
+    "hi": "तेजश",
+    "gu": "તેજશ",
+    "m": "lustrous"
+   }
+  ],
+  "To": [{"en": "Toshan",
+    "hi": "तोषण",
+    "gu": "તોષણ",
+    "m": "satisfying"
+   },{"en": "Toral",
+    "hi": "तोरल",
+    "gu": "તોરલ",
+    "m": "soft, folk heroine"
+   }
+  ],
+  "Pa": [{"en": "Parth",
+    "hi": "पार्थ",
+    "gu": "પાર્થ",
+    "m": "Arjuna, son of Pritha"
+   },{"en": "Pranav",
+    "hi": "प्रणव",
+    "gu": "પ્રણવ",
+    "m": "Om"
+   },{"en": "Pavan",
+    "hi": "पवन",
+    "gu": "પવન",
+    "m": "wind"
+   },{"en": "Param",
+    "hi": "परम",
+    "gu": "પરમ",
+    "m": "supreme"
+   },{"en": "Pankaj",
+    "hi": "पंकज",
+    "gu": "પંકજ",
+    "m": "lotus"
+   }
+  ],
+  "Pi": [{"en": "Piyush",
+    "hi": "पीयूष",
+    "gu": "પિયુષ",
+    "m": "nectar"
+   },{"en": "Pinak",
+    "hi": "पिनाक",
+    "gu": "પિનાક",
+    "m": "Shiva's bow"
+   }
+  ],
+  "Pu": [{"en": "Purab",
+    "hi": "पूरब",
+    "gu": "પૂરબ",
+    "m": "east"
+   },{"en": "Punit",
+    "hi": "पुनीत",
+    "gu": "પુનિત",
+    "m": "pure"
+   },{"en": "Pushkar",
+    "hi": "पुष्कर",
+    "gu": "પુષ્કર",
+    "m": "lotus, the lake"
+   },{"en": "Purav",
+    "hi": "पूरव",
+    "gu": "પૂરવ",
+    "m": "eastern"
+   }
+  ],
+  "Sha": [{"en": "Shaurya",
+    "hi": "शौर्य",
+    "gu": "શૌર્ય",
+    "m": "bravery"
+   },{"en": "Shaan",
+    "hi": "शान",
+    "gu": "શાન",
+    "m": "pride, grace"
+   },{"en": "Shantanu",
+    "hi": "शांतनु",
+    "gu": "શાંતનુ",
+    "m": "the Kuru king"
+   },{"en": "Shashwat",
+    "hi": "शाश्वत",
+    "gu": "શાશ્વત",
+    "m": "eternal"
+   }
+  ],
+  "Na": [{"en": "Naman",
+    "hi": "नमन",
+    "gu": "નમન",
+    "m": "salutation"
+   },{"en": "Naksh",
+    "hi": "नक्ष",
+    "gu": "નક્ષ",
+    "m": "feature, the Moon"
+   },{"en": "Nakul",
+    "hi": "नकुल",
+    "gu": "નકુલ",
+    "m": "the Pandava"
+   },{"en": "Narayan",
+    "hi": "नारायण",
+    "gu": "નારાયણ",
+    "m": "Vishnu"
+   },{"en": "Nachiket",
+    "hi": "नचिकेत",
+    "gu": "નચિકેત",
+    "m": "the seeker in the Katha Upanishad"
+   }
+  ],
+  "Tha": [{"en": "Thakur",
+    "hi": "ठाकुर",
+    "gu": "ઠાકુર",
+    "m": "lord, deity"
+   }
+  ],
+  "Pe": [{"en": "Pehel",
+    "hi": "पहल",
+    "gu": "પહેલ",
+    "m": "initiative"
+   }
+  ],
+  "Po": [{"en": "Poojan",
+    "hi": "पूजन",
+    "gu": "પૂજન",
+    "m": "worship"
+   }
+  ],
+  "Ra": [{"en": "Raghav",
+    "hi": "राघव",
+    "gu": "રાઘવ",
+    "m": "Rama"
+   },{"en": "Rajat",
+    "hi": "रजत",
+    "gu": "રજત",
+    "m": "silver"
+   },{"en": "Ranveer",
+    "hi": "रणवीर",
+    "gu": "રણવીર",
+    "m": "hero in battle"
+   },{"en": "Rahul",
+    "hi": "राहुल",
+    "gu": "રાહુલ",
+    "m": "Buddha's son"
+   },{"en": "Raman",
+    "hi": "रमण",
+    "gu": "રમણ",
+    "m": "pleasing"
+   }
+  ],
+  "Ri": [{"en": "Rishi",
+    "hi": "ऋषि",
+    "gu": "ઋષિ",
+    "m": "sage"
+   },{"en": "Riyansh",
+    "hi": "रियांश",
+    "gu": "રિયાંશ",
+    "m": "part of Lakshmi"
+   },{"en": "Ritvik",
+    "hi": "ऋत्विक",
+    "gu": "ઋત્વિક",
+    "m": "priest"
+   },{"en": "Rishabh",
+    "hi": "ऋषभ",
+    "gu": "ઋષભ",
+    "m": "bull; the first Tirthankara"
+   }
+  ],
+  "Ru": [{"en": "Rudra",
+    "hi": "रुद्र",
+    "gu": "રુદ્ર",
+    "m": "Shiva"
+   },{"en": "Rushil",
+    "hi": "रुशिल",
+    "gu": "રુશિલ",
+    "m": "charming"
+   },{"en": "Rutvij",
+    "hi": "ऋत्विज",
+    "gu": "રુત્વિજ",
+    "m": "priest"
+   }
+  ],
+  "Re": [{"en": "Reyansh",
+    "hi": "रेयांश",
+    "gu": "રેયાંશ",
+    "m": "ray of light"
+   },{"en": "Rehan",
+    "hi": "रेहान",
+    "gu": "રેહાન",
+    "m": "fragrant"
+   },{"en": "Revant",
+    "hi": "रेवंत",
+    "gu": "રેવંત",
+    "m": "son of Surya"
+   }
+  ],
+  "Ro": [{"en": "Rohan",
+    "hi": "रोहन",
+    "gu": "રોહન",
+    "m": "ascending"
+   },{"en": "Rohit",
+    "hi": "रोहित",
+    "gu": "રોહિત",
+    "m": "red, the Sun"
+   },{"en": "Ronak",
+    "hi": "रौनक",
+    "gu": "રોનક",
+    "m": "brightness"
+   }
+  ],
+  "Ni": [{"en": "Nirvaan",
+    "hi": "निर्वाण",
+    "gu": "નિર્વાણ",
+    "m": "liberation"
+   },{"en": "Nihar",
+    "hi": "निहार",
+    "gu": "નિહાર",
+    "m": "mist, dew"
+   },{"en": "Nikhil",
+    "hi": "निखिल",
+    "gu": "નિખિલ",
+    "m": "entire"
+   },{"en": "Nimit",
+    "hi": "निमित",
+    "gu": "નિમિત",
+    "m": "destiny, cause"
+   },{"en": "Nishant",
+    "hi": "निशांत",
+    "gu": "નિશાંત",
+    "m": "dawn"
+   }
+  ],
+  "Nu": [],
+  "Ne": [{"en": "Neel",
+    "hi": "नील",
+    "gu": "નીલ",
+    "m": "blue"
+   },{"en": "Nemish",
+    "hi": "नेमिष",
+    "gu": "નેમિષ",
+    "m": "Vishnu"
+   },{"en": "Netra",
+    "hi": "नेत्र",
+    "gu": "નેત્ર",
+    "m": "eye"
+   }
+  ],
+  "No": [],
+  "Ya": [{"en": "Yash",
+    "hi": "यश",
+    "gu": "યશ",
+    "m": "fame"
+   },{"en": "Yatharth",
+    "hi": "यथार्थ",
+    "gu": "યથાર્થ",
+    "m": "truth"
+   },{"en": "Yajat",
+    "hi": "यजत",
+    "gu": "યજત",
+    "m": "Shiva"
+   },{"en": "Yashvardhan",
+    "hi": "यशवर्धन",
+    "gu": "યશવર્ધન",
+    "m": "one who increases fame"
+   }
+  ],
+  "Yi": [],
+  "Yu": [{"en": "Yuvan",
+    "hi": "युवन",
+    "gu": "યુવન",
+    "m": "young, Shiva"
+   },{"en": "Yug",
+    "hi": "युग",
+    "gu": "યુગ",
+    "m": "era"
+   },{"en": "Yuvraj",
+    "hi": "युवराज",
+    "gu": "યુવરાજ",
+    "m": "crown prince"
+   },{"en": "Yudhishthir",
+    "hi": "युधिष्ठिर",
+    "gu": "યુધિષ્ઠિર",
+    "m": "the eldest Pandava"
+   }
+  ],
+  "Ye": [{"en": "Yesh",
+    "hi": "येश",
+    "gu": "યેશ",
+    "m": "fame"
+   }
+  ],
+  "Yo": [{"en": "Yogesh",
+    "hi": "योगेश",
+    "gu": "યોગેશ",
+    "m": "lord of yoga"
+   },{"en": "Yogi",
+    "hi": "योगी",
+    "gu": "યોગી",
+    "m": "ascetic"
+   },{"en": "Yogen",
+    "hi": "योगेन",
+    "gu": "યોગેન",
+    "m": "yogic"
+   }
+  ],
+  "Bha": [{"en": "Bhavya",
+    "hi": "भव्य",
+    "gu": "ભવ્ય",
+    "m": "grand"
+   },{"en": "Bhavin",
+    "hi": "भाविन",
+    "gu": "ભાવિન",
+    "m": "winner"
+   },{"en": "Bhargav",
+    "hi": "भार्गव",
+    "gu": "ભાર્ગવ",
+    "m": "Parashurama"
+   },{"en": "Bhaskar",
+    "hi": "भास्कर",
+    "gu": "ભાસ્કર",
+    "m": "the Sun"
+   }
+  ],
+  "Bhi": [{"en": "Bhishm",
+    "hi": "भीष्म",
+    "gu": "ભીષ્મ",
+    "m": "the terrible vow; the Kuru elder"
+   },{"en": "Bhim",
+    "hi": "भीम",
+    "gu": "ભીમ",
+    "m": "mighty"
+   }
+  ],
+  "Bhu": [{"en": "Bhuvan",
+    "hi": "भुवन",
+    "gu": "ભુવન",
+    "m": "world"
+   },{"en": "Bhupendra",
+    "hi": "भूपेंद्र",
+    "gu": "ભૂપેન્દ્ર",
+    "m": "king of kings"
+   },{"en": "Bhumit",
+    "hi": "भूमित",
+    "gu": "ભૂમિત",
+    "m": "friend of the earth"
+   }
+  ],
+  "Dha": [{"en": "Dhairya",
+    "hi": "धैर्य",
+    "gu": "ધૈર્ય",
+    "m": "patience"
+   },{"en": "Dhanush",
+    "hi": "धनुष",
+    "gu": "ધનુષ",
+    "m": "bow"
+   },{"en": "Dharmik",
+    "hi": "धार्मिक",
+    "gu": "ધાર્મિક",
+    "m": "righteous"
+   },{"en": "Dhaval",
+    "hi": "धवल",
+    "gu": "ધવલ",
+    "m": "white, pure"
+   },{"en": "Dhruv",
+    "hi": "ध्रुव",
+    "gu": "ધ્રુવ",
+    "m": "the pole star"
+   }
+  ],
+  "Pha": [{"en": "Phalgun",
+    "hi": "फाल्गुन",
+    "gu": "ફાલ્ગુન",
+    "m": "the spring month; Arjuna"
+   },{"en": "Phanindra",
+    "hi": "फणींद्र",
+    "gu": "ફણીન્દ્ર",
+    "m": "king of serpents"
+   }
+  ],
+  "Bhe": [{"en": "Bhesaj",
+    "hi": "भेषज",
+    "gu": "ભેષજ",
+    "m": "healer"
+   }
+  ],
+  "Bho": [{"en": "Bhoumik",
+    "hi": "भौमिक",
+    "gu": "ભૌમિક",
+    "m": "of the earth"
+   },{"en": "Bhola",
+    "hi": "भोला",
+    "gu": "ભોળા",
+    "m": "innocent, Shiva"
+   }
+  ],
+  "Ja": [{"en": "Jay",
+    "hi": "जय",
+    "gu": "જય",
+    "m": "victory"
+   },{"en": "Jatin",
+    "hi": "जतिन",
+    "gu": "જતિન",
+    "m": "ascetic, Shiva"
+   },{"en": "Jagdish",
+    "hi": "जगदीश",
+    "gu": "જગદીશ",
+    "m": "lord of the world"
+   },{"en": "Jash",
+    "hi": "जश",
+    "gu": "જશ",
+    "m": "fame"
+   },{"en": "Jaival",
+    "hi": "जैवल",
+    "gu": "જૈવલ",
+    "m": "full of life"
+   }
+  ],
+  "Ji": [{"en": "Jigar",
+    "hi": "जिगर",
+    "gu": "જિગર",
+    "m": "heart, courage"
+   },{"en": "Jitesh",
+    "hi": "जितेश",
+    "gu": "જિતેશ",
+    "m": "lord of victory"
+   },{"en": "Jinay",
+    "hi": "जिनय",
+    "gu": "જિનય",
+    "m": "of the Jina"
+   },{"en": "Jivin",
+    "hi": "जीविन",
+    "gu": "જીવિન",
+    "m": "giver of life"
+   }
+  ],
+  "Khi": [],
+  "Khu": [{"en": "Khush",
+    "hi": "खुश",
+    "gu": "ખુશ",
+    "m": "happy"
+   },{"en": "Khushal",
+    "hi": "खुशाल",
+    "gu": "ખુશાલ",
+    "m": "prosperous"
+   }
+  ],
+  "Khe": [{"en": "Khem",
+    "hi": "खेम",
+    "gu": "ખેમ",
+    "m": "welfare"
+   }
+  ],
+  "Kho": [],
+  "Ju": [{"en": "Jugal",
+    "hi": "जुगल",
+    "gu": "જુગલ",
+    "m": "pair, Radha-Krishna"
+   }
+  ],
+  "Je": [{"en": "Jeet",
+    "hi": "जीत",
+    "gu": "જીત",
+    "m": "victory"
+   },{"en": "Jenil",
+    "hi": "जेनिल",
+    "gu": "જેનિલ",
+    "m": "victorious"
+   }
+  ],
+  "Jo": [{"en": "Jovan",
+    "hi": "जोवन",
+    "gu": "જોવન",
+    "m": "youthful"
+   }
+  ],
+  "Ga": [{"en": "Gaurav",
+    "hi": "गौरव",
+    "gu": "ગૌરવ",
+    "m": "pride, honour"
+   },{"en": "Gagan",
+    "hi": "गगन",
+    "gu": "ગગન",
+    "m": "sky"
+   },{"en": "Ganesh",
+    "hi": "गणेश",
+    "gu": "ગણેશ",
+    "m": "lord of the ganas"
+   },{"en": "Gautam",
+    "hi": "गौतम",
+    "gu": "ગૌતમ",
+    "m": "the Buddha; the sage"
+   }
+  ],
+  "Gi": [{"en": "Girish",
+    "hi": "गिरीश",
+    "gu": "ગિરીશ",
+    "m": "lord of the mountain, Shiva"
+   },{"en": "Giriraj",
+    "hi": "गिरिराज",
+    "gu": "ગિરિરાજ",
+    "m": "king of mountains"
+   }
+  ],
+  "Gu": [{"en": "Gunjan",
+    "hi": "गुंजन",
+    "gu": "ગુંજન",
+    "m": "humming"
+   },{"en": "Gurdeep",
+    "hi": "गुरदीप",
+    "gu": "ગુરદીપ",
+    "m": "lamp of the guru"
+   },{"en": "Gunit",
+    "hi": "गुणित",
+    "gu": "ગુણિત",
+    "m": "virtuous"
+   }
+  ],
+  "Ge": [{"en": "Geet",
+    "hi": "गीत",
+    "gu": "ગીત",
+    "m": "song"
+   }
+  ],
+  "Go": [{"en": "Govind",
+    "hi": "गोविंद",
+    "gu": "ગોવિંદ",
+    "m": "Krishna, cowherd"
+   },{"en": "Gopal",
+    "hi": "गोपाल",
+    "gu": "ગોપાલ",
+    "m": "Krishna, protector of cows"
+   },{"en": "Gokul",
+    "hi": "गोकुल",
+    "gu": "ગોકુળ",
+    "m": "Krishna's village"
+   }
+  ],
+  "Sa": [{"en": "Saksham",
+    "hi": "सक्षम",
+    "gu": "સક્ષમ",
+    "m": "capable"
+   },{"en": "Sarthak",
+    "hi": "सार्थक",
+    "gu": "સાર્થક",
+    "m": "meaningful"
+   },{"en": "Samar",
+    "hi": "समर",
+    "gu": "સમર",
+    "m": "battle; fruit"
+   },{"en": "Sahil",
+    "hi": "साहिल",
+    "gu": "સાહિલ",
+    "m": "shore"
+   },{"en": "Samarth",
+    "hi": "समर्थ",
+    "gu": "સમર્થ",
+    "m": "powerful"
+   }
+  ],
+  "Si": [{"en": "Siddharth",
+    "hi": "सिद्धार्थ",
+    "gu": "સિદ્ધાર્થ",
+    "m": "one who has attained the goal"
+   },{"en": "Siddhant",
+    "hi": "सिद्धांत",
+    "gu": "સિદ્ધાંત",
+    "m": "principle"
+   },{"en": "Simar",
+    "hi": "सिमर",
+    "gu": "સિમર",
+    "m": "remembrance of God"
+   }
+  ],
+  "Su": [{"en": "Suryansh",
+    "hi": "सूर्यांश",
+    "gu": "સૂર્યાંશ",
+    "m": "part of the Sun"
+   },{"en": "Sumit",
+    "hi": "सुमित",
+    "gu": "સુમિત",
+    "m": "good friend"
+   },{"en": "Sujal",
+    "hi": "सुजल",
+    "gu": "સુજલ",
+    "m": "pure water"
+   },{"en": "Suyash",
+    "hi": "सुयश",
+    "gu": "સુયશ",
+    "m": "good fame"
+   },{"en": "Sudhir",
+    "hi": "सुधीर",
+    "gu": "સુધીર",
+    "m": "resolute"
+   }
+  ],
+  "Se": [{"en": "Sevak",
+    "hi": "सेवक",
+    "gu": "સેવક",
+    "m": "servant of God"
+   },{"en": "Senil",
+    "hi": "सेनिल",
+    "gu": "સેનિલ",
+    "m": "of the army"
+   }
+  ],
+  "So": [{"en": "Soham",
+    "hi": "सोहम",
+    "gu": "સોહમ",
+    "m": "I am That"
+   },{"en": "Somesh",
+    "hi": "सोमेश",
+    "gu": "સોમેશ",
+    "m": "lord of the Moon"
+   },{"en": "Sohan",
+    "hi": "सोहन",
+    "gu": "સોહન",
+    "m": "handsome"
+   }
+  ],
+  "Jha": [{"en": "Jhanak",
+    "hi": "झनक",
+    "gu": "ઝણક",
+    "m": "tinkling"
+   }
+  ],
+  "Jna": [{"en": "Gyanesh",
+    "hi": "ज्ञानेश",
+    "gu": "જ્ઞાનેશ",
+    "m": "lord of knowledge"
+   },{"en": "Gyan",
+    "hi": "ज्ञान",
+    "gu": "જ્ઞાન",
+    "m": "knowledge"
+   }
+  ],
+  "Cha": [{"en": "Chaitanya",
+    "hi": "चैतन्य",
+    "gu": "ચૈતન્ય",
+    "m": "consciousness"
+   },{"en": "Charan",
+    "hi": "चरण",
+    "gu": "ચરણ",
+    "m": "feet of the Lord"
+   },{"en": "Chandan",
+    "hi": "चंदन",
+    "gu": "ચંદન",
+    "m": "sandalwood"
+   },{"en": "Chakshu",
+    "hi": "चक्षु",
+    "gu": "ચક્ષુ",
+    "m": "eye"
+   }
+  ],
+  "Chi": [{"en": "Chirag",
+    "hi": "चिराग",
+    "gu": "ચિરાગ",
+    "m": "lamp"
+   },{"en": "Chinmay",
+    "hi": "चिन्मय",
+    "gu": "ચિન્મય",
+    "m": "pure consciousness"
+   },{"en": "Chintan",
+    "hi": "चिंतन",
+    "gu": "ચિંતન",
+    "m": "contemplation"
+   }
+  ]
+ },
+ "girls": {
+  "Chu": [],
+  "Che": [{"en": "Chetna",
+    "hi": "चेतना",
+    "gu": "ચેતના",
+    "m": "awareness"
+   },{"en": "Chetali",
+    "hi": "चेताली",
+    "gu": "ચેતાલી",
+    "m": "mindful"
+   }
+  ],
+  "Cho": [],
+  "La": [{"en": "Lakshmi",
+    "hi": "लक्ष्मी",
+    "gu": "લક્ષ્મી",
+    "m": "goddess of fortune"
+   },{"en": "Lavanya",
+    "hi": "लावण्या",
+    "gu": "લાવણ્યા",
+    "m": "grace"
+   },{"en": "Latika",
+    "hi": "लतिका",
+    "gu": "લતિકા",
+    "m": "small creeper"
+   },{"en": "Lalita",
+    "hi": "ललिता",
+    "gu": "લલિતા",
+    "m": "playful, the goddess"
+   },{"en": "Larisa",
+    "hi": "लारिसा",
+    "gu": "લારિસા",
+    "m": "cheerful"
+   }
+  ],
+  "Li": [{"en": "Lipi",
+    "hi": "लिपि",
+    "gu": "લિપિ",
+    "m": "script"
+   },{"en": "Lisha",
+    "hi": "लिशा",
+    "gu": "લિશા",
+    "m": "lotus"
+   }
+  ],
+  "Lu": [{"en": "Lubdha",
+    "hi": "लुब्धा",
+    "gu": "લુબ્ધા",
+    "m": "enchanted"
+   }
+  ],
+  "Le": [{"en": "Lekha",
+    "hi": "लेखा",
+    "gu": "લેખા",
+    "m": "writing, line"
+   },{"en": "Leela",
+    "hi": "लीला",
+    "gu": "લીલા",
+    "m": "divine play"
+   }
+  ],
+  "Lo": [{"en": "Lopa",
+    "hi": "लोपा",
+    "gu": "લોપા",
+    "m": "sage Lopamudra"
+   },{"en": "Lochana",
+    "hi": "लोचना",
+    "gu": "લોચના",
+    "m": "eye"
+   }
+  ],
+  "A": [{"en": "Aanya",
+    "hi": "आन्या",
+    "gu": "આન્યા",
+    "m": "inexhaustible"
+   },{"en": "Aaradhya",
+    "hi": "आराध्या",
+    "gu": "આરાધ્યા",
+    "m": "worshipped"
+   },{"en": "Anika",
+    "hi": "अनिका",
+    "gu": "અનિકા",
+    "m": "grace, Durga"
+   },{"en": "Avni",
+    "hi": "अवनि",
+    "gu": "અવનિ",
+    "m": "earth"
+   },{"en": "Aditi",
+    "hi": "अदिति",
+    "gu": "અદિતિ",
+    "m": "boundless, mother of the gods"
+   },{"en": "Amaira",
+    "hi": "अमायरा",
+    "gu": "અમાયરા",
+    "m": "beautiful"
+   },{"en": "Anvi",
+    "hi": "अन्वी",
+    "gu": "અન્વી",
+    "m": "one of Devi's names"
+   }
+  ],
+  "I": [{"en": "Ira",
+    "hi": "इरा",
+    "gu": "ઇરા",
+    "m": "earth, Saraswati"
+   },{"en": "Ishita",
+    "hi": "इशिता",
+    "gu": "ઇશિતા",
+    "m": "mastery"
+   },{"en": "Ishani",
+    "hi": "ईशानी",
+    "gu": "ઈશાની",
+    "m": "Parvati"
+   },{"en": "Inaaya",
+    "hi": "इनाया",
+    "gu": "ઇનાયા",
+    "m": "gift"
+   }
+  ],
+  "U": [{"en": "Urvi",
+    "hi": "उर्वी",
+    "gu": "ઉર્વી",
+    "m": "earth"
+   },{"en": "Uma",
+    "hi": "उमा",
+    "gu": "ઉમા",
+    "m": "Parvati"
+   },{"en": "Ujjwala",
+    "hi": "उज्ज्वला",
+    "gu": "ઉજ્જ્વલા",
+    "m": "bright"
+   },{"en": "Utkarsha",
+    "hi": "उत्कर्षा",
+    "gu": "ઉત્કર્ષા",
+    "m": "advancement"
+   }
+  ],
+  "E": [{"en": "Esha",
+    "hi": "एशा",
+    "gu": "એશા",
+    "m": "desire, Parvati"
+   },{"en": "Ekta",
+    "hi": "एकता",
+    "gu": "એકતા",
+    "m": "unity"
+   },{"en": "Ela",
+    "hi": "एला",
+    "gu": "એલા",
+    "m": "cardamom; earth"
+   }
+  ],
+  "O": [{"en": "Ojasvi",
+    "hi": "ओजस्वी",
+    "gu": "ઓજસ્વી",
+    "m": "radiant"
+   },{"en": "Oviya",
+    "hi": "ओविया",
+    "gu": "ઓવિયા",
+    "m": "artist, beautiful"
+   }
+  ],
+  "Va": [{"en": "Vanya",
+    "hi": "वान्या",
+    "gu": "વાન્યા",
+    "m": "of the forest"
+   },{"en": "Vaishnavi",
+    "hi": "वैष्णवी",
+    "gu": "વૈષ્ણવી",
+    "m": "devotee of Vishnu"
+   },{"en": "Vaidehi",
+    "hi": "वैदेही",
+    "gu": "વૈદેહી",
+    "m": "Sita"
+   },{"en": "Vamika",
+    "hi": "वामिका",
+    "gu": "વામિકા",
+    "m": "Durga"
+   },{"en": "Varsha",
+    "hi": "वर्षा",
+    "gu": "વર્ષા",
+    "m": "rain"
+   }
+  ],
+  "Vi": [{"en": "Vidhi",
+    "hi": "विधि",
+    "gu": "વિધિ",
+    "m": "destiny, ritual"
+   },{"en": "Vidya",
+    "hi": "विद्या",
+    "gu": "વિદ્યા",
+    "m": "knowledge"
+   },{"en": "Vishakha",
+    "hi": "विशाखा",
+    "gu": "વિશાખા",
+    "m": "the nakshatra"
+   },{"en": "Vihana",
+    "hi": "विहाना",
+    "gu": "વિહાના",
+    "m": "dawn"
+   },{"en": "Vinaya",
+    "hi": "विनया",
+    "gu": "વિનયા",
+    "m": "modest"
+   }
+  ],
+  "Vu": [],
+  "Ve": [{"en": "Veda",
+    "hi": "वेदा",
+    "gu": "વેદા",
+    "m": "sacred knowledge"
+   },{"en": "Vedika",
+    "hi": "वेदिका",
+    "gu": "વેદિકા",
+    "m": "altar"
+   },{"en": "Venya",
+    "hi": "वेण्या",
+    "gu": "વેણ્યા",
+    "m": "lovable"
+   }
+  ],
+  "Vo": [],
+  "Ka": [{"en": "Kavya",
+    "hi": "काव्या",
+    "gu": "કાવ્યા",
+    "m": "poetry"
+   },{"en": "Kashvi",
+    "hi": "काश्वी",
+    "gu": "કાશ્વી",
+    "m": "shining"
+   },{"en": "Kanak",
+    "hi": "कनक",
+    "gu": "કનક",
+    "m": "gold"
+   },{"en": "Kamya",
+    "hi": "काम्या",
+    "gu": "કામ્યા",
+    "m": "desirable"
+   },{"en": "Karuna",
+    "hi": "करुणा",
+    "gu": "કરુણા",
+    "m": "compassion"
+   }
+  ],
+  "Ki": [{"en": "Kiara",
+    "hi": "कियारा",
+    "gu": "કિયારા",
+    "m": "dark-haired; light"
+   },{"en": "Kinjal",
+    "hi": "किंजल",
+    "gu": "કિંજલ",
+    "m": "river bank"
+   },{"en": "Kirti",
+    "hi": "कीर्ति",
+    "gu": "કીર્તિ",
+    "m": "fame"
+   },{"en": "Kimaya",
+    "hi": "किमया",
+    "gu": "કિમયા",
+    "m": "miracle"
+   }
+  ],
+  "Ku": [{"en": "Kuhu",
+    "hi": "कुहू",
+    "gu": "કુહૂ",
+    "m": "the cuckoo's call"
+   },{"en": "Kumud",
+    "hi": "कुमुद",
+    "gu": "કુમુદ",
+    "m": "white lotus"
+   },{"en": "Kusum",
+    "hi": "कुसुम",
+    "gu": "કુસુમ",
+    "m": "flower"
+   }
+  ],
+  "Gha": [],
+  "Nga": [],
+  "Chha": [{"en": "Chhavi",
+    "hi": "छवि",
+    "gu": "છવિ",
+    "m": "image, radiance"
+   },{"en": "Chhaya",
+    "hi": "छाया",
+    "gu": "છાયા",
+    "m": "shade; Surya's wife"
+   }
+  ],
+  "Ke": [{"en": "Keya",
+    "hi": "केया",
+    "gu": "કેયા",
+    "m": "a fragrant flower"
+   },{"en": "Keshvi",
+    "hi": "केशवी",
+    "gu": "કેશવી",
+    "m": "beautiful hair"
+   },{"en": "Ketaki",
+    "hi": "केतकी",
+    "gu": "કેતકી",
+    "m": "screwpine flower"
+   },{"en": "Kesar",
+    "hi": "केसर",
+    "gu": "કેસર",
+    "m": "saffron"
+   }
+  ],
+  "Ko": [{"en": "Komal",
+    "hi": "कोमल",
+    "gu": "કોમલ",
+    "m": "tender"
+   },{"en": "Kokila",
+    "hi": "कोकिला",
+    "gu": "કોકિલા",
+    "m": "cuckoo"
+   },{"en": "Koyal",
+    "hi": "कोयल",
+    "gu": "કોયલ",
+    "m": "cuckoo"
+   }
+  ],
+  "Ha": [{"en": "Hansika",
+    "hi": "हंसिका",
+    "gu": "હંસિકા",
+    "m": "little swan"
+   },{"en": "Harshita",
+    "hi": "हर्षिता",
+    "gu": "હર્ષિતા",
+    "m": "joyful"
+   },{"en": "Hasti",
+    "hi": "हस्ती",
+    "gu": "હસ્તી",
+    "m": "existence"
+   },{"en": "Harini",
+    "hi": "हरिणी",
+    "gu": "હરિણી",
+    "m": "doe"
+   }
+  ],
+  "Hi": [{"en": "Hiral",
+    "hi": "हिरल",
+    "gu": "હિરલ",
+    "m": "diamond-like"
+   },{"en": "Hina",
+    "hi": "हिना",
+    "gu": "હિના",
+    "m": "henna"
+   },{"en": "Himani",
+    "hi": "हिमानी",
+    "gu": "હિમાની",
+    "m": "Parvati, of snow"
+   },{"en": "Hitakshi",
+    "hi": "हिताक्षी",
+    "gu": "હિતાક્ષી",
+    "m": "kind-eyed"
+   }
+  ],
+  "Hu": [],
+  "He": [{"en": "Hetvi",
+    "hi": "हेत्वी",
+    "gu": "હેત્વી",
+    "m": "loving"
+   },{"en": "Hemal",
+    "hi": "हेमल",
+    "gu": "હેમલ",
+    "m": "golden"
+   },{"en": "Hema",
+    "hi": "हेमा",
+    "gu": "હેમા",
+    "m": "gold"
+   },{"en": "Heer",
+    "hi": "हीर",
+    "gu": "હીર",
+    "m": "diamond"
+   }
+  ],
+  "Ho": [],
+  "Da": [{"en": "Daksha",
+    "hi": "दक्षा",
+    "gu": "દક્ષા",
+    "m": "capable"
+   },{"en": "Damini",
+    "hi": "दामिनी",
+    "gu": "દામિની",
+    "m": "lightning"
+   },{"en": "Darshana",
+    "hi": "दर्शना",
+    "gu": "દર્શના",
+    "m": "vision"
+   },{"en": "Daya",
+    "hi": "दया",
+    "gu": "દયા",
+    "m": "mercy"
+   }
+  ],
+  "Di": [{"en": "Diya",
+    "hi": "दिया",
+    "gu": "દિયા",
+    "m": "lamp"
+   },{"en": "Disha",
+    "hi": "दिशा",
+    "gu": "દિશા",
+    "m": "direction"
+   },{"en": "Divya",
+    "hi": "दिव्या",
+    "gu": "દિવ્યા",
+    "m": "divine"
+   },{"en": "Dipti",
+    "hi": "दीप्ति",
+    "gu": "દીપ્તિ",
+    "m": "radiance"
+   }
+  ],
+  "Du": [{"en": "Durga",
+    "hi": "दुर्गा",
+    "gu": "દુર્ગા",
+    "m": "the invincible goddess"
+   },{"en": "Dulari",
+    "hi": "दुलारी",
+    "gu": "દુલારી",
+    "m": "beloved daughter"
+   }
+  ],
+  "De": [{"en": "Devi",
+    "hi": "देवी",
+    "gu": "દેવી",
+    "m": "goddess"
+   },{"en": "Devanshi",
+    "hi": "देवांशी",
+    "gu": "દેવાંશી",
+    "m": "part of the divine"
+   },{"en": "Deepa",
+    "hi": "दीपा",
+    "gu": "દીપા",
+    "m": "lamp"
+   },{"en": "Deshna",
+    "hi": "देशना",
+    "gu": "દેશના",
+    "m": "teaching, gift"
+   }
+  ],
+  "Do": [],
+  "Ma": [{"en": "Mahi",
+    "hi": "माही",
+    "gu": "માહી",
+    "m": "earth"
+   },{"en": "Manasvi",
+    "hi": "मनस्वी",
+    "gu": "મનસ્વી",
+    "m": "intelligent"
+   },{"en": "Maitri",
+    "hi": "मैत्री",
+    "gu": "મૈત્રી",
+    "m": "friendship"
+   },{"en": "Mansi",
+    "hi": "मानसी",
+    "gu": "માનસી",
+    "m": "of the mind"
+   },{"en": "Madhavi",
+    "hi": "माधवी",
+    "gu": "માધવી",
+    "m": "spring creeper"
+   }
+  ],
+  "Mi": [{"en": "Mira",
+    "hi": "मीरा",
+    "gu": "મીરા",
+    "m": "the saint-poet"
+   },{"en": "Mishka",
+    "hi": "मिश्का",
+    "gu": "મિશ્કા",
+    "m": "gift of love"
+   },{"en": "Mitali",
+    "hi": "मिताली",
+    "gu": "મિતાલી",
+    "m": "friendly"
+   },{"en": "Mithila",
+    "hi": "मिथिला",
+    "gu": "મિથિલા",
+    "m": "Sita's kingdom"
+   }
+  ],
+  "Mu": [{"en": "Mukta",
+    "hi": "मुक्ता",
+    "gu": "મુક્તા",
+    "m": "pearl, liberated"
+   },{"en": "Mudra",
+    "hi": "मुद्रा",
+    "gu": "મુદ્રા",
+    "m": "gesture"
+   },{"en": "Mugdha",
+    "hi": "मुग्धा",
+    "gu": "મુગ્ધા",
+    "m": "innocent"
+   }
+  ],
+  "Me": [{"en": "Meera",
+    "hi": "मीरा",
+    "gu": "મીરા",
+    "m": "devotee of Krishna"
+   },{"en": "Megha",
+    "hi": "मेघा",
+    "gu": "મેઘા",
+    "m": "cloud"
+   },{"en": "Medha",
+    "hi": "मेधा",
+    "gu": "મેધા",
+    "m": "intellect"
+   },{"en": "Meher",
+    "hi": "मेहर",
+    "gu": "મેહર",
+    "m": "grace"
+   }
+  ],
+  "Mo": [{"en": "Mohini",
+    "hi": "मोहिनी",
+    "gu": "મોહિની",
+    "m": "enchantress"
+   },{"en": "Moksha",
+    "hi": "मोक्षा",
+    "gu": "મોક્ષા",
+    "m": "liberation"
+   },{"en": "Moulika",
+    "hi": "मौलिका",
+    "gu": "મૌલિકા",
+    "m": "original"
+   }
+  ],
+  "Ta": [{"en": "Tanvi",
+    "hi": "तन्वी",
+    "gu": "તન્વી",
+    "m": "slender, Durga"
+   },{"en": "Tara",
+    "hi": "तारा",
+    "gu": "તારા",
+    "m": "star"
+   },{"en": "Tanishka",
+    "hi": "तनिष्का",
+    "gu": "તનિષ્કા",
+    "m": "goddess of gold"
+   },{"en": "Tamanna",
+    "hi": "तमन्ना",
+    "gu": "તમન્ના",
+    "m": "wish"
+   },{"en": "Tanya",
+    "hi": "तान्या",
+    "gu": "તાન્યા",
+    "m": "of the family"
+   }
+  ],
+  "Ti": [{"en": "Tisha",
+    "hi": "तिशा",
+    "gu": "તિશા",
+    "m": "joy"
+   },{"en": "Tithi",
+    "hi": "तिथि",
+    "gu": "તિથિ",
+    "m": "lunar day"
+   },{"en": "Tilottama",
+    "hi": "तिलोत्तमा",
+    "gu": "તિલોત્તમા",
+    "m": "the celestial dancer"
+   }
+  ],
+  "Tu": [{"en": "Tulsi",
+    "hi": "तुलसी",
+    "gu": "તુલસી",
+    "m": "holy basil"
+   },{"en": "Tusti",
+    "hi": "तुष्टि",
+    "gu": "તુષ્ટિ",
+    "m": "contentment"
+   }
+  ],
+  "Te": [{"en": "Tejal",
+    "hi": "तेजल",
+    "gu": "તેજલ",
+    "m": "radiant"
+   },{"en": "Tejasvi",
+    "hi": "तेजस्वी",
+    "gu": "તેજસ્વી",
+    "m": "brilliant"
+   },{"en": "Tejaswini",
+    "hi": "तेजस्विनी",
+    "gu": "તેજસ્વિની",
+    "m": "lustrous"
+   }
+  ],
+  "To": [{"en": "Toshani",
+    "hi": "तोषणी",
+    "gu": "તોષણી",
+    "m": "Durga"
+   },{"en": "Toral",
+    "hi": "तोरल",
+    "gu": "તોરલ",
+    "m": "Gujarati folk heroine"
+   }
+  ],
+  "Pa": [{"en": "Pari",
+    "hi": "परी",
+    "gu": "પરી",
+    "m": "fairy"
+   },{"en": "Parvati",
+    "hi": "पार्वती",
+    "gu": "પાર્વતી",
+    "m": "daughter of the mountain"
+   },{"en": "Pallavi",
+    "hi": "पल्लवी",
+    "gu": "પલ્લવી",
+    "m": "new leaf"
+   },{"en": "Pakhi",
+    "hi": "पाखी",
+    "gu": "પાખી",
+    "m": "bird"
+   },{"en": "Panya",
+    "hi": "पान्या",
+    "gu": "પાન્યા",
+    "m": "admired"
+   }
+  ],
+  "Pi": [{"en": "Pihu",
+    "hi": "पीहू",
+    "gu": "પીહુ",
+    "m": "peacock's call"
+   },{"en": "Piya",
+    "hi": "पिया",
+    "gu": "પિયા",
+    "m": "beloved"
+   },{"en": "Pinal",
+    "hi": "पिनल",
+    "gu": "પિનલ",
+    "m": "pretty"
+   }
+  ],
+  "Pu": [{"en": "Purvi",
+    "hi": "पूर्वी",
+    "gu": "પૂર્વી",
+    "m": "eastern; a raga"
+   },{"en": "Pooja",
+    "hi": "पूजा",
+    "gu": "પૂજા",
+    "m": "worship"
+   },{"en": "Punam",
+    "hi": "पूनम",
+    "gu": "પૂનમ",
+    "m": "full moon"
+   },{"en": "Pushti",
+    "hi": "पुष्टि",
+    "gu": "પુષ્ટિ",
+    "m": "nourishment, grace"
+   }
+  ],
+  "Sha": [{"en": "Shanaya",
+    "hi": "शनाया",
+    "gu": "શનાયા",
+    "m": "first ray of the Sun"
+   },{"en": "Shreya",
+    "hi": "श्रेया",
+    "gu": "શ્રેયા",
+    "m": "auspicious"
+   },{"en": "Shanvi",
+    "hi": "शान्वी",
+    "gu": "શાન્વી",
+    "m": "Lakshmi"
+   },{"en": "Sharvi",
+    "hi": "शर्वी",
+    "gu": "શર્વી",
+    "m": "Parvati"
+   },{"en": "Shalini",
+    "hi": "शालिनी",
+    "gu": "શાલિની",
+    "m": "modest"
+   }
+  ],
+  "Na": [{"en": "Navya",
+    "hi": "नव्या",
+    "gu": "નવ્યા",
+    "m": "new, praiseworthy"
+   },{"en": "Naisha",
+    "hi": "नैशा",
+    "gu": "નૈશા",
+    "m": "special"
+   },{"en": "Nandini",
+    "hi": "नंदिनी",
+    "gu": "નંદિની",
+    "m": "daughter; the sacred cow"
+   },{"en": "Namita",
+    "hi": "नमिता",
+    "gu": "નમિતા",
+    "m": "humble"
+   },{"en": "Nandika",
+    "hi": "नंदिका",
+    "gu": "નંદિકા",
+    "m": "Lakshmi"
+   }
+  ],
+  "Tha": [],
+  "Pe": [],
+  "Po": [{"en": "Poonam",
+    "hi": "पूनम",
+    "gu": "પૂનમ",
+    "m": "full moon"
+   }
+  ],
+  "Ra": [{"en": "Radha",
+    "hi": "राधा",
+    "gu": "રાધા",
+    "m": "Krishna's beloved"
+   },{"en": "Rachana",
+    "hi": "रचना",
+    "gu": "રચના",
+    "m": "creation"
+   },{"en": "Rashi",
+    "hi": "राशि",
+    "gu": "રાશિ",
+    "m": "zodiac sign; heap"
+   },{"en": "Rajvi",
+    "hi": "राजवी",
+    "gu": "રાજવી",
+    "m": "royal"
+   },{"en": "Ragini",
+    "hi": "रागिनी",
+    "gu": "રાગિની",
+    "m": "melody"
+   }
+  ],
+  "Ri": [{"en": "Riya",
+    "hi": "रिया",
+    "gu": "રિયા",
+    "m": "singer"
+   },{"en": "Riddhi",
+    "hi": "ऋद्धि",
+    "gu": "ઋદ્ધિ",
+    "m": "prosperity"
+   },{"en": "Rishika",
+    "hi": "ऋषिका",
+    "gu": "ઋષિકા",
+    "m": "female sage"
+   },{"en": "Ritika",
+    "hi": "रितिका",
+    "gu": "રિતિકા",
+    "m": "of the seasons"
+   }
+  ],
+  "Ru": [{"en": "Ruhi",
+    "hi": "रूही",
+    "gu": "રુહી",
+    "m": "soul"
+   },{"en": "Rutvi",
+    "hi": "ऋत्वी",
+    "gu": "ઋત્વી",
+    "m": "season"
+   },{"en": "Rupal",
+    "hi": "रूपल",
+    "gu": "રૂપલ",
+    "m": "made of silver"
+   },{"en": "Rudrani",
+    "hi": "रुद्राणी",
+    "gu": "રુદ્રાણી",
+    "m": "Parvati"
+   }
+  ],
+  "Re": [{"en": "Reva",
+    "hi": "रेवा",
+    "gu": "રેવા",
+    "m": "the Narmada"
+   },{"en": "Renuka",
+    "hi": "रेणुका",
+    "gu": "રેણુકા",
+    "m": "Parashurama's mother"
+   },{"en": "Rekha",
+    "hi": "रेखा",
+    "gu": "રેખા",
+    "m": "line"
+   }
+  ],
+  "Ro": [{"en": "Roshni",
+    "hi": "रोशनी",
+    "gu": "રોશની",
+    "m": "light"
+   },{"en": "Rohini",
+    "hi": "रोहिणी",
+    "gu": "રોહિણી",
+    "m": "the nakshatra, Krishna's mother"
+   },{"en": "Roma",
+    "hi": "रोमा",
+    "gu": "રોમા",
+    "m": "Lakshmi"
+   }
+  ],
+  "Ni": [{"en": "Niharika",
+    "hi": "निहारिका",
+    "gu": "નિહારિકા",
+    "m": "nebula, dew"
+   },{"en": "Nitya",
+    "hi": "नित्या",
+    "gu": "નિત્યા",
+    "m": "eternal"
+   },{"en": "Nidhi",
+    "hi": "निधि",
+    "gu": "નિધિ",
+    "m": "treasure"
+   },{"en": "Nisha",
+    "hi": "निशा",
+    "gu": "નિશા",
+    "m": "night"
+   },{"en": "Nirali",
+    "hi": "निराली",
+    "gu": "નિરાલી",
+    "m": "unique"
+   }
+  ],
+  "Nu": [{"en": "Nupur",
+    "hi": "नूपुर",
+    "gu": "નૂપુર",
+    "m": "anklet"
+   },{"en": "Nutan",
+    "hi": "नूतन",
+    "gu": "નૂતન",
+    "m": "new"
+   }
+  ],
+  "Ne": [{"en": "Neha",
+    "hi": "नेहा",
+    "gu": "નેહા",
+    "m": "love, rain"
+   },{"en": "Netra",
+    "hi": "नेत्रा",
+    "gu": "નેત્રા",
+    "m": "eyes"
+   },{"en": "Neeti",
+    "hi": "नीति",
+    "gu": "નીતિ",
+    "m": "ethics"
+   }
+  ],
+  "No": [],
+  "Ya": [{"en": "Yashvi",
+    "hi": "यश्वी",
+    "gu": "યશ્વી",
+    "m": "famous"
+   },{"en": "Yamini",
+    "hi": "यामिनी",
+    "gu": "યામિની",
+    "m": "night"
+   },{"en": "Yashoda",
+    "hi": "यशोदा",
+    "gu": "યશોદા",
+    "m": "Krishna's foster mother"
+   },{"en": "Yami",
+    "hi": "यमी",
+    "gu": "યમી",
+    "m": "the Yamuna"
+   }
+  ],
+  "Yi": [],
+  "Yu": [{"en": "Yukti",
+    "hi": "युक्ति",
+    "gu": "યુક્તિ",
+    "m": "reasoning"
+   },{"en": "Yuvika",
+    "hi": "युविका",
+    "gu": "યુવિકા",
+    "m": "young woman"
+   },{"en": "Yuthika",
+    "hi": "यूथिका",
+    "gu": "યૂથિકા",
+    "m": "jasmine"
+   }
+  ],
+  "Ye": [],
+  "Yo": [{"en": "Yogita",
+    "hi": "योगिता",
+    "gu": "યોગિતા",
+    "m": "one who can concentrate"
+   },{"en": "Yogini",
+    "hi": "योगिनी",
+    "gu": "યોગિની",
+    "m": "female yogi"
+   }
+  ],
+  "Bha": [{"en": "Bhavya",
+    "hi": "भव्या",
+    "gu": "ભવ્યા",
+    "m": "grand, Parvati"
+   },{"en": "Bhavika",
+    "hi": "भाविका",
+    "gu": "ભાવિકા",
+    "m": "devoted"
+   },{"en": "Bhakti",
+    "hi": "भक्ति",
+    "gu": "ભક્તિ",
+    "m": "devotion"
+   },{"en": "Bhairavi",
+    "hi": "भैरवी",
+    "gu": "ભૈરવી",
+    "m": "a raga; the goddess"
+   }
+  ],
+  "Bhi": [],
+  "Bhu": [{"en": "Bhumi",
+    "hi": "भूमि",
+    "gu": "ભૂમિ",
+    "m": "earth"
+   },{"en": "Bhuvi",
+    "hi": "भुवि",
+    "gu": "ભુવિ",
+    "m": "heaven, earth"
+   }
+  ],
+  "Dha": [{"en": "Dhara",
+    "hi": "धारा",
+    "gu": "ધારા",
+    "m": "flow, earth"
+   },{"en": "Dhanvi",
+    "hi": "धन्वी",
+    "gu": "ધન્વી",
+    "m": "wealthy"
+   },{"en": "Dharini",
+    "hi": "धारिणी",
+    "gu": "ધારિણી",
+    "m": "the earth"
+   },{"en": "Dhriti",
+    "hi": "धृति",
+    "gu": "ધૃતિ",
+    "m": "steadfastness"
+   }
+  ],
+  "Pha": [{"en": "Phalguni",
+    "hi": "फाल्गुनी",
+    "gu": "ફાલ્ગુની",
+    "m": "born in Phalguna"
+   }
+  ],
+  "Bhe": [],
+  "Bho": [{"en": "Bhoomika",
+    "hi": "भूमिका",
+    "gu": "ભૂમિકા",
+    "m": "role, earth"
+   }
+  ],
+  "Ja": [{"en": "Jaya",
+    "hi": "जया",
+    "gu": "જયા",
+    "m": "victorious"
+   },{"en": "Jahnavi",
+    "hi": "जाह्नवी",
+    "gu": "જાહ્નવી",
+    "m": "the Ganga"
+   },{"en": "Janvi",
+    "hi": "जान्वी",
+    "gu": "જાન્વી",
+    "m": "the Ganga"
+   },{"en": "Jasmin",
+    "hi": "जैस्मिन",
+    "gu": "જૈસ્મિન",
+    "m": "the flower"
+   },{"en": "Jagruti",
+    "hi": "जागृति",
+    "gu": "જાગૃતિ",
+    "m": "awakening"
+   }
+  ],
+  "Ji": [{"en": "Jiya",
+    "hi": "जिया",
+    "gu": "જિયા",
+    "m": "heart"
+   },{"en": "Jinal",
+    "hi": "जिनल",
+    "gu": "જિનલ",
+    "m": "of the Jina"
+   },{"en": "Jigisha",
+    "hi": "जिगीषा",
+    "gu": "જિગીષા",
+    "m": "desire to win"
+   }
+  ],
+  "Khi": [],
+  "Khu": [{"en": "Khushi",
+    "hi": "खुशी",
+    "gu": "ખુશી",
+    "m": "happiness"
+   },{"en": "Khushboo",
+    "hi": "खुशबू",
+    "gu": "ખુશ્બૂ",
+    "m": "fragrance"
+   }
+  ],
+  "Khe": [],
+  "Kho": [],
+  "Ju": [{"en": "Juhi",
+    "hi": "जूही",
+    "gu": "જૂહી",
+    "m": "jasmine"
+   }
+  ],
+  "Je": [{"en": "Jenika",
+    "hi": "जेनिका",
+    "gu": "જેનિકા",
+    "m": "gracious"
+   }
+  ],
+  "Jo": [{"en": "Joshita",
+    "hi": "जोशिता",
+    "gu": "જોશિતા",
+    "m": "pleased"
+   },{"en": "Jovita",
+    "hi": "जोविता",
+    "gu": "જોવિતા",
+    "m": "joyful"
+   }
+  ],
+  "Ga": [{"en": "Gauri",
+    "hi": "गौरी",
+    "gu": "ગૌરી",
+    "m": "Parvati, fair"
+   },{"en": "Gargi",
+    "hi": "गार्गी",
+    "gu": "ગાર્ગી",
+    "m": "the Vedic philosopher"
+   },{"en": "Gayatri",
+    "hi": "गायत्री",
+    "gu": "ગાયત્રી",
+    "m": "the sacred mantra"
+   },{"en": "Garima",
+    "hi": "गरिमा",
+    "gu": "ગરિમા",
+    "m": "dignity"
+   }
+  ],
+  "Gi": [{"en": "Gira",
+    "hi": "गिरा",
+    "gu": "ગિરા",
+    "m": "speech, Saraswati"
+   },{"en": "Girija",
+    "hi": "गिरिजा",
+    "gu": "ગિરિજા",
+    "m": "Parvati"
+   }
+  ],
+  "Gu": [{"en": "Gunjan",
+    "hi": "गुंजन",
+    "gu": "ગુંજન",
+    "m": "humming of bees"
+   },{"en": "Gunika",
+    "hi": "गुणिका",
+    "gu": "ગુણિકા",
+    "m": "virtuous"
+   }
+  ],
+  "Ge": [{"en": "Geeta",
+    "hi": "गीता",
+    "gu": "ગીતા",
+    "m": "the song divine"
+   },{"en": "Geetika",
+    "hi": "गीतिका",
+    "gu": "ગીતિકા",
+    "m": "little song"
+   }
+  ],
+  "Go": [{"en": "Gopika",
+    "hi": "गोपिका",
+    "gu": "ગોપિકા",
+    "m": "cowherd girl"
+   },{"en": "Gomati",
+    "hi": "गोमती",
+    "gu": "ગોમતી",
+    "m": "the river"
+   }
+  ],
+  "Sa": [{"en": "Saanvi",
+    "hi": "सान्वी",
+    "gu": "સાન્વી",
+    "m": "Lakshmi"
+   },{"en": "Sara",
+    "hi": "सारा",
+    "gu": "સારા",
+    "m": "essence"
+   },{"en": "Samaira",
+    "hi": "समायरा",
+    "gu": "સમાયરા",
+    "m": "enchanting"
+   },{"en": "Sakshi",
+    "hi": "साक्षी",
+    "gu": "સાક્ષી",
+    "m": "witness"
+   },{"en": "Sanvi",
+    "hi": "सान्वी",
+    "gu": "સાન્વી",
+    "m": "knowledge"
+   }
+  ],
+  "Si": [{"en": "Siya",
+    "hi": "सिया",
+    "gu": "સિયા",
+    "m": "Sita"
+   },{"en": "Siddhi",
+    "hi": "सिद्धि",
+    "gu": "સિદ્ધિ",
+    "m": "attainment"
+   },{"en": "Simran",
+    "hi": "सिमरन",
+    "gu": "સિમરન",
+    "m": "remembrance"
+   }
+  ],
+  "Su": [{"en": "Suhani",
+    "hi": "सुहानी",
+    "gu": "સુહાની",
+    "m": "pleasant"
+   },{"en": "Surbhi",
+    "hi": "सुरभि",
+    "gu": "સુરભિ",
+    "m": "fragrance; the divine cow"
+   },{"en": "Suhasini",
+    "hi": "सुहासिनी",
+    "gu": "સુહાસિની",
+    "m": "smiling"
+   },{"en": "Sumedha",
+    "hi": "सुमेधा",
+    "gu": "સુમેધા",
+    "m": "wise"
+   },{"en": "Sudha",
+    "hi": "सुधा",
+    "gu": "સુધા",
+    "m": "nectar"
+   }
+  ],
+  "Se": [{"en": "Sejal",
+    "hi": "सेजल",
+    "gu": "સેજલ",
+    "m": "river water"
+   },{"en": "Sena",
+    "hi": "सेना",
+    "gu": "સેના",
+    "m": "army; Indra's wife"
+   }
+  ],
+  "So": [{"en": "Sonal",
+    "hi": "सोनल",
+    "gu": "સોનલ",
+    "m": "golden"
+   },{"en": "Soumya",
+    "hi": "सौम्या",
+    "gu": "સૌમ્યા",
+    "m": "gentle"
+   },{"en": "Sonakshi",
+    "hi": "सोनाक्षी",
+    "gu": "સોનાક્ષી",
+    "m": "golden-eyed"
+   }
+  ],
+  "Jha": [{"en": "Jhanvi",
+    "hi": "झान्वी",
+    "gu": "ઝાન્વી",
+    "m": "the Ganga"
+   },{"en": "Jhilmil",
+    "hi": "झिलमिल",
+    "gu": "ઝિલમિલ",
+    "m": "sparkle"
+   }
+  ],
+  "Jna": [{"en": "Gyanvi",
+    "hi": "ज्ञानवी",
+    "gu": "જ્ઞાનવી",
+    "m": "wise"
+   }
+  ],
+  "Cha": [{"en": "Charvi",
+    "hi": "चार्वी",
+    "gu": "ચાર્વી",
+    "m": "beautiful"
+   },{"en": "Chandni",
+    "hi": "चाँदनी",
+    "gu": "ચાંદની",
+    "m": "moonlight"
+   },{"en": "Charu",
+    "hi": "चारु",
+    "gu": "ચારુ",
+    "m": "lovely"
+   },{"en": "Chandrika",
+    "hi": "चंद्रिका",
+    "gu": "ચંદ્રિકા",
+    "m": "moonlight"
+   }
+  ],
+  "Chi": [{"en": "Chitra",
+    "hi": "चित्रा",
+    "gu": "ચિત્રા",
+    "m": "the nakshatra; picture"
+   },{"en": "Chinmayi",
+    "hi": "चिन्मयी",
+    "gu": "ચિન્મયી",
+    "m": "blissful consciousness"
+   },{"en": "Chitrangada",
+    "hi": "चित्रांगदा",
+    "gu": "ચિત્રાંગદા",
+    "m": "Arjuna's wife"
+   }
+  ]
+ }
+}

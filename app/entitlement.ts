@@ -4,7 +4,8 @@
 // Privacy: the device id is a random UUID that is sent only with a purchase claim; never a name or email.
 import { ENTITLEMENT_PUBLIC_KEY_JWK, IS_PLACEHOLDER } from './config.ts';
 
-export type Sku = 'report_single' | 'family_annual';
+export type Sku = 'report_single' | 'family_annual' | 'naam_report';
+export const CONSUMABLE_SKUS: Sku[] = ['report_single', 'naam_report'];
 export interface Entitlement {
   sku: Sku;
   source: 'play';
@@ -14,8 +15,10 @@ export interface Entitlement {
   iat: number;
   /** device id the token was issued to */
   dev: string;
-  /** remaining single-report credits (report_single only) */
+  /** remaining muhurta-report credits (report_single) */
   credits?: number;
+  /** remaining Namakarana-report credits (naam_report) */
+  naam?: number;
 }
 export const OFFLINE_GRACE_SECONDS = 7 * 86400;
 
@@ -47,7 +50,7 @@ export async function verifyToken(jws: string, jwk: JsonWebKey | null = ENTITLEM
     const ok = await subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, key, b64u.decode(parts[2]), utf8.encode(`${parts[0]}.${parts[1]}`));
     if (!ok) return null;
     const p = decodePayload(jws);
-    if (!p || (p.sku !== 'report_single' && p.sku !== 'family_annual') || p.source !== 'play' || typeof p.exp !== 'number' || typeof p.iat !== 'number' || typeof p.dev !== 'string') return null;
+    if (!p || !['report_single', 'family_annual', 'naam_report'].includes(p.sku) || p.source !== 'play' || typeof p.exp !== 'number' || typeof p.iat !== 'number' || typeof p.dev !== 'string') return null;
     return p;
   } catch { return null; }
 }
@@ -82,26 +85,33 @@ export async function loadEntitlement(now = Date.now(), jwk: JsonWebKey | null =
   const stale = nowS - p.iat > OFFLINE_GRACE_SECONDS;
   return { entitlement: p, stale };
 }
-/** True when the device may render a full report / family features. A stale token still counts (offline grace); the caller refreshes when online. */
+/** True when the device may render the full report of the given kind. A stale token still counts (offline grace); the caller refreshes when online.
+ *  The family plan unlocks every report; consumable credits are counted per kind minus the reports already consumed locally. */
 export async function isEntitled(sku: Sku | Sku[], now = Date.now(), jwk: JsonWebKey | null = ENTITLEMENT_PUBLIC_KEY_JWK): Promise<boolean> {
   if (IS_PLACEHOLDER(jwk as any) && jwk == null) return false;
   const r = await loadEntitlement(now, jwk);
   if (!r) return false;
   const want = Array.isArray(sku) ? sku : [sku];
   const e = r.entitlement;
-  if (e.sku === 'family_annual') return want.includes('family_annual') || want.includes('report_single');
-  if (e.sku === 'report_single') { const consumed: string[] = (await S().get(CONSUMED_KEY)) ?? []; return want.includes('report_single') && (e.credits ?? 0) - consumed.length > 0; }
+  if (e.sku === 'family_annual') return true;
+  const consumed: string[] = (await S().get(CONSUMED_KEY)) ?? [];
+  for (const w of want) if (w !== 'family_annual' && creditsLeft(e, w, consumed) > 0) return true;
   return false;
 }
-/** Consume one single-report credit when the full report is first rendered. Family plan is unlimited (no-op).
- *  Local bookkeeping only; the Worker's refresh endpoint is the source of truth once implemented. */
+function creditsLeft(e: Entitlement, kind: Sku, consumed: string[]): number {
+  const total = kind === 'naam_report' ? (e.naam ?? 0) : kind === 'report_single' ? (e.credits ?? 0) : 0;
+  const used = consumed.filter(k => (kind === 'naam_report') === k.startsWith('naam|')).length;
+  return total - used;
+}
+/** Consume one credit of the given kind when its full report is first rendered. Family plan is unlimited (no-op).
+ *  Local bookkeeping only; the Worker's refresh endpoint is the source of truth. Namakarana keys start with 'naam|'. */
 export async function consumeReport(reportKey: string, now = Date.now(), jwk: JsonWebKey | null = ENTITLEMENT_PUBLIC_KEY_JWK): Promise<boolean> {
   const r = await loadEntitlement(now, jwk); if (!r) return false;
   if (r.entitlement.sku === 'family_annual') return true;
   const consumed: string[] = (await S().get(CONSUMED_KEY)) ?? [];
   if (consumed.includes(reportKey)) return true; // already paid for this exact report
-  const credits = (r.entitlement.credits ?? 0) - consumed.length;
-  if (credits <= 0) return false;
+  const kind: Sku = reportKey.startsWith('naam|') ? 'naam_report' : 'report_single';
+  if (creditsLeft(r.entitlement, kind, consumed) <= 0) return false;
   await S().set(CONSUMED_KEY, [...consumed, reportKey]);
   return true;
 }
