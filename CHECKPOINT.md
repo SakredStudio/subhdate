@@ -38,3 +38,15 @@ Updated: 2026-10-18 (billing session, Claude on Soul's PC). Status: **v1 live on
 
 ## Exact next step for the next run
 After Soul's steps 1–3: do one test purchase of each SKU on the phone, read the `entitlements` + `rtdn_events` rows, fix anything the real Play payloads reveal, then re-run `tools/dev/store-shots.mjs` so screenshot 06 shows the price. Then the "finish early" list: household profiles, static SEO pages, Marathi.
+
+## Namakarana build (started 2026-10-22, stopped at usage limit)
+Done and pushed (engine half, all tests green, 104 tests):
+- `engine/namakarana.ts` (syllable table, Gand Mool, lord/deity, `naam()` = janma + syllables + names + namakarana muhurta day 11–45), `engine/data/names.json` (521 names EN/HI/GU + meanings; Gujarati spellings of rarer names UNVERIFIED by a native reader), `engine/test/namakarana.test.ts` (incl. the Toronto-3am ≠ Delhi check).
+- Worker op `naam` in `app/worker.ts` (returns candidates with labels, days with explain text).
+- SKU `naam_report` (consumable) in `app/entitlement.ts` (token field `naam` = credits; consumed keys prefixed `naam|`), `app/billing.ts`, `worker/src/entitle.ts` + `index.ts`. Worker NOT redeployed yet: run `cd worker; npx wrangler deploy`.
+- 48 UI strings `naam.*` + `nav.naam` in EN/HI/GU/Hinglish.
+Still to build (next session, ~1 evening):
+1. `app/screens/naam.ts`: form (DOB, time + unknown toggle, birth city via `cityPicker`, gender) → `call('naam', { req: { birth, gender, region }, lang })` → janma card (nakshatra, pada, rashi, lord, deity, Gand Mool note, ambiguous note), four syllables, names list (boys/girls, meaning), tap name → welcome card (canvas 1080×1350: sky-wheel mark `public/icons/icon-512.png`, "Welcome, {name}" in EN + script, nakshatra/pada/rashi line, born date · city) → `navigator.share({files})` or download PNG; naming-ceremony days (top 5, score ring, windows, keep/avoid); report section (print pages reusing `report.css` `.rp-page`: cover, janma + Moon longitude, syllables, full name lists, days with panchanga, sources) gated by `isEntitled('naam_report')` with buy button via `purchase('naam_report')` only when `isPlayBillingAvailable()`, consume key `naam|<date>|<time>|<lat,lon>`.
+2. Route `case 'naam'` in `app/main.ts`; entry card on Today + Muhurta screens (`t('naam.cta')`); optional tab (5 tabs already; use the card).
+3. Soul: create in-app product `naam_report` (one-time, consumable) ₹149 / $9.99 in Play Console → Monetize → Products; licence-test it. Note: Play product ids are per app, so the "Graha SKU" lives in ShubhDate's Play listing.
+4. Build, push, phone QA; later: static SEO page "baby names by nakshatra" per nakshatra (27 pages) from the same data.
