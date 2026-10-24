@@ -9,7 +9,8 @@ import { renderReport } from './screens/report.ts';
 import { renderNaam } from './screens/naam.ts';
 import { humanSource } from './format.ts';
 import { isEntitled, useStore, consumeReport } from './entitlement.ts';
-import { refreshIfStale } from './billing.ts';
+import { refreshIfStale, restorePurchases, isPlayBillingAvailable, forgetDevice, MANAGE_SUBSCRIPTIONS_URL } from './billing.ts';
+import { loadEntitlement } from './entitlement.ts';
 import { pushAvailable, enableReminders, disableReminders, remindersOn } from './push.ts';
 import './report.css';
 const ENGINE_VERSION = '0.1.0';
@@ -256,6 +257,8 @@ async function renderSaved() {
 async function renderSettings() {
   const langs = U.languages as { code: Lang; native: string; en: string; beta?: boolean }[];
   const janma = S.birth ? await call('janma', { birth: birthReq(), lang: S.lang }).catch(() => null) : null;
+  const ent = await loadEntitlement().catch(() => null); const playOk = await isPlayBillingAvailable().catch(() => false);
+  const entLine = ent ? (ent.entitlement.sku === 'family_annual' ? t('settings.famActive', { date: new Date(ent.entitlement.exp * 1000).toLocaleDateString() }) : t('settings.creditsLeft', { n: (ent.entitlement.credits ?? 0) + (ent.entitlement.naam ?? 0) })) : t('settings.noPurchases');
   view.innerHTML = `<h1>${t('settings.title')}</h1>
   <div class="card"><div class="label">${t('settings.language')}</div><div class="lang-grid">${langs.map(l => `<div class="lang-cell ${S.lang === l.code ? 'selected' : ''}" data-lang="${l.code}"><div class="native">${esc(l.native)}</div><div class="en">${esc(l.en)} ${l.beta ? `<span class="beta">${t('settings.beta')}</span>` : ''}</div></div>`).join('')}</div></div>
   <div class="card"><div class="label">${t('settings.city')}</div><button class="btn btn-outline" id="city">${esc(S.city.name)} · ${esc(S.city.region)} · ${esc(S.city.tz)}</button></div>
@@ -273,6 +276,10 @@ async function renderSettings() {
     ${janma ? `<p class="small">${t('settings.janma')}: ${janma.candidates.map((c: any) => `<b>${esc(c.nakshatraLabel)}</b> (${esc(c.rashiLabel)}, pada ${c.pada})`).join(' / ')}${janma.ambiguous ? ` · ${t('settings.timeUnknown')}` : ''}</p>` : ''}
     <div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="bsave">${t('settings.saveBirth')}</button><button class="btn btn-outline btn-small" id="bclear">${t('settings.clearBirth')}</button></div></div>
   ${IS_PLACEHOLDER(WAITLIST_URL) ? '' : `<div class="card"><a class="btn btn-outline" href="${WAITLIST_URL}" target="_blank" rel="noopener">💌 ${t('settings.waitlist')}</a></div>`}
+  <div class="card"><div class="label">${t('settings.purchases')}</div><p class="small">${esc(entLine)}</p>
+    <div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start">${playOk ? `<button class="btn btn-outline btn-small" id="restore">${t('report.restore')}</button>` : ''}<a class="btn btn-outline btn-small" href="${MANAGE_SUBSCRIPTIONS_URL}" target="_blank" rel="noopener">${t('settings.manageSub')}</a></div>
+    <p class="small muted">${t('settings.purchasesNote')}</p></div>
+  <div class="card"><div class="label">${t('settings.yourData')}</div><p class="small">${t('settings.yourDataNote')}</p><button class="btn btn-outline btn-small" id="wipe">${t('settings.deleteData')}</button></div>
   <div class="card"><div class="list-item" id="about"><span class="ico">📖</span><div class="body"><div class="title">${t('settings.about')}</div></div><span class="chev">›</span></div><div class="list-item" id="privacy"><span class="ico">🔒</span><div class="body"><div class="title">${t('settings.privacy')}</div></div><span class="chev">›</span></div></div>
   <p class="small dim center">${t('settings.version')} ${ENGINE_VERSION} · <a href="https://github.com/SakredStudio/subhdate" target="_blank" rel="noopener">github.com/SakredStudio/subhdate</a></p>`;
   view.querySelectorAll('[data-lang]').forEach(el => el.addEventListener('click', () => { S.lang = (el as HTMLElement).dataset.lang as Lang; saveSettings(); festCache = null; updateChrome(); renderSettings(); }));
@@ -293,6 +300,21 @@ async function renderSettings() {
   const tunk = view.querySelector('#tunk')!; tunk.addEventListener('click', () => { tunk.classList.toggle('on'); (view.querySelector('#btime') as HTMLInputElement).disabled = tunk.classList.contains('on'); });
   view.querySelector('#bsave')!.addEventListener('click', () => { const date = (view.querySelector('#bdate') as HTMLInputElement).value; if (!date) return toast('Date?'); const unk = tunk.classList.contains('on'); const time = unk ? null : ((view.querySelector('#btime') as HTMLInputElement).value || null); S.birth = { date, time, city: bcity }; saveSettings(); toast('✓'); renderSettings(); });
   view.querySelector('#bclear')!.addEventListener('click', () => { S.birth = null; saveSettings(); renderSettings(); });
+  view.querySelector('#restore')?.addEventListener('click', async () => { const n = await restorePurchases(); toast(t('report.restored', { n: String(n) })); if (n) renderSettings(); });
+  view.querySelector('#wipe')!.addEventListener('click', () => {
+    sheet(`<h3>${t('settings.deleteData')}</h3><p class="small">${t('settings.deleteConfirm')}</p><div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="wipe-yes">${t('settings.deleteYes')}</button><button class="btn btn-outline" id="wipe-no">${t('common.cancel')}</button></div>`, root => {
+      root.querySelector('#wipe-no')!.addEventListener('click', closeSheet);
+      root.querySelector('#wipe-yes')!.addEventListener('click', async () => {
+        try { if (remindersOn()) await disableReminders(); } catch { /* offline */ }
+        await forgetDevice();
+        try { localStorage.clear(); sessionStorage.clear(); } catch { /* ignore */ }
+        try { indexedDB.deleteDatabase('shubhdate'); } catch { /* ignore */ }
+        try { for (const k of await caches.keys()) await caches.delete(k); } catch { /* ignore */ }
+        try { for (const r of await navigator.serviceWorker.getRegistrations()) await r.unregister(); } catch { /* ignore */ }
+        location.replace(location.pathname);
+      });
+    });
+  });
   view.querySelector('#about')!.addEventListener('click', () => { location.hash = '#/about'; });
   view.querySelector('#privacy')!.addEventListener('click', () => { location.hash = '#/privacy'; });
 }

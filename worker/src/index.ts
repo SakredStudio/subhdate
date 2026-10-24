@@ -103,6 +103,16 @@ async function refresh(req: Request, env: Env): Promise<Response> {
   return tokenResponse(env, dev);
 }
 
+// ---------- POST /v1/device/forget { dev } : delete the entitlement + claim rows of an anonymous device id (push rows are keyed by endpoint and removed by DELETE /v1/push/subscribe) ----------
+async function forget(req: Request, env: Env): Promise<Response> {
+  const b: any = await req.json().catch(() => null);
+  if (!b || !isUuid(b.dev)) return json({ error: 'bad_request' }, 400, cors(env));
+  const dev = String(b.dev).toLowerCase();
+  const stmts = [env.DB.prepare('DELETE FROM entitlements WHERE device_id = ?').bind(dev), env.DB.prepare('DELETE FROM claim_log WHERE device_id = ?').bind(dev)];
+  await env.DB.batch(stmts);
+  return json({ ok: true }, 200, cors(env));
+}
+
 // ---------- POST /v1/rtdn?token=RTDN_TOKEN (Google Pub/Sub push) ----------
 async function rtdn(req: Request, env: Env, url: URL): Promise<Response> {
   if (!env.RTDN_TOKEN || url.searchParams.get('token') !== env.RTDN_TOKEN) return json({ error: 'forbidden' }, 403);
@@ -204,6 +214,7 @@ export default {
     if (p === '/v1/entitlement/claim' && req.method === 'POST') return claim(req, env);
     if (p === '/v1/entitlement/refresh' && req.method === 'POST') return refresh(req, env);
     if (p === '/v1/rtdn' && req.method === 'POST') return rtdn(req, env, url);
+    if (p === '/v1/device/forget' && req.method === 'POST') return forget(req, env);
     if (p === '/v1/push/subscribe' && req.method === 'POST') return subscribe(req, env);
     if (p === '/v1/push/subscribe' && req.method === 'DELETE') return unsubscribe(req, env);
     return json({ error: 'not_found' }, 404);

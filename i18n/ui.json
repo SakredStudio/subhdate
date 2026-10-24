@@ -333,7 +333,18 @@
     "naam.reportTitle": "Namakarana Report",
     "naam.moonAt": "Moon at birth",
     "naam.meaning": "Meaning",
-    "naam.sourcesPage": "Sources and conventions"
+    "naam.sourcesPage": "Sources and conventions",
+    "settings.purchases": "Purchases",
+    "settings.noPurchases": "No purchases on this device.",
+    "settings.famActive": "Family plan active until {date}.",
+    "settings.creditsLeft": "Report credits on this device: {n}.",
+    "settings.manageSub": "Manage subscription",
+    "settings.purchasesNote": "Subscriptions are managed and cancelled in Google Play. Cancelling keeps access until the end of the paid year. Purchases belong to your Google account; \"Restore purchases\" brings them back on a new phone.",
+    "settings.yourData": "Your data",
+    "settings.yourDataNote": "Everything you enter stays on this phone: birth details, saved dates, settings. Our server holds only an anonymous device id for purchases and reminders.",
+    "settings.deleteData": "Delete my data",
+    "settings.deleteConfirm": "This removes all birth details, saved dates, settings and the reminder subscription from this phone and our server. Purchases are not lost: use \"Restore purchases\" afterwards. Continue?",
+    "settings.deleteYes": "Delete everything"
   },
   "hi": {
     "nav.today": "आज",
@@ -616,7 +627,18 @@
     "naam.reportTitle": "नामकरण रिपोर्ट",
     "naam.moonAt": "जन्म के समय चंद्रमा",
     "naam.meaning": "अर्थ",
-    "naam.sourcesPage": "स्रोत और परंपराएँ"
+    "naam.sourcesPage": "स्रोत और परंपराएँ",
+    "settings.purchases": "खरीदारी",
+    "settings.noPurchases": "इस डिवाइस पर कोई खरीद नहीं।",
+    "settings.famActive": "परिवार योजना {date} तक सक्रिय।",
+    "settings.creditsLeft": "इस डिवाइस पर रिपोर्ट क्रेडिट: {n}।",
+    "settings.manageSub": "सदस्यता प्रबंधित करें",
+    "settings.purchasesNote": "सदस्यता Google Play में प्रबंधित और रद्द होती है। रद्द करने पर भुगतान किए वर्ष के अंत तक पहुँच बनी रहती है। खरीद आपके Google खाते की है; नए फ़ोन पर \"खरीद पुनर्स्थापित करें\" से वापस आती है।",
+    "settings.yourData": "आपका डेटा",
+    "settings.yourDataNote": "आप जो भी भरते हैं वह इसी फ़ोन पर रहता है: जन्म विवरण, सहेजी तिथियाँ, सेटिंग्स। हमारे सर्वर पर केवल खरीद और रिमाइंडर के लिए एक गुमनाम डिवाइस आईडी है।",
+    "settings.deleteData": "मेरा डेटा हटाएँ",
+    "settings.deleteConfirm": "इससे जन्म विवरण, सहेजी तिथियाँ, सेटिंग्स और रिमाइंडर सदस्यता इस फ़ोन और हमारे सर्वर से हट जाएगी। खरीद नहीं खोती: बाद में \"खरीद पुनर्स्थापित करें\" दबाएँ। जारी रखें?",
+    "settings.deleteYes": "सब हटाएँ"
   },
   "gu": {
     "nav.today": "આજ",
@@ -899,7 +921,18 @@
     "naam.reportTitle": "નામકરણ રિપોર્ટ",
     "naam.moonAt": "જન્મ સમયે ચંદ્ર",
     "naam.meaning": "અર્થ",
-    "naam.sourcesPage": "સ્રોત અને પરંપરાઓ"
+    "naam.sourcesPage": "સ્રોત અને પરંપરાઓ",
+    "settings.purchases": "ખરીદી",
+    "settings.noPurchases": "આ ડિવાઇસ પર કોઈ ખરીદી નથી.",
+    "settings.famActive": "પરિવાર યોજના {date} સુધી સક્રિય.",
+    "settings.creditsLeft": "આ ડિવાઇસ પર રિપોર્ટ ક્રેડિટ: {n}.",
+    "settings.manageSub": "સબ્સ્ક્રિપ્શન મેનેજ કરો",
+    "settings.purchasesNote": "સબ્સ્ક્રિપ્શન Google Play માં મેનેજ અને રદ થાય છે. રદ કરવાથી ચૂકવેલા વર્ષના અંત સુધી ઍક્સેસ રહે છે. ખરીદી તમારા Google ખાતાની છે; નવા ફોન પર \"ખરીદી પાછી મેળવો\" થી પાછી આવે છે.",
+    "settings.yourData": "તમારો ડેટા",
+    "settings.yourDataNote": "તમે જે ભરો છો તે આ જ ફોન પર રહે છે: જન્મ વિગત, સાચવેલી તારીખો, સેટિંગ્સ. અમારા સર્વર પર ફક્ત ખરીદી અને રિમાઇન્ડર માટે એક અનામી ડિવાઇસ આઈડી છે.",
+    "settings.deleteData": "મારો ડેટા કાઢી નાખો",
+    "settings.deleteConfirm": "આનાથી જન્મ વિગત, સાચવેલી તારીખો, સેટિંગ્સ અને રિમાઇન્ડર સબ્સ્ક્રિપ્શન આ ફોન અને અમારા સર્વરથી દૂર થશે. ખરીદી ખોવાતી નથી: પછી \"ખરીદી પાછી મેળવો\" દબાવો. ચાલુ રાખવું?",
+    "settings.deleteYes": "બધું કાઢી નાખો"
   },
   "hinglish": {
     "nav.today": "Aaj",
@@ -1035,7 +1068,19 @@
     "naam.reportTitle": "Naamkaran Report",
     "naam.moonAt": "Janm ke samay Chandra",
     "naam.meaning": "Arth",
-    "naam.sourcesPage": "Srot aur paramparaayein"
+    "naam.sourcesPage": "Srot aur paramparaayein",
+    "settings.purchases": "Purchases",
+    "settings.noPurchases": "Is device par koi purchase nahin.",
+    "settings.famActive": "Family plan {date} tak active.",
+    "settings.creditsLeft": "Is device par report credits: {n}.",
+    "settings.manageSub": "Subscription manage karein",
+    "settings.purchasesNote": "Subscription Google Play mein manage aur cancel hoti hai. Cancel karne par paid saal ke ant tak access rehta hai. Purchase aapke Google account ki hai; naye phone par \"Purchases restore karein\" se wapas aati hai.",
+    "settings.yourData": "Aapka data",
+    "settings.yourDataNote": "Aap jo bhi bharte hain woh isi phone par rehta hai: janm vivaran, saved dates, settings. Hamare server par sirf purchase aur reminder ke liye ek anonymous device id hai.",
+    "settings.deleteData": "Mera data delete karein",
+    "settings.deleteConfirm": "Isse janm vivaran, saved dates, settings aur reminder subscription is phone aur hamare server se hat jaayegi. Purchase nahin khoti: baad mein \"Purchases restore karein\" dabayein. Jaari rakhein?",
+    "settings.deleteYes": "Sab delete karein",
+    "common.cancel": "Cancel"
   },
   "mr": {
     "nav.today": "आज",

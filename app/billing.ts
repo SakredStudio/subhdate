@@ -7,6 +7,8 @@ import { getDeviceId, cacheEntitlement, verifyToken, loadEntitlement, type Sku, 
 
 export const PLAY_BILLING_METHOD = 'https://play.google.com/billing';
 export const PACKAGE_NAME = 'com.sakredstudio.shubhdate';
+/** Google Play's own subscription management page for this app (cancel, pause, change). */
+export const MANAGE_SUBSCRIPTIONS_URL = `https://play.google.com/store/account/subscriptions?sku=family_annual&package=${'com.sakredstudio.shubhdate'}`;
 export const SKUS: Sku[] = ['report_single', 'family_annual', 'naam_report'];
 
 export interface ProductDetails { itemId: Sku; title: string; description: string; price: { currency: string; value: string }; type?: string; subscriptionPeriod?: string; }
@@ -99,4 +101,11 @@ export async function refreshIfStale(): Promise<void> {
     const payload = await verifyToken(body.token);
     if (payload) await cacheEntitlement(body.token, payload);
   } catch { /* offline or Worker down: keep honouring the cached token until it expires */ }
+}
+
+/** Ask the Worker to forget this device: its entitlement rows and push subscriptions. Purchases stay with the Google
+ *  account and come back with "Restore purchases". Best effort; offline it simply resolves. */
+export async function forgetDevice(): Promise<void> {
+  if (IS_PLACEHOLDER(WORKER_URL)) return;
+  try { await fetch(`${WORKER_URL}/v1/device/forget`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ dev: getDeviceId() }) }); } catch { /* offline */ }
 }
