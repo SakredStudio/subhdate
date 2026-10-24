@@ -45,3 +45,7 @@ After Soul's steps 1–3: do one test purchase of each SKU on the phone, read th
 - Verified live at 360 px: result, card, report, no overflow. Service-worker cache v6.
 - **Soul**: Play Console → Monetize → Products → In-app products → Create: product id `naam_report`, name "Namakarana report", one-time, ₹149 / US$9.99 (Play's price template for the rest), Activate. Then licence-test one purchase from the phone (Naam tab → report card → Unlock). Until the product exists the TWA shows the "optional purchase" line instead of a price.
 - Open: Gujarati spellings of rarer names (native review), per-nakshatra static SEO pages (27) from the same data, Marathi/Tamil name lists, Play listing paragraph + screenshot for the new tab (no upload needed: the TWA loads the live site).
+
+## Peace-of-mind features (2026-10-24)
+- Naming report card offers the Family plan too; family subscribers see "Manage subscription" (Google Play subscriptions deep link `MANAGE_SUBSCRIPTIONS_URL` in `app/billing.ts`).
+- Settings → Purchases: status line (family until date / credits), Restore purchases (Play app only), Manage subscription. Settings → Your data → Delete my data: confirm sheet → unsubscribe reminders → `POST /v1/device/forget` (Worker deletes entitlement + claim_log rows for the device id) → clear localStorage/IndexedDB/caches/SW → reload. Purchases return via Restore. Cache v7. Worker redeployed.
