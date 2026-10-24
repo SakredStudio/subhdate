@@ -1,6 +1,6 @@
 /* ShubhDate service worker: offline shell. Precaches the entry, then caches every same-origin asset on first
    use (hashed Vite assets are immutable). Network-first for navigation so updates land on the next visit. */
-const VERSION = 'shubhdate-v5';
+const VERSION = 'shubhdate-v6';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/mark-84.png', './hero.webp', './privacy.html'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL).catch(() => null)).then(() => self.skipWaiting()));

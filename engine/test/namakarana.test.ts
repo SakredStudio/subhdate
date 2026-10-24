@@ -38,3 +38,12 @@ describe('namakarana', () => {
     }
   });
 });
+
+describe('namakarana result is JSON-safe for the Worker boundary', () => {
+  it('serialises candidates and days', () => {
+    const r = naam({ birth: { date: '2026-10-20', time: null, place: DELHI }, gender: 'girl' });
+    const s = JSON.parse(JSON.stringify({ candidates: r.candidates, from: r.from }));
+    expect(s.candidates[0].names.boys.length).toBe(0);
+    expect(s.candidates[0].syllable.latin.length).toBeGreaterThan(0);
+  });
+});

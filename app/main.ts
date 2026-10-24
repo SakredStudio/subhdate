@@ -6,6 +6,7 @@ import { db, type SavedItem } from './db.ts';
 import { aboutHtml, privacyHtml } from './screens/about.ts';
 import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
 import { renderReport } from './screens/report.ts';
+import { renderNaam } from './screens/naam.ts';
 import { humanSource } from './format.ts';
 import { isEntitled, useStore, consumeReport } from './entitlement.ts';
 import { refreshIfStale } from './billing.ts';
@@ -168,6 +169,7 @@ async function renderMuhurta() {
   const packs = await call('packs', { lang: S.lang });
   const from = lastReq?.from ?? todayIso(); const to = lastReq?.to ?? addIso(from, 60);
   view.innerHTML = `<h1>${t('muhurta.title')}</h1><p class="muted small">${t('muhurta.sub')}</p>
+  <a class="card naam-cta" href="#/naam">👶 ${t('naam.cta')} ›</a>
   <div class="card">
     <div class="field"><label>${t('muhurta.event')}</label><select id="ev">${packs.map((p: any) => `<option value="${p.id}" ${lastReq?.event === p.id ? 'selected' : ''}>${EVENT_ICONS[p.id] ?? ''} ${esc(p.name)}</option>`).join('')}</select></div>
     <div class="grid2"><div class="field"><label>${t('muhurta.from')}</label><input id="from" type="date" value="${from}"></div><div class="field"><label>${t('muhurta.to')}</label><input id="to" type="date" value="${to}"></div></div>
@@ -317,6 +319,10 @@ async function isReportUnlocked(): Promise<boolean> {
   if (localStorage.getItem('shubhdate.devReport') === '1') return true;
   return isEntitled(['report_single', 'family_annual']);
 }
+async function isNaamUnlocked(): Promise<boolean> {
+  if (localStorage.getItem('shubhdate.devReport') === '1') return true;
+  return isEntitled(['naam_report', 'family_annual']);
+}
 const reportKey = () => lastReq ? `${lastReq.event}|${lastReq.from}|${lastReq.to}|${lastReq.place.lat.toFixed(2)},${lastReq.place.lon.toFixed(2)}` : '';
 
 // ---------- Router ----------
@@ -337,6 +343,7 @@ function route() {
   switch (path) {
     case 'muhurta': return renderMuhurta();
     case 'result': return renderResult(Number(arg));
+    case 'naam': return renderNaam(view, { t, lang: S.lang, region: S.region, base: BASE, city: S.city, esc, fmtTime, fmtDate, scoreRing, toast, call, pickCity: cityPicker, isUnlocked: isNaamUnlocked, onFirstFullRender: (key) => { consumeReport(key).catch(() => null); } });
     case 'report': return renderReport(view, { t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, isUnlocked: isReportUnlocked, onFirstFullRender: () => { consumeReport(reportKey()).catch(() => null); } });
     case 'festivals': return renderFestivals();
     case 'saved': return renderSaved();
