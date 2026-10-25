@@ -25,9 +25,9 @@ table open; nothing else needs thinking. Build/upload steps are in `docs/PLAY-TW
 | Store settings | App category | Lifestyle |
 | | Tags | Calendar, Astrology, Hinduism, Festivals, Indian (pick up to 5 that the Console offers) |
 | | Contact email | `hello@sakredstudio.ca` (placeholder: confirm it exists and receives mail) |
-| | Website | `https://sakredstudio.github.io/subhdate/` |
+| | Website | `https://shubhdate.sakredstudio.ca/` |
 | | Phone | optional, leave blank |
-| App content → Privacy policy | URL | `https://sakredstudio.github.io/subhdate/privacy.html` |
+| App content → Privacy policy | URL | `https://shubhdate.sakredstudio.ca/privacy.html` |
 | App content → Ads | Contains ads? | No |
 | App content → App access | All functionality available without special access? | Yes (no login) |
 | App content → Content rating | Questionnaire | `store/data-safety.md` § Content rating (IARC) |

@@ -53,8 +53,8 @@ Calendar · Astrology · Hinduism · Festivals · Indian
 ## Contact
 
 - Email: hello@sakredstudio.ca (placeholder, Soul confirms)
-- Website: https://sakredstudio.github.io/subhdate/
-- Privacy policy: https://sakredstudio.github.io/subhdate/privacy.html
+- Website: https://shubhdate.sakredstudio.ca/
+- Privacy policy: https://shubhdate.sakredstudio.ca/privacy.html
 
 ## Release notes 1.0 (≤ 500 characters)
 

@@ -15,7 +15,7 @@ crons = ["0 */6 * * *"]
 
 [vars]
 PACKAGE_NAME = "com.sakredstudio.shubhdate"
-ALLOWED_ORIGIN = "https://sakredstudio.github.io"
+ALLOWED_ORIGIN = "https://shubhdate.sakredstudio.ca,https://sakredstudio.github.io"
 
 # Secrets (wrangler secret put <NAME>), never in this file:
 #   ENTITLEMENT_PRIVATE_KEY_JWK   ES256 private key (JWK JSON) that signs entitlement tokens; its public half goes to app/config.ts

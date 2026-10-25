@@ -132,7 +132,7 @@ function renderCard(host: HTMLElement, form: Form, x: any, n: any, c: NaamCtx) {
     g.fillStyle = '#251C30'; g.font = '34px "DM Sans", sans-serif';
     g.fillText(t('naam.cardLine', { nakshatra: x.nakshatraLabel, pada: x.pada, rashi: x.rashiLabel }), W / 2, 980);
     g.fillStyle = '#6C604E'; g.font = '30px "DM Sans", sans-serif'; g.fillText(t('naam.born', { date: c.fmtDate(form.date), city: form.city.name }), W / 2, 1040);
-    g.fillStyle = '#946916'; g.font = '500 24px "DM Sans", sans-serif'; g.fillText('ShubhDate · sakredstudio.github.io/subhdate', W / 2, 1250);
+    g.fillStyle = '#946916'; g.font = '500 24px "DM Sans", sans-serif'; g.fillText('ShubhDate · shubhdate.sakredstudio.ca', W / 2, 1250);
   };
   const img = new Image(); img.src = `${c.base}icons/icon-512.png`;
   img.onload = () => draw(img); img.onerror = () => draw(null);

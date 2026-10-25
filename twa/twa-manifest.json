@@ -1,6 +1,6 @@
 {
   "packageId": "com.sakredstudio.shubhdate",
-  "host": "sakredstudio.github.io",
+  "host": "shubhdate.sakredstudio.ca",
   "name": "ShubhDate",
   "launcherName": "ShubhDate",
   "display": "standalone",
@@ -13,9 +13,9 @@
   "navigationDividerColorDark": "#1A2440",
   "backgroundColor": "#F7F0E3",
   "enableNotifications": true,
-  "startUrl": "/subhdate/",
-  "iconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-512.png",
-  "maskableIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-maskable-512.png",
+  "startUrl": "/",
+  "iconUrl": "https://shubhdate.sakredstudio.ca/icons/icon-512.png",
+  "maskableIconUrl": "https://shubhdate.sakredstudio.ca/icons/icon-maskable-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "C:\\sakred-os\\projects\\shubhdate-twa\\android.keystore",
@@ -27,24 +27,24 @@
     {
       "name": "Today's panchang",
       "shortName": "Today",
-      "url": "/subhdate/#/today",
-      "chosenIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-192.png"
+      "url": "/#/today",
+      "chosenIconUrl": "https://shubhdate.sakredstudio.ca/icons/icon-192.png"
     },
     {
       "name": "Find a muhurta",
       "shortName": "Muhurta",
-      "url": "/subhdate/#/muhurta",
-      "chosenIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-192.png"
+      "url": "/#/muhurta",
+      "chosenIconUrl": "https://shubhdate.sakredstudio.ca/icons/icon-192.png"
     },
     {
       "name": "Festivals",
       "shortName": "Festivals",
-      "url": "/subhdate/#/festivals",
-      "chosenIconUrl": "https://sakredstudio.github.io/subhdate/icons/icon-192.png"
+      "url": "/#/festivals",
+      "chosenIconUrl": "https://shubhdate.sakredstudio.ca/icons/icon-192.png"
     }
   ],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://sakredstudio.github.io/subhdate/manifest.webmanifest",
+  "webManifestUrl": "https://shubhdate.sakredstudio.ca/manifest.webmanifest",
   "fallbackType": "customtabs",
   "features": {
     "playBilling": {
@@ -57,7 +57,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://sakredstudio.github.io/subhdate/",
+  "fullScopeUrl": "https://shubhdate.sakredstudio.ca/",
   "minSdkVersion": 24,
   "fingerprints": [
     { "name": "Play App Signing", "value": "02:3D:F3:9A:4C:D6:19:6C:A0:92:36:5C:2E:53:63:DF:3A:C6:F1:74:20:F5:06:80:DB:CB:DC:53:E3:F3:CC:3D" },

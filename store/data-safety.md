@@ -16,7 +16,7 @@ Keep the app consistent with this file: it is the truth table (see also `docs/WO
 
 Why "No" is true for v1.0:
 - The app has no server, no account, no analytics SDK and no ads SDK. The only network requests are the app's own
-  static files from sakredstudio.github.io and the Google Fonts stylesheet (Google receives the usual request
+  static files from shubhdate.sakredstudio.ca (GitHub Pages) and the Google Fonts stylesheet (Google receives the usual request
   metadata for fonts, as for any website; Play's form does not count it as app data collection).
 - Birth date, time and place (personal info) are entered optionally and stored only in the browser's local storage on
   the device; they are processed on the device (Tara bala / Chandra bala) and never transmitted. Play's definition of
@@ -85,4 +85,4 @@ Expected rating: Everyone / PEGI 3 / IARC "all ages" (the app is still declared 
 | Health | Not a health app; no health data |
 | Data deletion | Deletion available in-app (Settings) and by email (hello@sakredstudio.ca) |
 | App access | All features available without login; no credentials needed for review |
-| Privacy policy URL | https://sakredstudio.github.io/subhdate/privacy.html |
+| Privacy policy URL | https://shubhdate.sakredstudio.ca/privacy.html |

@@ -18,7 +18,9 @@ export interface Env {
 }
 
 const json = (body: unknown, status = 200, extra: Record<string, string> = {}) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...extra } });
-const cors = (env: Env) => ({ 'access-control-allow-origin': env.ALLOWED_ORIGIN, 'access-control-allow-methods': 'POST, DELETE, OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-max-age': '86400' });
+// ALLOWED_ORIGIN may list several origins, comma-separated (old github.io origin kept during the move).
+let reqOrigin = '';
+const cors = (env: Env) => ({ 'access-control-allow-origin': env.ALLOWED_ORIGIN.split(',').map(s => s.trim()).includes(reqOrigin) ? reqOrigin : env.ALLOWED_ORIGIN.split(',')[0].trim(), 'vary': 'Origin', 'access-control-allow-methods': 'POST, DELETE, OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-max-age': '86400' });
 const nowS = () => Math.floor(Date.now() / 1000);
 const isUuid = (s: unknown) => typeof s === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 const validTz = (tz: unknown) => { try { new Intl.DateTimeFormat('en', { timeZone: String(tz) }); return typeof tz === 'string'; } catch { return false; } };
@@ -197,7 +199,7 @@ export async function runReminders(env: Env): Promise<{ checked: number; due: nu
       if (already) continue;
       due++;
       const name = f.names[s.lang] ?? f.names.en;
-      const r = await sendPush(env, s, { title: name, body: `Tomorrow (${f.date}) at your city.`, url: `/subhdate/#/festivals`, tag: key });
+      const r = await sendPush(env, s, { title: name, body: `Tomorrow (${f.date}) at your city.`, url: `#/festivals`, tag: key });
       if (r === 'sent') { sent++; await env.DB.prepare('INSERT OR IGNORE INTO reminders_sent (sub_id, key, sent_at) VALUES (?, ?, ?)').bind(s.id, key, nowS()).run(); }
       if (r === 'gone') { await env.DB.prepare('DELETE FROM push_subscriptions WHERE id = ?').bind(s.id).run(); break; }
     }
@@ -207,6 +209,7 @@ export async function runReminders(env: Env): Promise<{ checked: number; due: nu
 
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
+    reqOrigin = req.headers.get("origin") ?? "";
     const url = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(env) });
     const p = url.pathname;

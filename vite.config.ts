@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 
-// GitHub Pages serves the site at /subhdate/ ; local dev at /
+// Served at the root of https://shubhdate.sakredstudio.ca (GitHub Pages custom domain, public/CNAME)
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/subhdate/' : '/',
+  base: '/',
   root: 'app',
   publicDir: '../public',
   build: {

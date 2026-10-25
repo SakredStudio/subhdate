@@ -1,1 +1,4 @@
-Android verifies Digital Asset Links per origin, at exactly `https://sakredstudio.github.io/.well-known/assetlinks.json`, which is served by the `SakredStudio/SakredStudio.github.io` repo (Swaiyu's file), so this copy at `/subhdate/.well-known/assetlinks.json` is never consulted. It is kept here only as the placeholder route and the documented intent; the real element to append to the root file is in `docs/PLAY-TWA.md`.
+ShubhDate has its own origin, https://shubhdate.sakredstudio.ca (GitHub Pages custom domain, Cloudflare CNAME, DNS only).
+Android verifies Digital Asset Links at https://shubhdate.sakredstudio.ca/.well-known/assetlinks.json, served from this folder.
+Only com.sakredstudio.shubhdate may be listed here: one origin per Android app, so Chrome routes Play Billing and
+notifications to the right app (five apps on sakredstudio.github.io broke billing with ClientAppUnavailable, 2026-10-25).
