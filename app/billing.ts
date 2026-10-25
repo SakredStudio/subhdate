@@ -8,7 +8,14 @@ import { getDeviceId, cacheEntitlement, verifyToken, loadEntitlement, type Sku, 
 export const PLAY_BILLING_METHOD = 'https://play.google.com/billing';
 export const PACKAGE_NAME = 'com.sakredstudio.shubhdate';
 /** Google Play's own subscription management page for this app (cancel, pause, change). */
-export const MANAGE_SUBSCRIPTIONS_URL = `https://play.google.com/store/account/subscriptions?sku=family_annual&package=${'com.sakredstudio.shubhdate'}`;
+export const MANAGE_SUBSCRIPTIONS_URL = 'https://play.google.com/store/account/subscriptions?sku=family_annual&package=com.sakredstudio.shubhdate';
+/** Open Google Play's subscription page. Inside the Play-installed app an intent URL hands it to the Play Store app
+ *  (a plain link stays in the in-app browser and can look like nothing happened). */
+export function openManageSubscriptions(): void {
+  const ua = navigator.userAgent || '';
+  if (/Android/i.test(ua)) { location.href = 'intent://play.google.com/store/account/subscriptions?sku=family_annual&package=com.sakredstudio.shubhdate#Intent;scheme=https;package=com.android.vending;S.browser_fallback_url=' + encodeURIComponent(MANAGE_SUBSCRIPTIONS_URL) + ';end'; return; }
+  window.open(MANAGE_SUBSCRIPTIONS_URL, '_blank', 'noopener');
+}
 export const SKUS: Sku[] = ['report_single', 'family_annual', 'naam_report'];
 
 export interface ProductDetails { itemId: Sku; title: string; description: string; price: { currency: string; value: string }; type?: string; subscriptionPeriod?: string; }
@@ -31,8 +38,15 @@ export async function isPlayBillingAvailable(): Promise<boolean> {
 /** Play's localised prices for the two SKUs (empty when unavailable). */
 export async function listProducts(): Promise<ProductDetails[]> {
   const s = await service(); if (!s) return [];
-  try { return await s.getDetails(SKUS); } catch { return []; }
+  // One SKU per call: Play rejects the whole request if any id is unknown (e.g. a product still propagating),
+  // which used to hide every price. Each product now shows up as soon as Play knows it.
+  const out: ProductDetails[] = [];
+  for (const id of SKUS) { try { out.push(...(await s.getDetails([id]))); } catch { /* not available yet */ } }
+  lastLookup = { at: Date.now(), found: out.map(p => p.itemId) };
+  return out;
 }
+/** Diagnostics for Settings: which products Play returned on the last lookup. */
+export let lastLookup: { at: number; found: string[] } | null = null;
 export async function listPurchases(): Promise<{ itemId: string; purchaseToken: string }[]> {
   const s = await service(); if (!s) return [];
   try { return await s.listPurchases(); } catch { return []; }

@@ -2,7 +2,7 @@
 // shareable "Welcome, {name}" card, naming-ceremony dates, and a printable report gated by the naam_report credit
 // (Play Billing inside the TWA; the web shows the preview and explains). Birth details stay on this device.
 import { humanSource } from '../format.ts';
-import { isPlayBillingAvailable, listProducts, purchase, restorePurchases, formatPrice, PurchaseError, MANAGE_SUBSCRIPTIONS_URL } from '../billing.ts';
+import { isPlayBillingAvailable, listProducts, purchase, restorePurchases, formatPrice, PurchaseError, openManageSubscriptions } from '../billing.ts';
 import { loadEntitlement } from '../entitlement.ts';
 import { loadReportFonts } from './report.ts';
 
@@ -89,7 +89,7 @@ async function renderResult(out: HTMLElement, form: Form, r: any, c: NaamCtx) {
   const prod = products.find(p => p.itemId === 'naam_report'), fam = products.find(p => p.itemId === 'family_annual');
   const ent = unlocked ? await loadEntitlement().catch(() => null) : null;
   const reportCard = `<div class="card ${unlocked ? '' : 'gold'}"><div class="label">${t('naam.report')}</div><p class="small">${t('naam.reportIntro')}</p>
-    ${unlocked ? `<button class="btn btn-gold" id="n-report">📄 ${t('naam.openReport')}</button>${ent?.entitlement.sku === 'family_annual' ? `<p class="small muted"><a href="${MANAGE_SUBSCRIPTIONS_URL}" target="_blank" rel="noopener">${t('settings.manageSub')}</a></p>` : ''}` : prod ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start"><button class="btn btn-gold btn-small" id="n-buy">${t('naam.buy', { price: formatPrice(prod) })}</button>${fam ? `<button class="btn btn-outline btn-small" id="n-buy-fam">${t('report.buyFamily', { price: formatPrice(fam) })}</button>` : ''}<button class="btn btn-outline btn-small" id="n-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>` : `<p class="small muted">${t('naam.locked')}</p>`}</div>`;
+    ${unlocked ? `<button class="btn btn-gold" id="n-report">📄 ${t('naam.openReport')}</button>${ent?.entitlement.sku === 'family_annual' ? `<p class="small muted"><a href="#" id="n-manage">${t('settings.manageSub')}</a></p>` : ''}` : prod ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start"><button class="btn btn-gold btn-small" id="n-buy">${t('naam.buy', { price: formatPrice(prod) })}</button>${fam ? `<button class="btn btn-outline btn-small" id="n-buy-fam">${t('report.buyFamily', { price: formatPrice(fam) })}</button>` : ''}<button class="btn btn-outline btn-small" id="n-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>` : `<p class="small muted">${t('naam.locked')}</p>`}</div>`;
   out.innerHTML = `${r.janma.ambiguous ? `<div class="banner">${t('naam.ambiguous')}</div>` : ''}${r.candidates.map(cand).join('')}<div id="n-card"></div>${days}${reportCard}<p class="small dim">${r.sources.map((s: string) => esc(humanSource(s))).join(' · ')}</p>`;
 
   out.querySelectorAll<HTMLButtonElement>('.naam-name').forEach(btn => btn.addEventListener('click', () => {
@@ -104,6 +104,7 @@ async function renderResult(out: HTMLElement, form: Form, r: any, c: NaamCtx) {
     try { await purchase('naam_report'); c.toast(t('report.unlocked')); renderResult(out, form, r, c); }
     catch (err: any) { b.disabled = false; if (!(err instanceof PurchaseError && err.code === 'cancelled')) c.toast(t('report.buyFailed', { err: String(err?.code ?? err?.message ?? 'error') })); }
   });
+  out.querySelector('#n-manage')?.addEventListener('click', e => { e.preventDefault(); openManageSubscriptions(); });
   out.querySelector('#n-buy-fam')?.addEventListener('click', async (e) => {
     const b = e.currentTarget as HTMLButtonElement; b.disabled = true;
     try { await purchase('family_annual'); c.toast(t('report.unlocked')); renderResult(out, form, r, c); }
