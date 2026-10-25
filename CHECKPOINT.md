@@ -49,3 +49,10 @@ After Soul's steps 1–3: do one test purchase of each SKU on the phone, read th
 ## Peace-of-mind features (2026-10-24)
 - Naming report card offers the Family plan too; family subscribers see "Manage subscription" (Google Play subscriptions deep link `MANAGE_SUBSCRIPTIONS_URL` in `app/billing.ts`).
 - Settings → Purchases: status line (family until date / credits), Restore purchases (Play app only), Manage subscription. Settings → Your data → Delete my data: confirm sheet → unsubscribe reminders → `POST /v1/device/forget` (Worker deletes entitlement + claim_log rows for the device id) → clear localStorage/IndexedDB/caches/SW → reload. Purchases return via Restore. Cache v7. Worker redeployed.
+
+## Own origin (2026-10-25)
+- ShubhDate now lives at **https://shubhdate.sakredstudio.ca** (Cloudflare CNAME → sakredstudio.github.io, DNS only; GitHub Pages custom domain, HTTPS enforced; `public/CNAME`; Vite base `/`). Old `sakredstudio.github.io/subhdate/*` 301-redirects. Google DAL API verifies the new origin for com.sakredstudio.shubhdate (both fingerprints).
+- Why: five TWAs shared sakredstudio.github.io → Chrome routed Digital Goods calls to the wrong app → `ClientAppUnavailable`, no prices. One origin per Android app from now on.
+- Worker `ALLOWED_ORIGIN` = comma list (new first, github.io kept until 1.0.2 is the only version in use), `Vary: Origin`.
+- TWA 1.0.2 (versionCode 3) built for the new host, signed by Soul 2026-10-25; to upload to Production. Backups of the 1.0.1 config in `shubhdate-twa/*.bak-v2` and `shubhdate-twa/backups-v2/`.
+- Play Console URLs to update: store listing website + privacy policy → shubhdate.sakredstudio.ca (old ones redirect, so not urgent).
