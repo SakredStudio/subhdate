@@ -40,13 +40,17 @@ export async function listProducts(): Promise<ProductDetails[]> {
   const s = await service(); if (!s) return [];
   // One SKU per call: Play rejects the whole request if any id is unknown (e.g. a product still propagating),
   // which used to hide every price. Each product now shows up as soon as Play knows it.
-  const out: ProductDetails[] = [];
-  for (const id of SKUS) { try { out.push(...(await s.getDetails([id]))); } catch { /* not available yet */ } }
-  lastLookup = { at: Date.now(), found: out.map(p => p.itemId) };
+  const out: ProductDetails[] = []; const errors: string[] = [];
+  for (const id of SKUS) {
+    try { const d = await s.getDetails([id]); if (d.length) out.push(...d); else errors.push(`${id}: empty`); }
+    catch (e: any) { errors.push(`${id}: ${e?.name ?? ''} ${e?.message ?? e}`.trim()); }
+  }
+  if (!out.length) { try { const all = await s.getDetails(SKUS); out.push(...all); if (!all.length) errors.push('all: empty'); } catch (e: any) { errors.push(`all: ${e?.name ?? ''} ${e?.message ?? e}`.trim()); } }
+  lastLookup = { at: Date.now(), found: out.map(p => p.itemId), errors };
   return out;
 }
 /** Diagnostics for Settings: which products Play returned on the last lookup. */
-export let lastLookup: { at: number; found: string[] } | null = null;
+export let lastLookup: { at: number; found: string[]; errors: string[] } | null = null;
 export async function listPurchases(): Promise<{ itemId: string; purchaseToken: string }[]> {
   const s = await service(); if (!s) return [];
   try { return await s.listPurchases(); } catch { return []; }

@@ -9,7 +9,7 @@ import { renderReport } from './screens/report.ts';
 import { renderNaam } from './screens/naam.ts';
 import { humanSource } from './format.ts';
 import { isEntitled, useStore, consumeReport } from './entitlement.ts';
-import { refreshIfStale, restorePurchases, isPlayBillingAvailable, forgetDevice, openManageSubscriptions, listProducts } from './billing.ts';
+import { refreshIfStale, restorePurchases, isPlayBillingAvailable, forgetDevice, openManageSubscriptions, listProducts, lastLookup } from './billing.ts';
 import { loadEntitlement } from './entitlement.ts';
 import { pushAvailable, enableReminders, disableReminders, remindersOn } from './push.ts';
 import './report.css';
@@ -279,7 +279,7 @@ async function renderSettings() {
   ${IS_PLACEHOLDER(WAITLIST_URL) ? '' : `<div class="card"><a class="btn btn-outline" href="${WAITLIST_URL}" target="_blank" rel="noopener">💌 ${t('settings.waitlist')}</a></div>`}
   <div class="card"><div class="label">${t('settings.purchases')}</div><p class="small">${esc(entLine)}</p>
     <div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start">${playOk ? `<button class="btn btn-outline btn-small" id="restore">${t('report.restore')}</button>` : ''}<button class="btn btn-outline btn-small" id="manage-sub">${t('settings.manageSub')}</button></div>
-    <p class="small muted">${t('settings.purchasesNote')}</p><p class="small dim">Google Play billing: ${playOk ? 'connected · ' + (found.length ? found.join(', ') : 'no products returned yet') : 'not available (web)'}</p></div>
+    <p class="small muted">${t('settings.purchasesNote')}</p><p class="small dim">Google Play billing: ${playOk ? 'connected · ' + (found.length ? found.join(', ') : 'no products returned yet') + (lastLookup?.errors.length ? ' · ' + esc(lastLookup.errors.join(' | ')) : '') : 'not available (web)'}</p></div>
   <div class="card"><div class="label">${t('settings.yourData')}</div><p class="small">${t('settings.yourDataNote')}</p><button class="btn btn-outline btn-small" id="wipe">${t('settings.deleteData')}</button></div>
   <div class="card"><div class="list-item" id="about"><span class="ico">📖</span><div class="body"><div class="title">${t('settings.about')}</div></div><span class="chev">›</span></div><div class="list-item" id="privacy"><span class="ico">🔒</span><div class="body"><div class="title">${t('settings.privacy')}</div></div><span class="chev">›</span></div></div>
   <p class="small dim center">${t('settings.version')} ${ENGINE_VERSION} · <a href="https://github.com/SakredStudio/subhdate" target="_blank" rel="noopener">github.com/SakredStudio/subhdate</a></p>`;
