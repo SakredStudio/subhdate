@@ -8,6 +8,8 @@ import { loadReportFonts } from './report.ts';
 
 export interface NaamCity { name: string; lat: number; lon: number; tz: string; region?: string }
 export interface NaamCtx {
+  /** false once the user has navigated away; async work must not paint then */
+  isCurrent?: () => boolean;
   t: (k: string, p?: Record<string, string | number>) => string;
   lang: string; region: string; base: string; city: NaamCity;
   esc: (s: any) => string; fmtTime: (iso: string | null | undefined, zone?: string) => string; fmtDate: (iso: string) => string;
@@ -49,7 +51,7 @@ export async function renderNaam(view: HTMLElement, c: NaamCtx) {
     const out = view.querySelector('#n-out')!; out.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
     try {
       const r = await c.call('naam', { req: { birth: { date: form.date, time: form.time, place: { name: form.city.name, lat: form.city.lat, lon: form.city.lon, tz: form.city.tz } }, gender: form.gender, region: c.region === 'west' || c.region === 'south' ? c.region : 'north' }, lang: c.lang });
-      last = { form, r }; renderResult(out as HTMLElement, form, r, c);
+      last = { form, r }; if (c.isCurrent?.() === false) return; renderResult(out as HTMLElement, form, r, c);
     } catch (e: any) { out.innerHTML = `<div class="card">Error: ${esc(e.message)}</div>`; }
   };
   view.querySelector('#n-go')!.addEventListener('click', run);
@@ -88,6 +90,7 @@ async function renderResult(out: HTMLElement, form: Form, r: any, c: NaamCtx) {
   if (!unlocked) { try { if (await isPlayBillingAvailable()) products = await listProducts(); } catch { products = []; } }
   const prod = products.find(p => p.itemId === 'naam_report'), fam = products.find(p => p.itemId === 'family_annual');
   const ent = unlocked ? await loadEntitlement().catch(() => null) : null;
+  if (c.isCurrent?.() === false) return;
   const reportCard = `<div class="card ${unlocked ? '' : 'gold'}"><div class="label">${t('naam.report')}</div><p class="small">${t('naam.reportIntro')}</p>
     ${unlocked ? `<button class="btn btn-gold" id="n-report">📄 ${t('naam.openReport')}</button>${ent?.entitlement.sku === 'family_annual' ? `<p class="small muted"><a href="#" id="n-manage">${t('settings.manageSub')}</a></p>` : ''}` : prod ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start"><button class="btn btn-gold btn-small" id="n-buy">${t('naam.buy', { price: formatPrice(prod) })}</button>${fam ? `<button class="btn btn-outline btn-small" id="n-buy-fam">${t('report.buyFamily', { price: formatPrice(fam) })}</button>` : ''}<button class="btn btn-outline btn-small" id="n-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>` : `<p class="small muted">${t('naam.locked')}</p>`}</div>`;
   out.innerHTML = `${r.janma.ambiguous ? `<div class="banner">${t('naam.ambiguous')}</div>` : ''}${r.candidates.map(cand).join('')}<div id="n-card"></div>${days}${reportCard}<p class="small dim">${r.sources.map((s: string) => esc(humanSource(s))).join(' · ')}</p>`;

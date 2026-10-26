@@ -25,3 +25,13 @@ export async function dayCached(date: string, place: any, opts: any, lang: strin
   mem.set(key, r); db.cacheSet(key, r);
   return r;
 }
+
+/** Called on every navigation: if the previous screen still has calculations queued (festivals, muhurta, report…),
+ *  stop the worker so the new screen does not wait behind them. Their promises reject with name 'Abandoned'. */
+export function abandonPending(): void {
+  if (!worker || pending.size === 0) return;
+  worker.terminate(); worker = null;
+  const err = Object.assign(new Error('abandoned'), { name: 'Abandoned' });
+  for (const p of pending.values()) p.reject(err);
+  pending.clear();
+}

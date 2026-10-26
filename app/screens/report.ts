@@ -7,6 +7,8 @@ import type { Sku } from '../entitlement.ts';
 import type { ReportModel, ReportDay, ReportWindow } from '../../engine/report.ts';
 
 export interface ReportCtx {
+  /** false once the user has navigated away; async work must not paint then */
+  isCurrent?: () => boolean;
   t: (k: string, p?: Record<string, string | number>) => string;
   lang: string; tz: string; cityName: string; region: string; base: string;
   esc: (s: any) => string; fmtTime: (iso: string | null | undefined, zone?: string) => string; fmtTimeD: (iso: string | null | undefined, ref: string, zone?: string) => string; fmtDate: (iso: string) => string;
@@ -35,7 +37,8 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
   const names = loadNames();
   let m: ReportModel;
   try { m = await c.call('report', { req: c.lastReq, lang: c.lang, family, names }); }
-  catch (e: any) { view.innerHTML = `<div class="card">Error: ${esc(e.message)}</div>`; return; }
+  catch (e: any) { if (c.isCurrent?.() === false) return; view.innerHTML = `<div class="card">Error: ${esc(e.message)}</div>`; return; }
+  if (c.isCurrent?.() === false) return;
   const unlocked = await c.isUnlocked();
   if (unlocked) c.onFirstFullRender?.();
   const tz = m.cover.place.tz;
@@ -133,6 +136,7 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
   // Inside the Play app the lock card sells the two products through Play Billing; on the web it only explains.
   let products: ProductDetails[] = [];
   if (!unlocked) { try { if (await isPlayBillingAvailable()) products = await listProducts(); } catch { products = []; } }
+  if (c.isCurrent?.() === false) return;
   const skuSingle = products.find(p => p.itemId === 'report_single'), skuFamily = products.find(p => p.itemId === 'family_annual');
   const buyButtons = products.length
     ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start;margin-top:8px">${skuSingle ? `<button class="btn btn-gold btn-small" data-buy="report_single">${t('report.buyReport', { price: formatPrice(skuSingle) })}</button>` : ''}${skuFamily ? `<button class="btn btn-outline btn-small" data-buy="family_annual">${t('report.buyFamily', { price: formatPrice(skuFamily) })}</button>` : ''}<button class="btn btn-outline btn-small" id="rp-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>`

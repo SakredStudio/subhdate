@@ -1,7 +1,7 @@
 // ShubhDate app shell: hash router, settings, screens. Vanilla ES modules; engine runs in a Web Worker.
 import UI from '../i18n/ui.json' with { type: 'json' };
 import { CITIES, searchCities, nearestCity, type City } from './cities.ts';
-import { call, dayCached } from './engine-client.ts';
+import { call, dayCached, abandonPending } from './engine-client.ts';
 import { db, type SavedItem } from './db.ts';
 import { aboutHtml, privacyHtml } from './screens/about.ts';
 import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
@@ -94,11 +94,14 @@ async function festivalsFor(from: string, to: string) {
   festCache = { key, list }; return list;
 }
 async function renderToday() {
+  const seq = navSeq;
   const date = todayDate;
   view.innerHTML = `<div class="hero">${heroArt}<h1>${esc(fmtDate(date))}</h1><p class="muted small">${esc(S.city.name)}</p></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>`;
   let d: any;
-  try { d = await dayCached(date, place(), engineOpts(), S.lang, birthReq()); } catch (e: any) { view.innerHTML = `<div class="card">Error: ${esc(e.message)}</div>`; return; }
+  try { d = await dayCached(date, place(), engineOpts(), S.lang, birthReq()); } catch (e: any) { if (isStale(seq)) return; view.innerHTML = `<div class="card">Error: ${esc(e.message)}</div>`; return; }
+  if (isStale(seq)) return;
   const fests = await festivalsFor(addIso(date, -1), addIso(date, 1)).catch(() => []);
+  if (isStale(seq)) return;
   const todayFests = fests.filter((f: any) => f.date === date);
   const now = Date.now();
   const inWin = (w: any) => w && now >= new Date(w.start).getTime() && now < new Date(w.end).getTime();
@@ -167,7 +170,9 @@ async function renderToday() {
 let lastResult: any = null; let lastReq: any = null;
 const EVENT_ICONS: Record<string, string> = { vivaha: '💍', griha_pravesh: '🏠', sagai: '💐', vahana: '🚗', vyapara: '🏪', namakarana: '👶', annaprashana: '🍚', mundan: '✂️', yatra: '✈️', new_job: '💼', exam_interview: '🎓', bhoomi_puja: '🪔' };
 async function renderMuhurta() {
+  const seq = navSeq;
   const packs = await call('packs', { lang: S.lang });
+  if (isStale(seq)) return;
   const from = lastReq?.from ?? todayIso(); const to = lastReq?.to ?? addIso(from, 60);
   view.innerHTML = `<h1>${t('muhurta.title')}</h1><p class="muted small">${t('muhurta.sub')}</p>
   <a class="card naam-cta" href="#/naam">👶 ${t('naam.cta')} ›</a>
@@ -204,9 +209,11 @@ function renderResults(root: Element) {
   root.querySelectorAll('[data-i]').forEach(el => el.addEventListener('click', () => { location.hash = `#/result/${(el as HTMLElement).dataset.i}`; }));
 }
 async function renderResult(idx: number) {
+  const seq = navSeq;
   if (!lastResult) { location.hash = '#/muhurta'; return; }
   const r = lastResult; const d = r.days[idx]; if (!d) { location.hash = '#/muhurta'; return; }
   const saved = await db.listSaved();
+  if (isStale(seq)) return;
   const idOf = (w: any) => `${lastReq.event}|${d.date}|${w.start}`;
   view.innerHTML = `<div class="row" style="border:0"><a href="#/muhurta" class="small">‹ ${t('result.back')}</a><a class="btn btn-outline btn-small" href="#/report">📄 ${t('report.open')}</a></div>
   <div class="hero"><div class="label">${EVENT_ICONS[lastReq.event] ?? ''} ${esc(r.packName)}</div><h1>${esc(fmtDate(d.date))}</h1><p class="muted small">${esc(d.headline)}</p>${scoreRing(d.score)}</div>
@@ -231,9 +238,10 @@ function downloadIcs(name: string, w: any, d: any) {
 
 // ---------- Festivals ----------
 async function renderFestivals() {
+  const seq = navSeq;
   view.innerHTML = `<h1>${t('fest.title')}</h1><p class="muted small">${t('fest.sub')} · ${esc(S.city.name)}</p><div class="skeleton"></div><div class="skeleton"></div>`;
   const from = addIso(todayIso(), -3); const to = addIso(from, 200);
-  let list: any[]; try { list = await festivalsFor(from, to); } catch (e: any) { view.innerHTML += `<div class="card">Error ${esc(e.message)}</div>`; return; }
+  let list: any[]; try { list = await festivalsFor(from, to); if (isStale(seq)) return; } catch (e: any) { if (isStale(seq)) return; view.innerHTML += `<div class="card">Error ${esc(e.message)}</div>`; return; }
   const main = list.filter(f => f.id !== 'ekadashi'); const ek = list.filter(f => f.id === 'ekadashi');
   view.innerHTML = `<h1>${t('fest.title')}</h1><p class="muted small">${t('fest.sub')} · ${esc(S.city.name)}</p>
   ${main.map(f => `<div class="card"><div class="row" style="border:0"><span class="k"><b style="color:var(--gold-light)">${esc(fmtDate(f.date))}</b></span><span class="v small muted">${esc(f.deity ?? '')}</span></div><h2>${esc(f.name)}</h2><p class="small muted">${esc(f.tithiLabel ?? '')}${f.instant ? ' · ' + fmtTimeD(f.instant, f.date) : ''}</p>
@@ -248,7 +256,9 @@ async function renderFestivals() {
 
 // ---------- Saved ----------
 async function renderSaved() {
+  const seq = navSeq;
   const list = await db.listSaved();
+  if (isStale(seq)) return;
   view.innerHTML = `<h1>${t('saved.title')}</h1>${list.length ? list.map(s => `<div class="card list-item" style="align-items:center">${scoreRing(s.score)}<div class="body"><div class="title">${EVENT_ICONS[s.event] ?? ''} ${esc(s.eventName)} · ${esc(fmtDate(s.date))}</div><div class="sub">${fmtTime(s.start, s.place.tz)}–${fmtTime(s.end, s.place.tz)} · ${esc(s.place.name)}</div><div class="sub">${s.reasons.slice(0, 2).map(esc).join(' ')}</div></div><button class="btn btn-outline btn-small" data-rm="${esc(s.id)}">${t('saved.remove')}</button></div>`).join('') : `<div class="card center"><p style="font-size:32px">🪷</p><p class="muted">${t('saved.empty')}</p><a class="btn btn-gold" href="#/muhurta">${t('muhurta.title')}</a></div>`}`;
   view.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', async () => { await db.remove((b as HTMLElement).dataset.rm!); renderSaved(); }));
 }
@@ -264,10 +274,12 @@ function hostMode(): string {
   return 'browser ' + chrome;
 }
 async function renderSettings() {
+  const seq = navSeq;
   const langs = U.languages as { code: Lang; native: string; en: string; beta?: boolean }[];
   const janma = S.birth ? await call('janma', { birth: birthReq(), lang: S.lang }).catch(() => null) : null;
   const ent = await loadEntitlement().catch(() => null); const playOk = await isPlayBillingAvailable().catch(() => false);
   const found = playOk ? (await listProducts().catch(() => [])).map(p => p.itemId) : [];
+  if (isStale(seq)) return;
   const entLine = ent ? (ent.entitlement.sku === 'family_annual' ? t('settings.famActive', { date: new Date(ent.entitlement.exp * 1000).toLocaleDateString() }) : t('settings.creditsLeft', { n: (ent.entitlement.credits ?? 0) + (ent.entitlement.naam ?? 0) })) : t('settings.noPurchases');
   view.innerHTML = `<h1>${t('settings.title')}</h1>
   <div class="card"><div class="label">${t('settings.language')}</div><div class="lang-grid">${langs.map(l => `<div class="lang-cell ${S.lang === l.code ? 'selected' : ''}" data-lang="${l.code}"><div class="native">${esc(l.native)}</div><div class="en">${esc(l.en)} ${l.beta ? `<span class="beta">${t('settings.beta')}</span>` : ''}</div></div>`).join('')}</div></div>
@@ -364,7 +376,12 @@ function updateChrome() {
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t((el as HTMLElement).dataset.i18n!); });
   const chip = document.getElementById('city-chip')!; chip.textContent = `📍 ${S.city.name}`;
 }
+// Each navigation gets a number; an async screen that finishes after the user moved on must not paint.
+let navSeq = 0;
+const isStale = (seq: number) => seq !== navSeq;
 function route() {
+  navSeq++;
+  abandonPending();
   const hash = location.hash || '#/today';
   const [, path, arg] = hash.split('/');
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active', (a as HTMLElement).dataset.tab === path));
@@ -376,8 +393,8 @@ function route() {
   switch (path) {
     case 'muhurta': return renderMuhurta();
     case 'result': return renderResult(Number(arg));
-    case 'naam': return renderNaam(view, { t, lang: S.lang, region: S.region, base: BASE, city: S.city, esc, fmtTime, fmtDate, scoreRing, toast, call, pickCity: cityPicker, isUnlocked: isNaamUnlocked, onFirstFullRender: (key) => { consumeReport(key).catch(() => null); } });
-    case 'report': return renderReport(view, { t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, isUnlocked: isReportUnlocked, onFirstFullRender: () => { consumeReport(reportKey()).catch(() => null); } });
+    case 'naam': return renderNaam(view, { isCurrent: ((q) => () => !isStale(q))(navSeq), t, lang: S.lang, region: S.region, base: BASE, city: S.city, esc, fmtTime, fmtDate, scoreRing, toast, call, pickCity: cityPicker, isUnlocked: isNaamUnlocked, onFirstFullRender: (key) => { consumeReport(key).catch(() => null); } });
+    case 'report': return renderReport(view, { isCurrent: ((q) => () => !isStale(q))(navSeq), t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, isUnlocked: isReportUnlocked, onFirstFullRender: () => { consumeReport(reportKey()).catch(() => null); } });
     case 'festivals': return renderFestivals();
     case 'saved': return renderSaved();
     case 'settings': return renderSettings();
