@@ -70,3 +70,14 @@ Uploaded and rolled out to Internal testing via Claude in Chrome (workflow, each
 - FollowUp Buddy 4 (1.1.2) — available to internal testers.
 Release notes en-US: "Fixes in-app purchases and prices not loading." 8 AM backup task disabled.
 Next (Soul, evening): update ShubhDate on the phone from Play (internal tester), Settings → Purchases should list report_single, family_annual, naam_report; then Internal testing → Promote release → Production → Send for review (ShubhDate, Chanda). Kilat/FollowUp stay paused until names/logos.
+
+## Billing WORKING on 1.0.3 (2026-10-26 23:04, Soul's phone, verified over adb + DevTools)
+Play returned all three products to the Play-installed TWA: report_single CAD 6.99, family_annual CAD 20.99/yr, naam_report CAD 13.99. Naam screen shows "Unlock the report · CA$13.99" and "Family plan · CA$20.99 / year".
+What it took, in order:
+1. 1.0.3 fixes the stale AndroidManifest pathPrefix ("/subhdate/" → "/"); without it Chrome never registers the app as delegate → clientAppUnavailable. Chrome caches that per process: force-stop Chrome after updating.
+2. naam_report created + activated in Play Console 2026-10-26 (Buy option "buy", USD 9.99 base, INR 149).
+3. The Play app must actually be installed and opened from its own icon. On 10-26 Chrome had installed its own WebAPK copy of shubhdate.sakredstudio.ca (org.chromium.webapk.*) after the Play app was uninstalled; that copy can never bill ("not available (web)"). Removed it; web manifest now declares the Play app in related_applications with prefer_related_applications (cache v12).
+4. Installed from Play under sakredfamily@gmail.com (licence tester); Finsky logs "Billing preferred account via installer".
+Debug recipe: wireless adb, `adb shell setprop log.tag V` (nubia ROM silences logs), `adb logcat -d | grep -E "BillingClient|TwaBilling"` → "Got unfetchedProduct ... statusCode=N" / "Got product details". billing 1.2.0 hides unfetched reasons from the page.
+Note: Chanda's billing.js shows a hard-coded ₹149 fallback when Play returns nothing, so "Chanda shows a price" is NOT proof billing works.
+Next: Soul promotes ShubhDate 1.0.3 (code 4) Internal → Production (Production 1.0.2 is broken for every user, incl. wife's phone).
