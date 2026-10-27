@@ -81,3 +81,6 @@ What it took, in order:
 Debug recipe: wireless adb, `adb shell setprop log.tag V` (nubia ROM silences logs), `adb logcat -d | grep -E "BillingClient|TwaBilling"` → "Got unfetchedProduct ... statusCode=N" / "Got product details". billing 1.2.0 hides unfetched reasons from the page.
 Note: Chanda's billing.js shows a hard-coded ₹149 fallback when Play returns nothing, so "Chanda shows a price" is NOT proof billing works.
 Next: Soul promotes ShubhDate 1.0.3 (code 4) Internal → Production (Production 1.0.2 is broken for every user, incl. wife's phone).
+
+## Production submission (2026-10-26 ~23:40)
+ShubhDate 4 (1.0.3) promoted Internal → Production (100% rollout, notes "Fixes in-app purchases and prices not loading.", 1.0.2 not included) and submitted: Publishing overview shows "Changes in review — Production 4 (1.0.3) Start full rollout" (quick checks running, then Google review, typically ≤7 days). Managed publishing OFF → goes live automatically on approval. Production still serves 3 (1.0.2) until then. Play flagged 4 non-blocking recommendations (edge-to-edge x2, large-screen orientation/resizability, R8).
