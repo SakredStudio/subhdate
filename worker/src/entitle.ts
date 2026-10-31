@@ -2,12 +2,14 @@
 import { signES256 } from './jws.ts';
 import { subscriptionActive, subscriptionExpiry, type ProductPurchase, type SubscriptionV2 } from './play.ts';
 
-export type Sku = 'report_single' | 'family_annual' | 'naam_report';
-export const SKUS: Sku[] = ['report_single', 'family_annual', 'naam_report'];
+export type Sku = 'report_single' | 'family_annual' | 'naam_report' | 'shagun_pro';
+export const SKUS: Sku[] = ['report_single', 'family_annual', 'naam_report', 'shagun_pro'];
+/** One-time products verified with purchases.products.get; the consumable ones are also consumed so they can be bought again. */
+export const ONE_TIME: Sku[] = ['report_single', 'naam_report', 'shagun_pro'];
 export const CONSUMABLE: Sku[] = ['report_single', 'naam_report'];
 export const FAR_FUTURE = 4102444800; // 2100-01-01, used as exp for consumable credits
 
-export interface EntitlementPayload { sku: Sku; source: 'play'; exp: number; iat: number; dev: string; credits?: number; naam?: number; }
+export interface EntitlementPayload { sku: Sku; source: 'play'; exp: number; iat: number; dev: string; credits?: number; naam?: number; shagun?: boolean; }
 export interface EntRow { id: string; sku: Sku; device_id: string; purchase_token_hash: string; order_id: string | null; expires_at: number | null; created_at: number; revoked_at: number | null; }
 
 /** Decide what a verified one-time purchase means. */
@@ -33,7 +35,8 @@ export function payloadFor(dev: string, rows: EntRow[], now: number): Entitlemen
   if (fam) return { sku: 'family_annual', source: 'play', exp: fam.expires_at!, iat: now, dev };
   const credits = live.filter(r => r.sku === 'report_single').length;
   const naam = live.filter(r => r.sku === 'naam_report').length;
-  if (credits > 0 || naam > 0) return { sku: credits > 0 ? 'report_single' : 'naam_report', source: 'play', exp: FAR_FUTURE, iat: now, dev, ...(credits > 0 ? { credits } : {}), ...(naam > 0 ? { naam } : {}) };
+  const shagun = live.some(r => r.sku === 'shagun_pro');
+  if (credits > 0 || naam > 0 || shagun) return { sku: credits > 0 ? 'report_single' : naam > 0 ? 'naam_report' : 'shagun_pro', source: 'play', exp: FAR_FUTURE, iat: now, dev, ...(credits > 0 ? { credits } : {}), ...(naam > 0 ? { naam } : {}), ...(shagun ? { shagun: true } : {}) };
   return null;
 }
 export async function issueToken(payload: EntitlementPayload, privateJwk: JsonWebKey): Promise<string> {

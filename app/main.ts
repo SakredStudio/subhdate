@@ -7,6 +7,7 @@ import { aboutHtml, privacyHtml } from './screens/about.ts';
 import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
 import { renderReport } from './screens/report.ts';
 import { renderNaam } from './screens/naam.ts';
+import { renderShagun } from './screens/shagun.ts';
 import { humanSource } from './format.ts';
 import { isEntitled, useStore, consumeReport } from './entitlement.ts';
 import { refreshIfStale, restorePurchases, isPlayBillingAvailable, forgetDevice, openManageSubscriptions } from './billing.ts';
@@ -176,6 +177,7 @@ async function renderMuhurta() {
   const from = lastReq?.from ?? todayIso(); const to = lastReq?.to ?? addIso(from, 60);
   view.innerHTML = `<h1>${t('muhurta.title')}</h1><p class="muted small">${t('muhurta.sub')}</p>
   <a class="card naam-cta" href="#/naam">👶 ${t('naam.cta')} ›</a>
+  <a class="card naam-cta" href="#/shagun">🎁 ${t('shagun.cta')} ›</a>
   <div class="card">
     <div class="field"><label>${t('muhurta.event')}</label><select id="ev">${packs.map((p: any) => `<option value="${p.id}" ${lastReq?.event === p.id ? 'selected' : ''}>${EVENT_ICONS[p.id] ?? ''} ${esc(p.name)}</option>`).join('')}</select></div>
     <div class="grid2"><div class="field"><label>${t('muhurta.from')}</label><input id="from" type="date" value="${from}"></div><div class="field"><label>${t('muhurta.to')}</label><input id="to" type="date" value="${to}"></div></div>
@@ -271,6 +273,7 @@ async function renderSettings() {
   const ent = await loadEntitlement().catch(() => null); const playOk = await isPlayBillingAvailable().catch(() => false);
   if (isStale(seq)) return;
   const entLine = ent ? (ent.entitlement.sku === 'family_annual' ? t('settings.famActive', { date: new Date(ent.entitlement.exp * 1000).toLocaleDateString() }) : t('settings.creditsLeft', { n: (ent.entitlement.credits ?? 0) + (ent.entitlement.naam ?? 0) })) : t('settings.noPurchases');
+  const shagunLine = ent?.entitlement.shagun || ent?.entitlement.sku === 'shagun_pro' ? ` ${t('settings.shagunPro')}` : '';
   view.innerHTML = `<h1>${t('settings.title')}</h1>
   <div class="card"><div class="label">${t('settings.language')}</div><div class="lang-grid">${langs.map(l => `<div class="lang-cell ${S.lang === l.code ? 'selected' : ''}" data-lang="${l.code}"><div class="native">${esc(l.native)}</div><div class="en">${esc(l.en)} ${l.beta ? `<span class="beta">${t('settings.beta')}</span>` : ''}</div></div>`).join('')}</div></div>
   <div class="card"><div class="label">${t('settings.city')}</div><button class="btn btn-outline" id="city">${esc(S.city.name)} · ${esc(S.city.region)} · ${esc(S.city.tz)}</button></div>
@@ -288,7 +291,7 @@ async function renderSettings() {
     ${janma ? `<p class="small">${t('settings.janma')}: ${janma.candidates.map((c: any) => `<b>${esc(c.nakshatraLabel)}</b> (${esc(c.rashiLabel)}, pada ${c.pada})`).join(' / ')}${janma.ambiguous ? ` · ${t('settings.timeUnknown')}` : ''}</p>` : ''}
     <div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="bsave">${t('settings.saveBirth')}</button><button class="btn btn-outline btn-small" id="bclear">${t('settings.clearBirth')}</button></div></div>
   ${IS_PLACEHOLDER(WAITLIST_URL) ? '' : `<div class="card"><a class="btn btn-outline" href="${WAITLIST_URL}" target="_blank" rel="noopener">💌 ${t('settings.waitlist')}</a></div>`}
-  <div class="card"><div class="label">${t('settings.purchases')}</div><p class="small">${esc(entLine)}</p>
+  <div class="card"><div class="label">${t('settings.purchases')}</div><p class="small">${esc(entLine + shagunLine)}</p>
     <div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start">${playOk ? `<button class="btn btn-outline btn-small" id="restore">${t('report.restore')}</button>` : ''}<button class="btn btn-outline btn-small" id="manage-sub">${t('settings.manageSub')}</button></div>
     <p class="small muted">${t('settings.purchasesNote')}</p></div>
   <div class="card"><div class="label">${t('settings.yourData')}</div><p class="small">${t('settings.yourDataNote')}</p><button class="btn btn-outline btn-small" id="wipe">${t('settings.deleteData')}</button></div>
@@ -358,6 +361,10 @@ async function isNaamUnlocked(): Promise<boolean> {
   if (localStorage.getItem('shubhdate.devReport') === '1') return true;
   return isEntitled(['naam_report', 'family_annual']);
 }
+async function isShagunUnlocked(): Promise<boolean> {
+  if (localStorage.getItem('shubhdate.devReport') === '1') return true;
+  return isEntitled(['shagun_pro', 'family_annual']);
+}
 const reportKey = () => lastReq ? `${lastReq.event}|${lastReq.from}|${lastReq.to}|${lastReq.place.lat.toFixed(2)},${lastReq.place.lon.toFixed(2)}` : '';
 
 // ---------- Router ----------
@@ -373,7 +380,7 @@ function route() {
   navSeq++;
   abandonPending();
   const hash = location.hash || '#/today';
-  const [, path, arg] = hash.split('/');
+  const [, path, arg, ...rest] = hash.split('/');
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active', (a as HTMLElement).dataset.tab === path));
   document.getElementById('tabbar')!.style.display = S.onboarded ? '' : 'none';
   document.body.dataset.route = path || 'today';
@@ -384,6 +391,7 @@ function route() {
     case 'muhurta': return renderMuhurta();
     case 'result': return renderResult(Number(arg));
     case 'naam': return renderNaam(view, { isCurrent: ((q) => () => !isStale(q))(navSeq), t, lang: S.lang, region: S.region, base: BASE, city: S.city, esc, fmtTime, fmtDate, scoreRing, toast, call, pickCity: cityPicker, isUnlocked: isNaamUnlocked, onFirstFullRender: (key) => { consumeReport(key).catch(() => null); } });
+    case 'shagun': return renderShagun(view, { isCurrent: ((q) => () => !isStale(q))(navSeq), t, lang: S.lang, base: BASE, esc, fmtDate, toast, sheet, closeSheet, isUnlocked: isShagunUnlocked, sub: arg ? [arg, ...rest].join('/') : undefined });
     case 'report': return renderReport(view, { isCurrent: ((q) => () => !isStale(q))(navSeq), t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, isUnlocked: isReportUnlocked, onFirstFullRender: () => { consumeReport(reportKey()).catch(() => null); } });
     case 'festivals': return renderFestivals();
     case 'saved': return renderSaved();

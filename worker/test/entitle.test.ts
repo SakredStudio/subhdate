@@ -59,3 +59,13 @@ describe('token round trip', () => {
     expect(await verifyToken(tok.slice(0, -2) + 'AA', { kty: pub.kty, crv: pub.crv, x: pub.x, y: pub.y })).toBeNull();
   });
 });
+
+describe('shagun_pro rows', () => {
+  it('a live shagun_pro row sets the shagun flag; alone it is the sku; credits still win the sku slot', () => {
+    const p = payloadFor('d', [row({ id: 's', sku: 'shagun_pro' })], now)!;
+    expect(p.sku).toBe('shagun_pro'); expect(p.shagun).toBe(true); expect(p.exp).toBe(FAR_FUTURE); expect(p.credits).toBeUndefined();
+    const q = payloadFor('d', [row({ id: 's', sku: 'shagun_pro' }), row({ id: 'n', sku: 'naam_report' })], now)!;
+    expect(q.sku).toBe('naam_report'); expect(q.naam).toBe(1); expect(q.shagun).toBe(true);
+    expect(payloadFor('d', [row({ id: 's', sku: 'shagun_pro', revoked_at: now })], now)).toBeNull();
+  });
+});

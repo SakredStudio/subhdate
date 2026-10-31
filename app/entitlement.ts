@@ -4,7 +4,7 @@
 // Privacy: the device id is a random UUID that is sent only with a purchase claim; never a name or email.
 import { ENTITLEMENT_PUBLIC_KEY_JWK, IS_PLACEHOLDER } from './config.ts';
 
-export type Sku = 'report_single' | 'family_annual' | 'naam_report';
+export type Sku = 'report_single' | 'family_annual' | 'naam_report' | 'shagun_pro';
 export const CONSUMABLE_SKUS: Sku[] = ['report_single', 'naam_report'];
 export interface Entitlement {
   sku: Sku;
@@ -19,6 +19,8 @@ export interface Entitlement {
   credits?: number;
   /** remaining Namakarana-report credits (naam_report) */
   naam?: number;
+  /** Shagun Register Pro (shagun_pro, one-time, never consumed) */
+  shagun?: boolean;
 }
 export const OFFLINE_GRACE_SECONDS = 7 * 86400;
 
@@ -50,7 +52,7 @@ export async function verifyToken(jws: string, jwk: JsonWebKey | null = ENTITLEM
     const ok = await subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, key, b64u.decode(parts[2]), utf8.encode(`${parts[0]}.${parts[1]}`));
     if (!ok) return null;
     const p = decodePayload(jws);
-    if (!p || !['report_single', 'family_annual', 'naam_report'].includes(p.sku) || p.source !== 'play' || typeof p.exp !== 'number' || typeof p.iat !== 'number' || typeof p.dev !== 'string') return null;
+    if (!p || !['report_single', 'family_annual', 'naam_report', 'shagun_pro'].includes(p.sku) || p.source !== 'play' || typeof p.exp !== 'number' || typeof p.iat !== 'number' || typeof p.dev !== 'string') return null;
     return p;
   } catch { return null; }
 }
@@ -94,8 +96,9 @@ export async function isEntitled(sku: Sku | Sku[], now = Date.now(), jwk: JsonWe
   const want = Array.isArray(sku) ? sku : [sku];
   const e = r.entitlement;
   if (e.sku === 'family_annual') return true;
+  if (want.includes('shagun_pro') && (e.shagun || e.sku === 'shagun_pro')) return true;
   const consumed: string[] = (await S().get(CONSUMED_KEY)) ?? [];
-  for (const w of want) if (w !== 'family_annual' && creditsLeft(e, w, consumed) > 0) return true;
+  for (const w of want) if (w !== 'family_annual' && w !== 'shagun_pro' && creditsLeft(e, w, consumed) > 0) return true;
   return false;
 }
 function creditsLeft(e: Entitlement, kind: Sku, consumed: string[]): number {

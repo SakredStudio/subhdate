@@ -16,7 +16,7 @@ export function openManageSubscriptions(): void {
   if (/Android/i.test(ua)) { location.href = 'intent://play.google.com/store/account/subscriptions?sku=family_annual&package=com.sakredstudio.shubhdate#Intent;scheme=https;package=com.android.vending;S.browser_fallback_url=' + encodeURIComponent(MANAGE_SUBSCRIPTIONS_URL) + ';end'; return; }
   window.open(MANAGE_SUBSCRIPTIONS_URL, '_blank', 'noopener');
 }
-export const SKUS: Sku[] = ['report_single', 'family_annual', 'naam_report'];
+export const SKUS: Sku[] = ['report_single', 'family_annual', 'naam_report', 'shagun_pro'];
 
 export interface ProductDetails { itemId: Sku; title: string; description: string; price: { currency: string; value: string }; type?: string; subscriptionPeriod?: string; }
 interface DigitalGoodsService { getDetails(ids: string[]): Promise<ProductDetails[]>; listPurchases(): Promise<{ itemId: string; purchaseToken: string }[]>; consume?(purchaseToken: string): Promise<void>; }
