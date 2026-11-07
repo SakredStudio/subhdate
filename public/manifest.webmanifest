@@ -13,7 +13,7 @@
     "lifestyle",
     "utilities"
   ],
-  "prefer_related_applications": true,
+  "prefer_related_applications": false,
   "related_applications": [
     {
       "platform": "play",

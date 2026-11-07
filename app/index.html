@@ -21,11 +21,19 @@
 </head>
 <body>
   <div class="stars" aria-hidden="true"></div>
+  <div id="desk-bg" class="desk-bg" aria-hidden="true"></div>
   <header class="topbar">
     <a href="#/today" class="brand"><img class="brand-mark" src="icons/mark-84.png" width="28" height="28" alt="" aria-hidden="true"><span class="brand-name">ShubhDate</span></a>
-    <button class="city-chip" id="city-chip" type="button" aria-label="Change city"></button>
+    <div class="top-actions">
+      <button class="install-chip" id="top-install" type="button" hidden>📲 <span data-i18n="common.install">Install app</span></button>
+      <button class="city-chip" id="city-chip" type="button" aria-label="Change city"></button>
+    </div>
   </header>
-  <main id="view" class="view" aria-live="polite"></main>
+  <div class="app-shell">
+    <aside id="rail-left" class="desk-rail" aria-label="Live cosmic clock"></aside>
+    <main id="view" class="view" aria-live="polite"></main>
+    <aside id="rail-right" class="desk-rail" aria-label="Upcoming festivals and mobile app"></aside>
+  </div>
   <nav class="tabbar" id="tabbar" aria-label="Main">
     <a href="#/today" data-tab="today"><span class="tab-icon">☀</span><span class="tab-label" data-i18n="nav.today">Today</span></a>
     <a href="#/muhurta" data-tab="muhurta"><span class="tab-icon">✦</span><span class="tab-label" data-i18n="nav.muhurta">Muhurta</span></a>

@@ -69,6 +69,20 @@ function closeSheet() { document.getElementById('sheet-root')!.innerHTML = ''; }
 const isIos = () => typeof navigator !== 'undefined' && (/iPhone|iPad|iPod/i.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
 const isStandalone = () => typeof window !== 'undefined' && (!!(navigator as any).standalone || !!window.matchMedia?.('(display-mode: standalone)').matches);
 const IOS_DISMISS_KEY = 'shubhdate.iosDismissed';
+const PLAY_URL = 'https://play.google.com/store/apps/details?id=com.sakredstudio.shubhdate';
+const QR_ROWS = [533480831,273556289,391678301,391983709,390935389,274718017,534074751,166144,502993348,309836584,470277195,145716874,443796593,309775922,467674585,170037044,451090044,376913812,424697685,194409486,33246185,488327936,458826623,52103745,301175389,494943837,331111261,153055297,458999935];
+function qrSvg() {
+  let d = '';
+  for (let r = 0; r < 29; r++) for (let c = 0; c < 29; c++) if ((QR_ROWS[r] >> c) & 1) d += `M${c},${r}h1v1h-1z`;
+  return `<svg class="qr-svg" viewBox="-1 -1 31 31" aria-label="QR code for shubhdate.sakredstudio.ca"><path fill="#251C30" d="${d}"/></svg>`;
+}
+let deferredInstall: any = null;
+window.addEventListener('beforeinstallprompt', (e: any) => { e.preventDefault(); deferredInstall = e; syncInstallBtn(); });
+window.addEventListener('appinstalled', () => { deferredInstall = null; syncInstallBtn(); });
+function syncInstallBtn() {
+  const btn = document.getElementById('top-install') as HTMLButtonElement | null;
+  if (btn) btn.hidden = isStandalone();
+}
 function showIosInstallSheet() {
   const shareSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>`;
   const addSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>`;
@@ -79,6 +93,27 @@ function showIosInstallSheet() {
     <button class="btn btn-gold mt" id="ios-ok" type="button">${esc(t('common.ok'))}</button>`, root => {
     root.querySelector('#ios-ok')!.addEventListener('click', closeSheet);
   });
+}
+function showUniversalInstallSheet() {
+  const dlSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>`;
+  sheet(`<h3>📲 ${esc(t('common.install'))}</h3><p class="small muted">${esc(t('ios.sub'))}</p>
+    <div class="ios-step"><span class="ios-ico">${dlSvg}</span><div><b>Desktop Chrome / Edge:</b> Click the <b>⬇ Install</b> button on the right side of your browser's address bar (next to ★).</div></div>
+    <div class="qr-wrap">${qrSvg()}<div><div class="label">iPhone &amp; Android</div><p class="small" style="margin:4px 0 0">Scan with your phone's camera to open <b>shubhdate.sakredstudio.ca</b> &amp; install directly to your Home Screen.</p></div></div>
+    <div class="store-row">
+      <a class="btn btn-gold btn-small" href="${PLAY_URL}" target="_blank" rel="noopener">▶ Google Play (Android)</a>
+      <button class="btn btn-outline btn-small" id="u-ios" type="button">🍎 iPhone / iPad Guide</button>
+    </div>
+    <button class="btn btn-outline mt" id="u-ok" type="button">${esc(t('common.close'))}</button>`, root => {
+    root.querySelector('#u-ios')!.addEventListener('click', showIosInstallSheet);
+    root.querySelector('#u-ok')!.addEventListener('click', closeSheet);
+  });
+}
+async function triggerInstall() {
+  if (deferredInstall) {
+    try { deferredInstall.prompt(); await deferredInstall.userChoice; deferredInstall = null; syncInstallBtn(); return; } catch { /* fallback */ }
+  }
+  if (isIos()) return showIosInstallSheet();
+  showUniversalInstallSheet();
 }
 function scoreRing(score: number) { const r = 24, c = 2 * Math.PI * r; return `<svg class="score" viewBox="0 0 56 56"><circle class="track" cx="28" cy="28" r="${r}" fill="none" stroke-width="3"/><circle class="fill" cx="28" cy="28" r="${r}" fill="none" stroke-width="3" stroke-dasharray="${(score / 100 * c).toFixed(1)} ${c.toFixed(1)}"/><text x="28" y="33" text-anchor="middle">${score}</text></svg>`; }
 const heroArt = `<picture><source srcset="${BASE}hero.webp" type="image/webp"><img class="hero-art" src="${BASE}hero.png" width="180" height="180" alt="" aria-hidden="true"></picture>`;
@@ -138,11 +173,11 @@ async function renderToday() {
   const isDiaspora = S.city.tz !== 'Asia/Kolkata';
   const sank = d.sankalpa;
   const bala = d.personal ? `<div class="card"><div class="label">${t('today.yourBala')}</div>${d.personal.atSunrise.map((a: any, i: number) => `<div class="row"><span class="k">${esc(d.personal.candidates[i].nakshatra)} · ${esc(d.personal.candidates[i].rashi)}</span><span class="v"><span class="pill ${a.tara.good ? 'good' : 'avoid'}">${t('today.tara')} ${a.tara.tara} ${esc(a.tara.name)}</span><span class="pill ${a.chandra.quality === 'good' ? 'good' : a.chandra.quality === 'avoid' ? 'avoid' : 'info'}">${t('today.chandra')} ${a.chandra.house} · ${t('today.' + (a.chandra.quality === 'weak' ? 'weak' : a.chandra.quality === 'good' ? 'good' : 'bad'))}${a.chandra.chandrashtama ? ' · Chandrashtama' : ''}</span></span></div>`).join('')}${d.personal.ambiguous ? `<p class="small muted">${esc(U.en['settings.timeUnknown'])}: ${d.personal.candidates.length} candidates.</p>` : ''}</div>` : '';
-  const showIos = isIos() && !isStandalone() && localStorage.getItem(IOS_DISMISS_KEY) !== '1';
+  const showInstallBanner = !isStandalone() && localStorage.getItem(IOS_DISMISS_KEY) !== '1';
   view.innerHTML = `
   <div class="hero">${heroArt}<h1>${esc(fmtDate(date))}</h1><p class="muted small">${esc(d.vara.label)} · ${esc(S.city.name)}</p>
     <div class="row" style="justify-content:center;gap:8px;border:0"><button class="btn btn-outline btn-small" id="prev">‹ ${t('today.prev')}</button><button class="btn btn-outline btn-small" id="tod">${t('today.todayBtn')}</button><button class="btn btn-outline btn-small" id="next">${t('today.next')} ›</button></div></div>
-  ${showIos ? `<div class="banner ios-banner" id="ios-bar"><span class="small">📲 ${esc(t('ios.banner'))}</span><div style="display:flex;gap:6px;align-items:center;flex-shrink:0"><button class="btn btn-gold btn-small" id="ios-install" type="button">${esc(t('common.install'))}</button><button class="btn btn-outline btn-small" id="ios-dismiss" type="button" aria-label="${esc(t('common.close'))}">✕</button></div></div>` : ''}
+  ${showInstallBanner ? `<div class="banner ios-banner" id="ios-bar"><span class="small">📲 ${esc(t('ios.banner'))}</span><div style="display:flex;gap:6px;align-items:center;flex-shrink:0"><button class="btn btn-gold btn-small" id="ios-install" type="button">${esc(t('common.install'))}</button><button class="btn btn-outline btn-small" id="ios-dismiss" type="button" aria-label="${esc(t('common.close'))}">✕</button></div></div>` : ''}
   ${isDiaspora ? `<div class="banner">🌏 ${t('today.diaspora')}</div>` : ''}
   ${todayFests.length ? `<div class="card gold"><div class="label">${t('today.festival')}</div>${todayFests.map((f: any) => `<h2>${esc(f.name)}</h2><p class="small muted">${esc(f.tithiLabel ?? '')}${f.window ? ` · ${t('fest.window')} ${fmtTime(f.window.start)}–${fmtTime(f.window.end)}` : ''}${f.moonrise ? ` · ${t('fest.moonrise')} ${fmtTime(f.moonrise)}` : ''}${f.diaspora?.differs ? `<br>${t('fest.differs', { date: fmtDate(f.diaspora.delhiDate) })}` : ''}${f.noteText ? `<br>${esc(f.noteText)}` : ''}</p>`).join('')}</div>` : ''}
   <div class="card">
@@ -187,7 +222,7 @@ async function renderToday() {
   view.querySelector('#prev')!.addEventListener('click', () => { todayDate = addIso(todayDate, -1); renderToday(); });
   view.querySelector('#next')!.addEventListener('click', () => { todayDate = addIso(todayDate, 1); renderToday(); });
   view.querySelector('#tod')!.addEventListener('click', () => { todayDate = todayIso(); renderToday(); });
-  view.querySelector('#ios-install')?.addEventListener('click', showIosInstallSheet);
+  view.querySelector('#ios-install')?.addEventListener('click', triggerInstall);
   view.querySelector('#ios-dismiss')?.addEventListener('click', () => { localStorage.setItem(IOS_DISMISS_KEY, '1'); view.querySelector('#ios-bar')?.remove(); });
   view.querySelector('#sk-deva')!.addEventListener('click', () => { S.sankalpaScript = 'deva'; saveSettings(); renderToday(); });
   view.querySelector('#sk-iast')!.addEventListener('click', () => { S.sankalpaScript = 'iast'; saveSettings(); renderToday(); });
@@ -300,7 +335,7 @@ async function renderSettings() {
   if (isStale(seq)) return;
   const entLine = ent ? (ent.entitlement.sku === 'family_annual' ? t('settings.famActive', { date: new Date(ent.entitlement.exp * 1000).toLocaleDateString() }) : t('settings.creditsLeft', { n: (ent.entitlement.credits ?? 0) + (ent.entitlement.naam ?? 0) })) : t('settings.noPurchases');
   view.innerHTML = `<h1>${t('settings.title')}</h1>
-  ${isIos() && !isStandalone() ? `<div class="card gold"><div class="label">${esc(t('ios.title'))}</div><p class="small">${esc(t('ios.sub'))}</p><button class="btn btn-gold btn-small" id="ios-install-set" type="button">📲 ${esc(t('common.install'))}</button></div>` : ''}
+  ${!isStandalone() ? `<div class="card gold"><div class="label">${esc(t('common.install'))}</div><p class="small">${esc(t('ios.sub'))}</p><button class="btn btn-gold btn-small" id="ios-install-set" type="button">📲 ${esc(t('common.install'))}</button></div>` : ''}
   <div class="card"><div class="label">${t('settings.language')}</div><div class="lang-grid">${langs.map(l => `<div class="lang-cell ${S.lang === l.code ? 'selected' : ''}" data-lang="${l.code}"><div class="native">${esc(l.native)}</div><div class="en">${esc(l.en)} ${l.beta ? `<span class="beta">${t('settings.beta')}</span>` : ''}</div></div>`).join('')}</div></div>
   <div class="card"><div class="label">${t('settings.city')}</div><button class="btn btn-outline" id="city">${esc(S.city.name)} · ${esc(S.city.region)} · ${esc(S.city.tz)}</button></div>
   <div class="card"><div class="field"><label>${t('settings.region')}</label><select id="region">${(['north', 'west', 'south', 'east', 'diaspora'] as const).map(r => `<option value="${r}" ${S.region === r ? 'selected' : ''}>${t('settings.' + r)}</option>`).join('')}</select></div>
@@ -323,7 +358,7 @@ async function renderSettings() {
   <div class="card"><div class="label">${t('settings.yourData')}</div><p class="small">${t('settings.yourDataNote')}</p><button class="btn btn-outline btn-small" id="wipe">${t('settings.deleteData')}</button></div>
   <div class="card"><div class="list-item" id="about"><span class="ico">📖</span><div class="body"><div class="title">${t('settings.about')}</div></div><span class="chev">›</span></div><div class="list-item" id="privacy"><span class="ico">🔒</span><div class="body"><div class="title">${t('settings.privacy')}</div></div><span class="chev">›</span></div></div>
   <p class="small dim center">${t('settings.version')} ${ENGINE_VERSION} · <a href="https://github.com/SakredStudio/subhdate" target="_blank" rel="noopener">github.com/SakredStudio/subhdate</a></p>`;
-  view.querySelector('#ios-install-set')?.addEventListener('click', showIosInstallSheet);
+  view.querySelector('#ios-install-set')?.addEventListener('click', triggerInstall);
   view.querySelectorAll('[data-lang]').forEach(el => el.addEventListener('click', () => { S.lang = (el as HTMLElement).dataset.lang as Lang; saveSettings(); festCache = null; updateChrome(); renderSettings(); }));
   view.querySelector('#city')!.addEventListener('click', () => cityPicker(c => { setCity(c); }));
   view.querySelector('#region')!.addEventListener('change', e => { S.region = (e.target as HTMLSelectElement).value as any; S.monthSystem = S.region === 'north' ? 'purnimanta' : S.region === 'diaspora' ? S.monthSystem : 'amanta'; saveSettings(); festCache = null; renderSettings(); });
@@ -406,11 +441,116 @@ async function isNaamUnlocked(): Promise<boolean> {
 }
 const reportKey = () => lastReq ? `${lastReq.event}|${lastReq.from}|${lastReq.to}|${lastReq.place.lat.toFixed(2)},${lastReq.place.lon.toFixed(2)}` : '';
 
+// ---------- Desktop-Only Backdrop & Live Side Rails (>= 1100px) ----------
+function initDesktopBackdrop() {
+  const bg = document.getElementById('desk-bg');
+  if (!bg) return;
+  const ring = (cls: string) => `<svg class="desk-mandala ${cls}" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="0.65"><circle cx="60" cy="60" r="56"/><circle cx="60" cy="60" r="46"/><circle cx="60" cy="60" r="34"/><circle cx="60" cy="60" r="22"/><circle cx="60" cy="60" r="10"/>${Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6; return `<line x1="${60 + 10 * Math.cos(a)}" y1="${60 + 10 * Math.sin(a)}" x2="${60 + 56 * Math.cos(a)}" y2="${60 + 56 * Math.sin(a)}"/><circle cx="${60 + 46 * Math.cos(a)}" cy="${60 + 46 * Math.sin(a)}" r="1.8" fill="currentColor"/>`; }).join('')}${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4 + Math.PI / 8; const x = 60 + 28 * Math.cos(a), y = 60 + 28 * Math.sin(a); return `<path d="M${x} ${y - 6} L${x + 4} ${y} L${x} ${y + 6} L${x - 4} ${y} Z"/>`; }).join('')}</g></svg>`;
+  bg.innerHTML = ring('left') + ring('right');
+}
+let railKey = '';
+async function updateDesktopRails(force = false) {
+  if (typeof window === 'undefined' || window.innerWidth < 1100 || !S.onboarded) return;
+  const left = document.getElementById('rail-left');
+  const right = document.getElementById('rail-right');
+  if (!left || !right) return;
+  const date = todayIso();
+  const key = `${date}|${S.city.lat}|${S.city.lon}|${S.lang}|${S.region}|${S.monthSystem}`;
+  if (!force && railKey === key && left.innerHTML) return;
+  railKey = key;
+  try {
+    const [d, fests] = await Promise.all([
+      dayCached(date, place(), engineOpts(), S.lang, birthReq()),
+      festivalsFor(date, addIso(date, 90)).catch(() => [])
+    ]);
+    if (railKey !== key) return;
+    const now = Date.now();
+    const inWin = (w: any) => w && now >= new Date(w.start).getTime() && now < new Date(w.end).getTime();
+    const allChog = [...(d.kala?.choghadiya?.day ?? []), ...(d.kala?.choghadiya?.night ?? [])];
+    const curChog = allChog.find(inWin) ?? allChog[0];
+    const chogPct = curChog ? Math.max(6, Math.min(100, Math.round(((now - new Date(curChog.start).getTime()) / Math.max(1, new Date(curChog.end).getTime() - new Date(curChog.start).getTime())) * 100))) : 50;
+    const allHora = [...(d.kala?.hora?.day ?? []), ...(d.kala?.hora?.night ?? [])];
+    const curHora = allHora.find(inWin) ?? allHora[0];
+    const rahuNow = inWin(d.kala?.rahuKaal);
+    const abhiNow = inWin(d.kala?.abhijit);
+
+    // Sun position along daylight arc
+    const sr = d.sunrise ? new Date(d.sunrise).getTime() : now - 3600000;
+    const ss = d.sunset ? new Date(d.sunset).getTime() : now + 3600000;
+    const sunT = Math.max(0, Math.min(1, (now - sr) / Math.max(1, ss - sr)));
+    const sx = (16 + sunT * 208).toFixed(1);
+    const sy = (54 - Math.sin(sunT * Math.PI) * 40).toFixed(1);
+    const masa = S.monthSystem === 'amanta' ? d.masa.amanta : d.masa.purnimanta;
+
+    left.innerHTML = `
+      <div class="rail-card pulse">
+        <div class="rail-hdr"><span class="live-badge"><span class="live-dot"></span> ${esc(t('today.now'))} · ${esc(S.city.name)}</span><span class="small muted">${esc(d.vara.label)}</span></div>
+        ${curChog ? `<div class="rail-slot">
+          <div class="row" style="border:0;padding:0"><span class="small muted">${esc(t('today.choghadiya'))}</span><span class="pill ${curChog.quality === 'good' ? 'good' : curChog.quality === 'avoid' ? 'avoid' : 'info'}" style="margin:0">${esc(curChog.label)}</span></div>
+          <div class="rail-slot-title">${fmtTime(curChog.start)} – ${fmtTime(curChog.end)}</div>
+          <div class="slot-bar"><span style="width:${chogPct}%"></span></div>
+        </div>` : ''}
+        <div class="row"><span class="k">${esc(t('today.hora'))}</span><span class="v"><b>${esc(curHora?.label ?? '—')}</b></span></div>
+        <div class="row"><span class="k">${esc(t('today.rahu'))}</span><span class="v"><span class="pill ${rahuNow ? 'avoid' : 'info'}" style="margin:0">${d.kala.rahuKaal ? `${fmtTime(d.kala.rahuKaal.start)}–${fmtTime(d.kala.rahuKaal.end)}` : '—'}</span></span></div>
+        ${d.kala.abhijit ? `<div class="row"><span class="k">${esc(t('today.abhijit'))}</span><span class="v"><span class="pill ${abhiNow ? 'good' : 'info'}" style="margin:0">${fmtTime(d.kala.abhijit.start)}–${fmtTime(d.kala.abhijit.end)}</span></span></div>` : ''}
+      </div>
+      <div class="rail-card sky">
+        <div class="label">${esc(t('today.sunrise'))} &amp; ${esc(t('today.sunset'))}</div>
+        <svg class="sun-arc" viewBox="0 0 240 64" aria-hidden="true">
+          <path d="M16 54 Q120 -26 224 54" fill="none" stroke="rgba(188,139,44,0.35)" stroke-width="2" stroke-dasharray="4 4"/>
+          <line x1="8" y1="54" x2="232" y2="54" stroke="rgba(188,139,44,0.22)" stroke-width="1"/>
+          <circle cx="${sx}" cy="${sy}" r="8" fill="#D97706" opacity="0.28"/>
+          <circle cx="${sx}" cy="${sy}" r="5" fill="#D97706"/>
+        </svg>
+        <div class="row"><span class="k">☀ ${esc(t('today.sunrise'))}</span><span class="v"><b>${fmtTime(d.sunrise)}</b></span></div>
+        <div class="row"><span class="k">🌇 ${esc(t('today.sunset'))}</span><span class="v"><b>${fmtTime(d.sunset)}</b></span></div>
+        <div class="row"><span class="k">${esc(t('today.tithi'))}</span><span class="v small"><b>${esc(d.tithi[0]?.label ?? '')}</b></span></div>
+        <div class="row"><span class="k">${esc(t('today.nakshatra'))}</span><span class="v small"><b>${esc(d.nakshatra[0]?.label ?? '')}</b></span></div>
+        <div class="row"><span class="k">${esc(t('today.masa'))}</span><span class="v small">${esc(masa.label)} · ${esc(d.pakshaLabel)}</span></div>
+        <div class="row"><span class="k">${esc(t('today.moonSign'))}</span><span class="v small">${esc(d.moonRashi.label)}</span></div>
+      </div>`;
+
+    const upcoming = (fests || []).filter((f: any) => f.id !== 'ekadashi' && f.date >= date).slice(0, 4);
+    const diffDays = (iso: string) => Math.round((Date.parse(iso) - Date.parse(date)) / 86400000);
+    const cntLabel = (iso: string) => { const n = diffDays(iso); return n <= 0 ? t('today.todayBtn') : n === 1 ? '+1d' : `+${n}d`; };
+
+    right.innerHTML = `
+      <div class="rail-card app-promo">
+        <div class="label">📲 ${esc(t('common.install'))}</div>
+        <h3 style="margin:4px 0 6px">ShubhDate on Desktop &amp; Phone</h3>
+        <p class="small muted" style="margin:0 0 10px">${esc(t('ios.sub'))}</p>
+        ${!isStandalone() ? `<button class="btn btn-gold btn-small" id="rail-install" type="button" style="width:100%">📲 ${esc(t('common.install'))}</button>` : ''}
+        <div class="qr-wrap">${qrSvg()}<div><div class="label">Scan for Phone</div><p class="small muted" style="margin:4px 0 0">Point your iPhone or Android camera here to install on your phone.</p></div></div>
+        <div class="store-row">
+          <a class="btn btn-outline btn-small" href="${PLAY_URL}" target="_blank" rel="noopener" style="flex:1;text-align:center">▶ Google Play</a>
+          <button class="btn btn-outline btn-small" id="rail-ios" type="button" style="flex:1">🍎 iPhone</button>
+        </div>
+      </div>
+      <div class="rail-card fest">
+        <div class="rail-hdr"><div class="label">🪔 ${esc(t('fest.title'))}</div><a href="#/festivals" class="small">All ›</a></div>
+        ${upcoming.length ? upcoming.map((f: any) => `<a href="#/festivals" class="fest-mini"><div><div style="font-weight:500;font-size:14px">${esc(f.name)}</div><div class="small muted">${esc(fmtDate(f.date))}</div></div><span class="fest-cnt">${esc(cntLabel(f.date))}</span></a>`).join('') : `<p class="small muted">—</p>`}
+      </div>
+      <div class="rail-card">
+        <div class="label">✦ ${esc(t('muhurta.title'))}</div>
+        <div class="quick-chips">
+          <a class="quick-chip" href="#/muhurta">💍 Vivaha</a>
+          <a class="quick-chip" href="#/muhurta">🏠 Griha Pravesh</a>
+          <a class="quick-chip" href="#/muhurta">🚗 Vahana</a>
+          <a class="quick-chip" href="#/naam">👶 Naam Karan</a>
+        </div>
+      </div>`;
+    right.querySelector('#rail-install')?.addEventListener('click', triggerInstall);
+    right.querySelector('#rail-ios')?.addEventListener('click', showIosInstallSheet);
+  } catch { /* ignore background rail errors */ }
+}
+
 // ---------- Router ----------
 function updateChrome() {
   document.documentElement.lang = S.lang === 'hinglish' ? 'en' : S.lang;
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t((el as HTMLElement).dataset.i18n!); });
   const chip = document.getElementById('city-chip')!; chip.textContent = `📍 ${S.city.name}`;
+  syncInstallBtn();
+  updateDesktopRails(true);
 }
 // Each navigation gets a number; an async screen that finishes after the user moved on must not paint.
 let navSeq = 0;
@@ -422,9 +562,11 @@ function route() {
   const [, path, arg] = hash.split('/');
   document.querySelectorAll('.tabbar a').forEach(a => a.classList.toggle('active', (a as HTMLElement).dataset.tab === path));
   document.getElementById('tabbar')!.style.display = S.onboarded ? '' : 'none';
+  document.body.dataset.onboard = S.onboarded ? '1' : '0';
   document.body.dataset.route = path || 'today';
   closeSheet();
   if (!S.onboarded && path !== 'about' && path !== 'privacy') return renderWelcome();
+  updateDesktopRails();
   window.scrollTo(0, 0);
   switch (path) {
     case 'muhurta': return renderMuhurta();
@@ -440,7 +582,10 @@ function route() {
   }
 }
 window.addEventListener('hashchange', route);
+window.addEventListener('resize', () => updateDesktopRails());
 document.getElementById('city-chip')!.addEventListener('click', () => cityPicker(setCity));
+document.getElementById('top-install')?.addEventListener('click', triggerInstall);
+initDesktopBackdrop();
 updateChrome();
 route();
 // A cached entitlement older than the offline grace period is refreshed from the Worker (no-op on the web / offline).
