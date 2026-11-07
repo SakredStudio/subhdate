@@ -160,6 +160,10 @@ ul.reasons li.avoid::marker { color: var(--avoid); }
 .naam-syl.big { min-width: 96px; padding: 10px 16px; } .naam-syl.big b { font-size: 40px; color: var(--gold-light); }
 .naam-sylrow .cur .naam-syl { border-color: var(--gold); background: var(--gold-tint); }
 .naam-other-pada { margin-top: 6px; }
+.ios-banner { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ios-step { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.ios-step:last-of-type { border-bottom: 0; }
+.ios-ico { width: 36px; height: 36px; flex: 0 0 36px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--gold-tint); color: var(--gold-light); display: inline-flex; align-items: center; justify-content: center; }
 .naam-names { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 6px 0 10px; }
 .naam-name { font: inherit; text-align: left; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px 12px; color: var(--text); cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .naam-name b { font-weight: 500; font-size: 15px; } .naam-name span { overflow-wrap: anywhere; }

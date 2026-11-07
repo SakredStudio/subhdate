@@ -66,6 +66,20 @@ function sheet(html: string, onMount?: (root: HTMLElement) => void) {
   onMount?.(root.querySelector('.sheet') as HTMLElement);
 }
 function closeSheet() { document.getElementById('sheet-root')!.innerHTML = ''; }
+const isIos = () => typeof navigator !== 'undefined' && (/iPhone|iPad|iPod/i.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+const isStandalone = () => typeof window !== 'undefined' && (!!(navigator as any).standalone || !!window.matchMedia?.('(display-mode: standalone)').matches);
+const IOS_DISMISS_KEY = 'shubhdate.iosDismissed';
+function showIosInstallSheet() {
+  const shareSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m8 7 4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>`;
+  const addSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>`;
+  sheet(`<h3>${esc(t('ios.title'))}</h3><p class="small muted">${esc(t('ios.sub'))}</p>
+    <div class="ios-step"><span class="ios-ico">${shareSvg}</span><div><b>1.</b> ${esc(t('ios.step1'))}</div></div>
+    <div class="ios-step"><span class="ios-ico">${addSvg}</span><div><b>2.</b> ${esc(t('ios.step2'))}</div></div>
+    <p class="small muted mt">${esc(t('ios.hint'))}</p>
+    <button class="btn btn-gold mt" id="ios-ok" type="button">${esc(t('common.ok'))}</button>`, root => {
+    root.querySelector('#ios-ok')!.addEventListener('click', closeSheet);
+  });
+}
 function scoreRing(score: number) { const r = 24, c = 2 * Math.PI * r; return `<svg class="score" viewBox="0 0 56 56"><circle class="track" cx="28" cy="28" r="${r}" fill="none" stroke-width="3"/><circle class="fill" cx="28" cy="28" r="${r}" fill="none" stroke-width="3" stroke-dasharray="${(score / 100 * c).toFixed(1)} ${c.toFixed(1)}"/><text x="28" y="33" text-anchor="middle">${score}</text></svg>`; }
 const heroArt = `<picture><source srcset="${BASE}hero.webp" type="image/webp"><img class="hero-art" src="${BASE}hero.png" width="180" height="180" alt="" aria-hidden="true"></picture>`;
 const mandala = `<svg class="mandala" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="60" cy="60" r="56" opacity=".5"/><circle cx="60" cy="60" r="46" opacity=".6"/><circle cx="60" cy="60" r="34" opacity=".5"/><circle cx="60" cy="60" r="22" opacity=".6"/><circle cx="60" cy="60" r="10" opacity=".5"/>${Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6; return `<line x1="${60 + 22 * Math.cos(a)}" y1="${60 + 22 * Math.sin(a)}" x2="${60 + 56 * Math.cos(a)}" y2="${60 + 56 * Math.sin(a)}" opacity=".5"/><circle cx="${60 + 56 * Math.cos(a)}" cy="${60 + 56 * Math.sin(a)}" r="2" fill="currentColor" stroke="none"/>`; }).join('')}${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4 + Math.PI / 8; const x = 60 + 28 * Math.cos(a), y = 60 + 28 * Math.sin(a); return `<path d="M${x} ${y - 7} L${x + 5} ${y} L${x} ${y + 7} L${x - 5} ${y} Z" opacity=".7"/>`; }).join('')}</g><circle cx="60" cy="60" r="3.5" fill="currentColor" opacity=".8"/></svg>`;
@@ -124,9 +138,11 @@ async function renderToday() {
   const isDiaspora = S.city.tz !== 'Asia/Kolkata';
   const sank = d.sankalpa;
   const bala = d.personal ? `<div class="card"><div class="label">${t('today.yourBala')}</div>${d.personal.atSunrise.map((a: any, i: number) => `<div class="row"><span class="k">${esc(d.personal.candidates[i].nakshatra)} · ${esc(d.personal.candidates[i].rashi)}</span><span class="v"><span class="pill ${a.tara.good ? 'good' : 'avoid'}">${t('today.tara')} ${a.tara.tara} ${esc(a.tara.name)}</span><span class="pill ${a.chandra.quality === 'good' ? 'good' : a.chandra.quality === 'avoid' ? 'avoid' : 'info'}">${t('today.chandra')} ${a.chandra.house} · ${t('today.' + (a.chandra.quality === 'weak' ? 'weak' : a.chandra.quality === 'good' ? 'good' : 'bad'))}${a.chandra.chandrashtama ? ' · Chandrashtama' : ''}</span></span></div>`).join('')}${d.personal.ambiguous ? `<p class="small muted">${esc(U.en['settings.timeUnknown'])}: ${d.personal.candidates.length} candidates.</p>` : ''}</div>` : '';
+  const showIos = isIos() && !isStandalone() && localStorage.getItem(IOS_DISMISS_KEY) !== '1';
   view.innerHTML = `
   <div class="hero">${heroArt}<h1>${esc(fmtDate(date))}</h1><p class="muted small">${esc(d.vara.label)} · ${esc(S.city.name)}</p>
     <div class="row" style="justify-content:center;gap:8px;border:0"><button class="btn btn-outline btn-small" id="prev">‹ ${t('today.prev')}</button><button class="btn btn-outline btn-small" id="tod">${t('today.todayBtn')}</button><button class="btn btn-outline btn-small" id="next">${t('today.next')} ›</button></div></div>
+  ${showIos ? `<div class="banner ios-banner" id="ios-bar"><span class="small">📲 ${esc(t('ios.banner'))}</span><div style="display:flex;gap:6px;align-items:center;flex-shrink:0"><button class="btn btn-gold btn-small" id="ios-install" type="button">${esc(t('common.install'))}</button><button class="btn btn-outline btn-small" id="ios-dismiss" type="button" aria-label="${esc(t('common.close'))}">✕</button></div></div>` : ''}
   ${isDiaspora ? `<div class="banner">🌏 ${t('today.diaspora')}</div>` : ''}
   ${todayFests.length ? `<div class="card gold"><div class="label">${t('today.festival')}</div>${todayFests.map((f: any) => `<h2>${esc(f.name)}</h2><p class="small muted">${esc(f.tithiLabel ?? '')}${f.window ? ` · ${t('fest.window')} ${fmtTime(f.window.start)}–${fmtTime(f.window.end)}` : ''}${f.moonrise ? ` · ${t('fest.moonrise')} ${fmtTime(f.moonrise)}` : ''}${f.diaspora?.differs ? `<br>${t('fest.differs', { date: fmtDate(f.diaspora.delhiDate) })}` : ''}${f.noteText ? `<br>${esc(f.noteText)}` : ''}</p>`).join('')}</div>` : ''}
   <div class="card">
@@ -171,6 +187,8 @@ async function renderToday() {
   view.querySelector('#prev')!.addEventListener('click', () => { todayDate = addIso(todayDate, -1); renderToday(); });
   view.querySelector('#next')!.addEventListener('click', () => { todayDate = addIso(todayDate, 1); renderToday(); });
   view.querySelector('#tod')!.addEventListener('click', () => { todayDate = todayIso(); renderToday(); });
+  view.querySelector('#ios-install')?.addEventListener('click', showIosInstallSheet);
+  view.querySelector('#ios-dismiss')?.addEventListener('click', () => { localStorage.setItem(IOS_DISMISS_KEY, '1'); view.querySelector('#ios-bar')?.remove(); });
   view.querySelector('#sk-deva')!.addEventListener('click', () => { S.sankalpaScript = 'deva'; saveSettings(); renderToday(); });
   view.querySelector('#sk-iast')!.addEventListener('click', () => { S.sankalpaScript = 'iast'; saveSettings(); renderToday(); });
   view.querySelector('#sk-copy')!.addEventListener('click', () => { navigator.clipboard?.writeText((view.querySelector('#sk-text') as HTMLElement).textContent || '').then(() => toast(t('common.copied'))); });
@@ -282,6 +300,7 @@ async function renderSettings() {
   if (isStale(seq)) return;
   const entLine = ent ? (ent.entitlement.sku === 'family_annual' ? t('settings.famActive', { date: new Date(ent.entitlement.exp * 1000).toLocaleDateString() }) : t('settings.creditsLeft', { n: (ent.entitlement.credits ?? 0) + (ent.entitlement.naam ?? 0) })) : t('settings.noPurchases');
   view.innerHTML = `<h1>${t('settings.title')}</h1>
+  ${isIos() && !isStandalone() ? `<div class="card gold"><div class="label">${esc(t('ios.title'))}</div><p class="small">${esc(t('ios.sub'))}</p><button class="btn btn-gold btn-small" id="ios-install-set" type="button">📲 ${esc(t('common.install'))}</button></div>` : ''}
   <div class="card"><div class="label">${t('settings.language')}</div><div class="lang-grid">${langs.map(l => `<div class="lang-cell ${S.lang === l.code ? 'selected' : ''}" data-lang="${l.code}"><div class="native">${esc(l.native)}</div><div class="en">${esc(l.en)} ${l.beta ? `<span class="beta">${t('settings.beta')}</span>` : ''}</div></div>`).join('')}</div></div>
   <div class="card"><div class="label">${t('settings.city')}</div><button class="btn btn-outline" id="city">${esc(S.city.name)} · ${esc(S.city.region)} · ${esc(S.city.tz)}</button></div>
   <div class="card"><div class="field"><label>${t('settings.region')}</label><select id="region">${(['north', 'west', 'south', 'east', 'diaspora'] as const).map(r => `<option value="${r}" ${S.region === r ? 'selected' : ''}>${t('settings.' + r)}</option>`).join('')}</select></div>
@@ -304,6 +323,7 @@ async function renderSettings() {
   <div class="card"><div class="label">${t('settings.yourData')}</div><p class="small">${t('settings.yourDataNote')}</p><button class="btn btn-outline btn-small" id="wipe">${t('settings.deleteData')}</button></div>
   <div class="card"><div class="list-item" id="about"><span class="ico">📖</span><div class="body"><div class="title">${t('settings.about')}</div></div><span class="chev">›</span></div><div class="list-item" id="privacy"><span class="ico">🔒</span><div class="body"><div class="title">${t('settings.privacy')}</div></div><span class="chev">›</span></div></div>
   <p class="small dim center">${t('settings.version')} ${ENGINE_VERSION} · <a href="https://github.com/SakredStudio/subhdate" target="_blank" rel="noopener">github.com/SakredStudio/subhdate</a></p>`;
+  view.querySelector('#ios-install-set')?.addEventListener('click', showIosInstallSheet);
   view.querySelectorAll('[data-lang]').forEach(el => el.addEventListener('click', () => { S.lang = (el as HTMLElement).dataset.lang as Lang; saveSettings(); festCache = null; updateChrome(); renderSettings(); }));
   view.querySelector('#city')!.addEventListener('click', () => cityPicker(c => { setCity(c); }));
   view.querySelector('#region')!.addEventListener('change', e => { S.region = (e.target as HTMLSelectElement).value as any; S.monthSystem = S.region === 'north' ? 'purnimanta' : S.region === 'diaspora' ? S.monthSystem : 'amanta'; saveSettings(); festCache = null; renderSettings(); });
