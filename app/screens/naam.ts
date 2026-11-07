@@ -32,42 +32,54 @@ export async function renderNaam(view: HTMLElement, c: NaamCtx) {
   const f: Form = loadForm() ?? { date: '', time: '', unk: false, city: c.city, gender: 'any' };
   const isUnk = !!f.unk;
   let city = f.city;
-  const today = new Intl.DateTimeFormat('en-CA', { timeZone: city.tz || c.city.tz }).format(new Date());
+  let runSeq = 0;
   view.innerHTML = `<h1>${t('naam.title')}</h1><p class="muted small">${t('naam.intro')}</p>
   <div class="card">
-    <div class="grid2"><div class="field"><label>${t('naam.dob')}</label><input id="n-date" type="date" min="1900-01-01" max="${today}" value="${esc(f.date)}"></div><div class="field" id="n-time-field"><label>${t('naam.tob')}</label><input id="n-time" type="time" value="${esc(f.time ?? '')}" ${isUnk ? 'disabled' : ''}></div></div>
+    <div class="grid2"><div class="field"><label>${t('naam.dob')}</label><input id="n-date" type="date" min="1900-01-01" max="2100-12-31" value="${esc(f.date)}"></div><div class="field" id="n-time-field"><label>${t('naam.tob')}</label><input id="n-time" type="time" value="${esc(f.time ?? '')}" ${isUnk ? 'disabled' : ''}></div></div>
     <div class="toggle" id="n-unk-row"><span>${t('naam.timeUnknown')}</span><div class="switch ${isUnk ? 'on' : ''}" id="n-unk" role="switch" aria-checked="${isUnk}"></div></div>
     <div class="field"><label>${t('naam.city')}</label><button class="btn btn-outline" id="n-city" type="button">${esc(city.name)}${city.region ? ` · ${esc(city.region)}` : ''}</button></div>
     <div class="field"><label>${t('naam.gender')}</label><select id="n-gender">${(['any', 'boy', 'girl'] as const).map(g => `<option value="${g}" ${f.gender === g ? 'selected' : ''}>${t('naam.' + g)}</option>`).join('')}</select></div>
     <p class="small muted">🔒 ${t('naam.privacy')}</p>
-    <div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="n-go">✦ ${t('naam.go')}</button><button class="btn btn-outline btn-small" id="n-clear" type="button">${t('settings.clearBirth')}</button></div>
+    <div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="n-go" type="button">✦ ${t('naam.go')}</button><button class="btn btn-outline btn-small" id="n-clear" type="button">${t('settings.clearBirth')}</button></div>
   </div>
   <div id="n-out"></div>`;
   const dateEl = view.querySelector('#n-date') as HTMLInputElement;
   const unk = view.querySelector('#n-unk') as HTMLElement, timeEl = view.querySelector('#n-time') as HTMLInputElement;
+  const goBtn = view.querySelector('#n-go') as HTMLButtonElement;
   const setUnk = (on: boolean) => { unk.classList.toggle('on', on); unk.setAttribute('aria-checked', String(on)); timeEl.disabled = on; };
-  const run = async () => {
+  const run = async (scroll = false) => {
     const date = dateEl.value; if (!date) return c.toast(t('naam.noBirth'));
+    const mySeq = ++runSeq;
     const unkOn = unk.classList.contains('on');
     const form: Form = { date, time: unkOn ? null : (timeEl.value || ''), unk: unkOn, city, gender: (view.querySelector('#n-gender') as HTMLSelectElement).value as Form['gender'] };
     saveForm(form);
-    const out = view.querySelector('#n-out')!; out.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+    const out = view.querySelector('#n-out') as HTMLElement;
+    out.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+    if (scroll) out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    goBtn.disabled = true;
     try {
       const r = await c.call('naam', { req: { birth: { date: form.date, time: form.time || null, place: { name: form.city.name, lat: form.city.lat, lon: form.city.lon, tz: form.city.tz } }, gender: form.gender, region: c.region === 'west' || c.region === 'south' ? c.region : 'north' }, lang: c.lang });
-      last = { form, r }; if (c.isCurrent?.() === false) return; renderResult(out as HTMLElement, form, r, c);
-    } catch (e: any) { out.innerHTML = `<div class="card">Error: ${esc(e.message)}</div>`; }
+      if (mySeq !== runSeq || c.isCurrent?.() === false) return;
+      last = { form, r };
+      renderResult(out, form, r, c);
+      if (scroll) out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e: any) {
+      if (mySeq === runSeq) out.innerHTML = `<div class="card">Error: ${esc(e.message)}</div>`;
+    } finally {
+      if (mySeq === runSeq) goBtn.disabled = false;
+    }
   };
-  view.querySelector('#n-unk-row')!.addEventListener('click', () => { setUnk(!unk.classList.contains('on')); if (dateEl.value) run(); });
+  view.querySelector('#n-unk-row')!.addEventListener('click', () => { setUnk(!unk.classList.contains('on')); if (last && dateEl.value) run(false); });
   view.querySelector('#n-time-field')!.addEventListener('click', () => {
     if (unk.classList.contains('on')) { setUnk(false); timeEl.focus(); (timeEl as any).showPicker?.(); }
   });
-  view.querySelector('#n-city')!.addEventListener('click', () => c.pickCity(ci => { city = ci; (view.querySelector('#n-city') as HTMLElement).textContent = `${ci.name}${ci.region ? ` · ${ci.region}` : ''}`; if (dateEl.value) run(); }));
-  dateEl.addEventListener('change', () => { if (dateEl.value) run(); });
-  timeEl.addEventListener('change', () => { if (dateEl.value) run(); });
-  view.querySelector('#n-gender')!.addEventListener('change', () => { if (dateEl.value) run(); });
-  view.querySelector('#n-go')!.addEventListener('click', run);
+  view.querySelector('#n-city')!.addEventListener('click', () => c.pickCity(ci => { city = ci; (view.querySelector('#n-city') as HTMLElement).textContent = `${ci.name}${ci.region ? ` · ${ci.region}` : ''}`; if (last && dateEl.value) run(false); }));
+  dateEl.addEventListener('change', () => { if (last && dateEl.value) run(false); });
+  timeEl.addEventListener('change', () => { if (last && dateEl.value) run(false); });
+  view.querySelector('#n-gender')!.addEventListener('change', () => { if (last && dateEl.value) run(false); });
+  goBtn.addEventListener('click', () => run(true));
   view.querySelector('#n-clear')!.addEventListener('click', () => {
-    localStorage.removeItem(FORM_KEY); last = null;
+    runSeq++; localStorage.removeItem(FORM_KEY); last = null; goBtn.disabled = false;
     dateEl.value = ''; timeEl.value = ''; setUnk(false);
     city = c.city; (view.querySelector('#n-city') as HTMLElement).textContent = `${city.name}${city.region ? ` · ${city.region}` : ''}`;
     (view.querySelector('#n-gender') as HTMLSelectElement).value = 'any';
@@ -75,7 +87,7 @@ export async function renderNaam(view: HTMLElement, c: NaamCtx) {
   });
   if (last && last.form.date === f.date && (last.form.time || '') === (f.time || '') && last.form.gender === f.gender && last.form.city.name === f.city.name) {
     renderResult(view.querySelector('#n-out') as HTMLElement, last.form, last.r, c);
-  } else if (f.date) run();
+  } else if (f.date) run(false);
 }
 
 function sylHtml(s: any, lang: string, big = false) {
@@ -114,15 +126,8 @@ async function renderResult(out: HTMLElement, form: Form, r: any, c: NaamCtx) {
   const days = `<div class="card"><div class="label">${t('naam.muhurta')}</div><p class="small muted">${t('naam.muhurtaNote')}</p>
     ${r.days.slice(0, 5).map((d: any) => `<div class="list-item"><div class="body"><div class="title"><b>${esc(c.fmtDate(d.date))}</b> <span class="small muted">· ${esc(d.headline)}</span></div><div class="sub">${d.windows.slice(0, 2).map((w: any) => `${c.fmtTime(w.start, form.city.tz)}–${c.fmtTime(w.end, form.city.tz)}${w.choghadiya ? ` · ${esc(w.choghadiya)}` : ''}`).join(' · ')}</div></div>${c.scoreRing(d.score)}</div>`).join('')}
     ${r.days.length ? '' : `<p class="small muted">—</p>`}</div>`;
-  const unlocked = await c.isUnlocked();
-  let products: any[] = [];
-  if (!unlocked) { try { if (await isPlayBillingAvailable()) products = await listProducts(); } catch { products = []; } }
-  const prod = products.find(p => p.itemId === 'naam_report'), fam = products.find(p => p.itemId === 'family_annual');
-  const ent = unlocked ? await loadEntitlement().catch(() => null) : null;
-  if (c.isCurrent?.() === false) return;
-  const reportCard = `<div class="card ${unlocked ? '' : 'gold'}"><div class="label">${t('naam.report')}</div><p class="small">${t('naam.reportIntro')}</p>
-    ${unlocked ? `<button class="btn btn-gold" id="n-report">📄 ${t('naam.openReport')}</button>${ent?.entitlement.sku === 'family_annual' ? `<p class="small muted"><a href="#" id="n-manage">${t('settings.manageSub')}</a></p>` : ''}` : prod ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start"><button class="btn btn-gold btn-small" id="n-buy">${t('naam.buy', { price: formatPrice(prod) })}</button>${fam ? `<button class="btn btn-outline btn-small" id="n-buy-fam">${t('report.buyFamily', { price: formatPrice(fam) })}</button>` : ''}<button class="btn btn-outline btn-small" id="n-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>` : `<p class="small muted">${t('naam.locked')}</p>`}</div>`;
-  out.innerHTML = `${r.janma.ambiguous ? `<div class="banner">${t('naam.ambiguous')}</div>` : ''}${r.candidates.map(cand).join('')}<div id="n-card"></div>${days}${reportCard}<p class="small dim">${r.sources.map((s: string) => esc(humanSource(s))).join(' · ')}</p>`;
+  const defaultReportCard = `<div class="card gold"><div class="label">${t('naam.report')}</div><p class="small">${t('naam.reportIntro')}</p><p class="small muted">${t('naam.locked')}</p></div>`;
+  out.innerHTML = `${r.janma.ambiguous ? `<div class="banner">${t('naam.ambiguous')}</div>` : ''}${r.candidates.map(cand).join('')}<div id="n-card"></div>${days}<div id="n-report-slot">${defaultReportCard}</div><p class="small dim">${r.sources.map((s: string) => esc(humanSource(s))).join(' · ')}</p>`;
 
   const bindBox = (box: HTMLElement) => {
     const idx = Number(box.dataset.cand ?? 0);
@@ -144,19 +149,30 @@ async function renderResult(out: HTMLElement, form: Form, r: any, c: NaamCtx) {
     }));
   };
   out.querySelectorAll<HTMLElement>('.naam-pada-box').forEach(bindBox);
-  out.querySelector('#n-report')?.addEventListener('click', () => { c.onFirstFullRender?.(naamKey(form)); renderReport(form, r, c); });
-  out.querySelector('#n-buy')?.addEventListener('click', async (e) => {
+
+  const unlocked = await c.isUnlocked().catch(() => false);
+  let products: any[] = [];
+  if (!unlocked) { try { if (await isPlayBillingAvailable()) products = await listProducts(); } catch { products = []; } }
+  const prod = products.find(p => p.itemId === 'naam_report'), fam = products.find(p => p.itemId === 'family_annual');
+  const ent = unlocked ? await loadEntitlement().catch(() => null) : null;
+  if (c.isCurrent?.() === false) return;
+  const slot = out.querySelector('#n-report-slot');
+  if (!slot) return;
+  slot.innerHTML = `<div class="card ${unlocked ? '' : 'gold'}"><div class="label">${t('naam.report')}</div><p class="small">${t('naam.reportIntro')}</p>
+    ${unlocked ? `<button class="btn btn-gold" id="n-report">📄 ${t('naam.openReport')}</button>${ent?.entitlement.sku === 'family_annual' ? `<p class="small muted"><a href="#" id="n-manage">${t('settings.manageSub')}</a></p>` : ''}` : prod ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start"><button class="btn btn-gold btn-small" id="n-buy">${t('naam.buy', { price: formatPrice(prod) })}</button>${fam ? `<button class="btn btn-outline btn-small" id="n-buy-fam">${t('report.buyFamily', { price: formatPrice(fam) })}</button>` : ''}<button class="btn btn-outline btn-small" id="n-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>` : `<p class="small muted">${t('naam.locked')}</p>`}</div>`;
+  slot.querySelector('#n-report')?.addEventListener('click', () => { c.onFirstFullRender?.(naamKey(form)); renderReport(form, r, c); });
+  slot.querySelector('#n-buy')?.addEventListener('click', async (e) => {
     const b = e.currentTarget as HTMLButtonElement; b.disabled = true;
     try { await purchase('naam_report'); c.toast(t('report.unlocked')); renderResult(out, form, r, c); }
     catch (err: any) { b.disabled = false; if (!(err instanceof PurchaseError && err.code === 'cancelled')) c.toast(t('report.buyFailed', { err: String(err?.code ?? err?.message ?? 'error') })); }
   });
-  out.querySelector('#n-manage')?.addEventListener('click', e => { e.preventDefault(); openManageSubscriptions(); });
-  out.querySelector('#n-buy-fam')?.addEventListener('click', async (e) => {
+  slot.querySelector('#n-manage')?.addEventListener('click', e => { e.preventDefault(); openManageSubscriptions(); });
+  slot.querySelector('#n-buy-fam')?.addEventListener('click', async (e) => {
     const b = e.currentTarget as HTMLButtonElement; b.disabled = true;
     try { await purchase('family_annual'); c.toast(t('report.unlocked')); renderResult(out, form, r, c); }
     catch (err: any) { b.disabled = false; if (!(err instanceof PurchaseError && err.code === 'cancelled')) c.toast(t('report.buyFailed', { err: String(err?.code ?? err?.message ?? 'error') })); }
   });
-  out.querySelector('#n-restore')?.addEventListener('click', async () => { const n = await restorePurchases(); c.toast(t('report.restored', { n: String(n) })); if (n) renderResult(out, form, r, c); });
+  slot.querySelector('#n-restore')?.addEventListener('click', async () => { const n = await restorePurchases(); c.toast(t('report.restored', { n: String(n) })); if (n) renderResult(out, form, r, c); });
 }
 
 // ---- Welcome card: 1080x1350 PNG drawn on a canvas, shared with navigator.share or downloaded ----

@@ -6,7 +6,7 @@ import type { Place, SunriseConvention } from './astro.ts';
 import { panchang, spanAt, type PanchangDay, type Region } from './panchanga.ts';
 import { kala, windowAt, type KalaTable } from './kala.ts';
 import { dayFlags, flagsAt, type Flag } from './flags.ts';
-import { personal, type Birth, type PersonalBala } from './personal.ts';
+import { personal, janma, type Birth, type PersonalBala } from './personal.ts';
 import { isoDate, addDays, parseIsoDate, localMidnightUtc } from './time.ts';
 import { MASA_NAMES, VARA_SHORT } from './names.ts';
 import VIVAHA from './rules/vivaha.json' with { type: 'json' };
@@ -221,12 +221,13 @@ export function findMuhurta(req: MuhurtaRequest): MuhurtaResult {
   const endParts = parseIsoDate(req.to);
   const endUtc = localMidnightUtc(endParts.y, endParts.m, endParts.d, req.place.tz);
   const days: DayResult[] = []; const rejectedDays: { date: string; reasons: Reason[] }[] = [];
+  const birthJanma = req.birth ? janma(req.birth) : undefined;
   let pers: PersonalBala | null = null;
   let evaluated = 0;
   while (cursor.getTime() <= endUtc.getTime() && evaluated < 400) {
     const date = isoDate(cursor, req.place.tz);
     const p = panchang(date, req.place, { sunrise: req.sunrise, region });
-    if (req.birth) pers = personal(p, req.birth);
+    if (req.birth) pers = personal(p, req.birth, birthJanma);
     const r = scoreDay(pack, date, req, pers);
     if (r.windows.length) days.push(r); else rejectedDays.push({ date, reasons: r.rejected });
     cursor = addDays(cursor, 1); evaluated++;

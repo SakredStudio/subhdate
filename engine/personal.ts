@@ -30,9 +30,10 @@ export interface JanmaResult {
 
 function janmaAt(t: Date): Janma {
   const ml = moonSidereal(t);
-  const nak = Math.floor(ml / (360 / 27)) + 1;
-  const rashi = Math.floor(ml / 30) + 1;
-  return { nakshatra: nak, nakshatraName: NAKSHATRA_NAMES[nak - 1], pada: Math.floor((ml % (360 / 27)) / (360 / 108)) + 1, rashi, rashiName: RASHI_NAMES[rashi - 1], moonLongitude: ml };
+  const nak = Math.min(27, Math.floor(ml / (360 / 27)) + 1);
+  const rashi = Math.min(12, Math.floor(ml / 30) + 1);
+  const pada = Math.min(4, Math.floor((ml % (360 / 27)) / (360 / 108)) + 1);
+  return { nakshatra: nak, nakshatraName: NAKSHATRA_NAMES[nak - 1], pada, rashi, rashiName: RASHI_NAMES[rashi - 1], moonLongitude: ml };
 }
 
 /** Janma nakshatra and rashi from birth data. */
@@ -84,8 +85,8 @@ export interface PersonalBala {
 }
 
 /** L4 for a day and a birth. */
-export function personal(day: PanchangDay, birth: Birth): PersonalBala {
-  const j = janma(birth);
+export function personal(day: PanchangDay, birth: Birth, precomputedJanma?: JanmaResult): PersonalBala {
+  const j = precomputedJanma ?? janma(birth);
   const atSunrise = j.candidates.map(c => ({ janma: c, tara: taraBala(c.nakshatra, day.nakshatra[0].num), chandra: chandraBala(c.rashi, day.moonRashi.index) }));
   const spans = day.nakshatra.map(n => ({ nakshatra: n.num, start: n.start, end: n.end, tara: j.candidates.map(c => taraBala(c.nakshatra, n.num)) }));
   return { janma: j, atSunrise, spans, confidence: j.birthTimeKnown ? 'high' : j.ambiguous ? 'low' : 'medium' };
