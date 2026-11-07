@@ -17,7 +17,7 @@ const ENGINE_VERSION = '0.1.0';
 const BASE = import.meta.env.BASE_URL;
 
 type Lang = 'en' | 'hi' | 'hinglish' | 'gu' | 'mr' | 'ta' | 'te' | 'bn' | 'kn';
-interface Birth { date: string; time: string | null; city: City; }
+interface Birth { date: string; time: string | null; unk?: boolean; city: City; }
 interface Settings { lang: Lang; region: 'north' | 'west' | 'south' | 'east' | 'diaspora'; monthSystem: 'amanta' | 'purnimanta'; sunrise: 'limb' | 'center'; abhijitWed: boolean; city: City; birth: Birth | null; sankalpaScript: 'deva' | 'iast'; onboarded: boolean; theme: 'paper' | 'night'; }
 
 const DEFAULT_CITY = CITIES[0];
@@ -55,7 +55,7 @@ const todayIso = () => new Intl.DateTimeFormat('en-CA', { timeZone: tz() }).form
 const addIso = (iso: string, days: number) => { const [y, m, d] = iso.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10); };
 const place = () => ({ name: S.city.name, lat: S.city.lat, lon: S.city.lon, tz: S.city.tz });
 const engineOpts = () => ({ sunrise: S.sunrise, region: S.region, monthSystem: S.monthSystem });
-const birthReq = () => S.birth ? { date: S.birth.date, time: S.birth.time, place: { name: S.birth.city.name, lat: S.birth.city.lat, lon: S.birth.city.lon, tz: S.birth.city.tz } } : null;
+const birthReq = () => S.birth ? { date: S.birth.date, time: S.birth.time || null, place: { name: S.birth.city.name, lat: S.birth.city.lat, lon: S.birth.city.lon, tz: S.birth.city.tz } } : null;
 
 const view = document.getElementById('view')!;
 function toast(msg: string) { const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg; document.body.appendChild(el); setTimeout(() => el.remove(), 1800); }
@@ -74,11 +74,21 @@ const mandala = `<svg class="mandala" viewBox="0 0 120 120" aria-hidden="true"><
 function cityPicker(onPick: (c: City) => void) {
   sheet(`<h3>${t('city.search')}</h3><p class="small muted">${t('city.hint')}</p><div class="field"><input id="city-q" type="search" autocomplete="off" placeholder="${t('city.search')}"></div><button class="btn btn-outline btn-small" id="city-locate">📍 ${t('settings.locate')}</button><div id="city-list" class="mt"></div>`, root => {
     const q = root.querySelector('#city-q') as HTMLInputElement; const list = root.querySelector('#city-list')!;
-    const render = () => { list.innerHTML = searchCities(q.value).map((c, i) => `<div class="list-item" data-i="${i}"><div class="body"><div class="title">${esc(c.name)}</div><div class="sub">${esc(c.region)} · ${esc(c.tz)}</div></div><span class="chev">›</span></div>`).join(''); list.querySelectorAll('.list-item').forEach(el => el.addEventListener('click', () => { onPick(searchCities(q.value)[Number((el as HTMLElement).dataset.i)]); closeSheet(); })); };
-    q.addEventListener('input', render); render(); q.focus();
+    const pick = (c: City | undefined) => { if (!c) return; q.blur(); onPick(c); closeSheet(); };
+    const render = () => {
+      const matches = searchCities(q.value);
+      list.innerHTML = matches.map((c, i) => `<div class="list-item" data-i="${i}"><div class="body"><div class="title">${esc(c.name)}</div><div class="sub">${esc(c.region)} · ${esc(c.tz)}</div></div><span class="chev">›</span></div>`).join('');
+      list.querySelectorAll('.list-item').forEach(el => {
+        el.addEventListener('mousedown', e => e.preventDefault());
+        el.addEventListener('click', () => pick(matches[Number((el as HTMLElement).dataset.i)]));
+      });
+    };
+    q.addEventListener('input', render);
+    q.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); pick(searchCities(q.value)[0]); } });
+    render(); q.focus();
     root.querySelector('#city-locate')!.addEventListener('click', () => {
       if (!navigator.geolocation) return toast('No geolocation');
-      navigator.geolocation.getCurrentPosition(pos => { const near = nearestCity(pos.coords.latitude, pos.coords.longitude); const c: City = { ...near, name: near.name, lat: pos.coords.latitude, lon: pos.coords.longitude, tz: Intl.DateTimeFormat().resolvedOptions().timeZone || near.tz }; onPick(c); closeSheet(); }, () => toast('Location unavailable'));
+      navigator.geolocation.getCurrentPosition(pos => { const near = nearestCity(pos.coords.latitude, pos.coords.longitude); const c: City = { ...near, name: near.name, lat: pos.coords.latitude, lon: pos.coords.longitude, tz: Intl.DateTimeFormat().resolvedOptions().timeZone || near.tz }; pick(c); }, () => toast('Location unavailable'));
     });
   });
 }
@@ -281,9 +291,9 @@ async function renderSettings() {
   ${pushAvailable() ? `<div class="card"><div class="toggle"><span>${t('settings.reminders')}</span><div class="switch ${remindersOn() ? 'on' : ''}" id="reminders"></div></div><p class="small muted">${t('settings.remindersNote')}</p></div>` : ''}
   <div class="card"><div class="field"><label>${t('settings.theme')}</label><select id="theme"><option value="paper" ${S.theme !== 'night' ? 'selected' : ''}>${t('theme.paper')}</option><option value="night" ${S.theme === 'night' ? 'selected' : ''}>${t('theme.night')}</option></select></div></div>
   <div class="card"><div class="label">${t('settings.birth')}</div><p class="small muted">🔒 ${t('settings.birthNote')}</p>
-    <div class="field"><label>${t('settings.birthDate')}</label><input id="bdate" type="date" value="${S.birth?.date ?? ''}"></div>
-    <div class="field"><label>${t('settings.birthTime')}</label><input id="btime" type="time" value="${S.birth?.time ?? ''}" ${S.birth && S.birth.time === null ? 'disabled' : ''}></div>
-    <div class="toggle"><span>${t('settings.timeUnknown')}</span><div class="switch ${S.birth && S.birth.time === null ? 'on' : ''}" id="tunk"></div></div>
+    <div class="field"><label>${t('settings.birthDate')}</label><input id="bdate" type="date" min="1900-01-01" max="${todayIso()}" value="${S.birth?.date ?? ''}"></div>
+    <div class="field" id="btime-field"><label>${t('settings.birthTime')}</label><input id="btime" type="time" value="${S.birth?.time ?? ''}" ${S.birth?.unk ? 'disabled' : ''}></div>
+    <div class="toggle" id="tunk-row"><span>${t('settings.timeUnknown')}</span><div class="switch ${S.birth?.unk ? 'on' : ''}" id="tunk" role="switch" aria-checked="${!!S.birth?.unk}"></div></div>
     <div class="field"><label>${t('settings.birthCity')}</label><button class="btn btn-outline" id="bcity" type="button">${esc((S.birth?.city ?? S.city).name)}</button></div>
     ${janma ? `<p class="small">${t('settings.janma')}: ${janma.candidates.map((c: any) => `<b>${esc(c.nakshatraLabel)}</b> (${esc(c.rashiLabel)}, pada ${c.pada})`).join(' / ')}${janma.ambiguous ? ` · ${t('settings.timeUnknown')}` : ''}</p>` : ''}
     <div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="bsave">${t('settings.saveBirth')}</button><button class="btn btn-outline btn-small" id="bclear">${t('settings.clearBirth')}</button></div></div>
@@ -308,9 +318,25 @@ async function renderSettings() {
   });
   view.querySelector('#theme')!.addEventListener('change', e => { S.theme = (e.target as HTMLSelectElement).value as any; saveSettings(); applyTheme(); });
   let bcity: City = S.birth?.city ?? S.city;
-  view.querySelector('#bcity')!.addEventListener('click', () => cityPicker(c => { bcity = c; (view.querySelector('#bcity') as HTMLElement).textContent = c.name; }));
-  const tunk = view.querySelector('#tunk')!; tunk.addEventListener('click', () => { tunk.classList.toggle('on'); (view.querySelector('#btime') as HTMLInputElement).disabled = tunk.classList.contains('on'); });
-  view.querySelector('#bsave')!.addEventListener('click', () => { const date = (view.querySelector('#bdate') as HTMLInputElement).value; if (!date) return toast('Date?'); const unk = tunk.classList.contains('on'); const time = unk ? null : ((view.querySelector('#btime') as HTMLInputElement).value || null); S.birth = { date, time, city: bcity }; saveSettings(); toast('✓'); renderSettings(); });
+  const bdateEl = view.querySelector('#bdate') as HTMLInputElement;
+  const btimeEl = view.querySelector('#btime') as HTMLInputElement;
+  const tunk = view.querySelector('#tunk')!;
+  const setTunk = (on: boolean) => { tunk.classList.toggle('on', on); tunk.setAttribute('aria-checked', String(on)); btimeEl.disabled = on; };
+  const syncBirth = () => {
+    const date = bdateEl.value; if (!date) return false;
+    const unk = tunk.classList.contains('on');
+    S.birth = { date, time: unk ? null : (btimeEl.value || ''), unk, city: bcity };
+    saveSettings();
+    return true;
+  };
+  view.querySelector('#bcity')!.addEventListener('click', () => cityPicker(c => { bcity = c; (view.querySelector('#bcity') as HTMLElement).textContent = c.name; if (syncBirth()) renderSettings(); }));
+  view.querySelector('#tunk-row')!.addEventListener('click', () => { setTunk(!tunk.classList.contains('on')); if (syncBirth()) renderSettings(); });
+  view.querySelector('#btime-field')!.addEventListener('click', () => {
+    if (tunk.classList.contains('on')) { setTunk(false); btimeEl.focus(); (btimeEl as any).showPicker?.(); }
+  });
+  bdateEl.addEventListener('change', () => { syncBirth(); });
+  btimeEl.addEventListener('change', () => { syncBirth(); });
+  view.querySelector('#bsave')!.addEventListener('click', () => { if (!syncBirth()) return toast(t('naam.noBirth')); toast('✓'); renderSettings(); });
   view.querySelector('#bclear')!.addEventListener('click', () => { S.birth = null; saveSettings(); renderSettings(); });
   view.querySelector('#manage-sub')?.addEventListener('click', openManageSubscriptions);
   view.querySelector('#restore')?.addEventListener('click', async () => { const n = await restorePurchases(); toast(t('report.restored', { n: String(n) })); if (n) renderSettings(); });

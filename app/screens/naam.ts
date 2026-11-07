@@ -18,45 +18,64 @@ export interface NaamCtx {
   pickCity: (onPick: (c: NaamCity) => void) => void;
   isUnlocked: () => Promise<boolean>; onFirstFullRender?: (key: string) => void;
 }
-interface Form { date: string; time: string | null; city: NaamCity; gender: 'boy' | 'girl' | 'any'; }
+interface Form { date: string; time: string | null; unk?: boolean; city: NaamCity; gender: 'boy' | 'girl' | 'any'; }
 const FORM_KEY = 'shubhdate.naam';
 function loadForm(): Form | null { try { return JSON.parse(localStorage.getItem(FORM_KEY) || 'null'); } catch { return null; } }
 function saveForm(f: Form) { localStorage.setItem(FORM_KEY, JSON.stringify(f)); }
-export const naamKey = (f: Form) => `naam|${f.date}|${f.time ?? 'x'}|${f.city.lat.toFixed(2)},${f.city.lon.toFixed(2)}`;
+export const naamKey = (f: Form) => `naam|${f.date}|${f.time || 'x'}|${f.city.lat.toFixed(2)},${f.city.lon.toFixed(2)}`;
 
 let last: { form: Form; r: any } | null = null;
 export function lastNaamForm(): Form | null { return last?.form ?? loadForm(); }
 
 export async function renderNaam(view: HTMLElement, c: NaamCtx) {
   const { t, esc } = c;
-  const f: Form = loadForm() ?? { date: '', time: '', city: c.city, gender: 'any' };
+  const f: Form = loadForm() ?? { date: '', time: '', unk: false, city: c.city, gender: 'any' };
+  const isUnk = !!f.unk;
   let city = f.city;
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: city.tz || c.city.tz }).format(new Date());
   view.innerHTML = `<h1>${t('naam.title')}</h1><p class="muted small">${t('naam.intro')}</p>
   <div class="card">
-    <div class="grid2"><div class="field"><label>${t('naam.dob')}</label><input id="n-date" type="date" value="${esc(f.date)}"></div><div class="field"><label>${t('naam.tob')}</label><input id="n-time" type="time" value="${esc(f.time ?? '')}" ${f.time === null ? 'disabled' : ''}></div></div>
-    <div class="toggle"><span>${t('naam.timeUnknown')}</span><div class="switch ${f.time === null ? 'on' : ''}" id="n-unk"></div></div>
+    <div class="grid2"><div class="field"><label>${t('naam.dob')}</label><input id="n-date" type="date" min="1900-01-01" max="${today}" value="${esc(f.date)}"></div><div class="field" id="n-time-field"><label>${t('naam.tob')}</label><input id="n-time" type="time" value="${esc(f.time ?? '')}" ${isUnk ? 'disabled' : ''}></div></div>
+    <div class="toggle" id="n-unk-row"><span>${t('naam.timeUnknown')}</span><div class="switch ${isUnk ? 'on' : ''}" id="n-unk" role="switch" aria-checked="${isUnk}"></div></div>
     <div class="field"><label>${t('naam.city')}</label><button class="btn btn-outline" id="n-city" type="button">${esc(city.name)}${city.region ? ` · ${esc(city.region)}` : ''}</button></div>
     <div class="field"><label>${t('naam.gender')}</label><select id="n-gender">${(['any', 'boy', 'girl'] as const).map(g => `<option value="${g}" ${f.gender === g ? 'selected' : ''}>${t('naam.' + g)}</option>`).join('')}</select></div>
     <p class="small muted">🔒 ${t('naam.privacy')}</p>
-    <button class="btn btn-gold" id="n-go">✦ ${t('naam.go')}</button>
+    <div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="n-go">✦ ${t('naam.go')}</button><button class="btn btn-outline btn-small" id="n-clear" type="button">${t('settings.clearBirth')}</button></div>
   </div>
-  <div id="n-out">${last && last.form.date === f.date ? '' : ''}</div>`;
+  <div id="n-out"></div>`;
+  const dateEl = view.querySelector('#n-date') as HTMLInputElement;
   const unk = view.querySelector('#n-unk') as HTMLElement, timeEl = view.querySelector('#n-time') as HTMLInputElement;
-  unk.addEventListener('click', () => { unk.classList.toggle('on'); timeEl.disabled = unk.classList.contains('on'); });
-  view.querySelector('#n-city')!.addEventListener('click', () => c.pickCity(ci => { city = ci; (view.querySelector('#n-city') as HTMLElement).textContent = `${ci.name}${ci.region ? ` · ${ci.region}` : ''}`; }));
+  const setUnk = (on: boolean) => { unk.classList.toggle('on', on); unk.setAttribute('aria-checked', String(on)); timeEl.disabled = on; };
   const run = async () => {
-    const date = (view.querySelector('#n-date') as HTMLInputElement).value; if (!date) return c.toast(t('naam.noBirth'));
-    const form: Form = { date, time: unk.classList.contains('on') ? null : (timeEl.value || null), city, gender: (view.querySelector('#n-gender') as HTMLSelectElement).value as Form['gender'] };
+    const date = dateEl.value; if (!date) return c.toast(t('naam.noBirth'));
+    const unkOn = unk.classList.contains('on');
+    const form: Form = { date, time: unkOn ? null : (timeEl.value || ''), unk: unkOn, city, gender: (view.querySelector('#n-gender') as HTMLSelectElement).value as Form['gender'] };
     saveForm(form);
     const out = view.querySelector('#n-out')!; out.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
     try {
-      const r = await c.call('naam', { req: { birth: { date: form.date, time: form.time, place: { name: form.city.name, lat: form.city.lat, lon: form.city.lon, tz: form.city.tz } }, gender: form.gender, region: c.region === 'west' || c.region === 'south' ? c.region : 'north' }, lang: c.lang });
+      const r = await c.call('naam', { req: { birth: { date: form.date, time: form.time || null, place: { name: form.city.name, lat: form.city.lat, lon: form.city.lon, tz: form.city.tz } }, gender: form.gender, region: c.region === 'west' || c.region === 'south' ? c.region : 'north' }, lang: c.lang });
       last = { form, r }; if (c.isCurrent?.() === false) return; renderResult(out as HTMLElement, form, r, c);
     } catch (e: any) { out.innerHTML = `<div class="card">Error: ${esc(e.message)}</div>`; }
   };
+  view.querySelector('#n-unk-row')!.addEventListener('click', () => { setUnk(!unk.classList.contains('on')); if (dateEl.value) run(); });
+  view.querySelector('#n-time-field')!.addEventListener('click', () => {
+    if (unk.classList.contains('on')) { setUnk(false); timeEl.focus(); (timeEl as any).showPicker?.(); }
+  });
+  view.querySelector('#n-city')!.addEventListener('click', () => c.pickCity(ci => { city = ci; (view.querySelector('#n-city') as HTMLElement).textContent = `${ci.name}${ci.region ? ` · ${ci.region}` : ''}`; if (dateEl.value) run(); }));
+  dateEl.addEventListener('change', () => { if (dateEl.value) run(); });
+  timeEl.addEventListener('change', () => { if (dateEl.value) run(); });
+  view.querySelector('#n-gender')!.addEventListener('change', () => { if (dateEl.value) run(); });
   view.querySelector('#n-go')!.addEventListener('click', run);
-  if (last) { renderResult(view.querySelector('#n-out') as HTMLElement, last.form, last.r, c); }
-  else if (f.date) run();
+  view.querySelector('#n-clear')!.addEventListener('click', () => {
+    localStorage.removeItem(FORM_KEY); last = null;
+    dateEl.value = ''; timeEl.value = ''; setUnk(false);
+    city = c.city; (view.querySelector('#n-city') as HTMLElement).textContent = `${city.name}${city.region ? ` · ${city.region}` : ''}`;
+    (view.querySelector('#n-gender') as HTMLSelectElement).value = 'any';
+    view.querySelector('#n-out')!.innerHTML = '';
+  });
+  if (last && last.form.date === f.date && (last.form.time || '') === (f.time || '') && last.form.gender === f.gender && last.form.city.name === f.city.name) {
+    renderResult(view.querySelector('#n-out') as HTMLElement, last.form, last.r, c);
+  } else if (f.date) run();
 }
 
 function sylHtml(s: any, lang: string, big = false) {
@@ -66,8 +85,20 @@ function sylHtml(s: any, lang: string, big = false) {
 
 async function renderResult(out: HTMLElement, form: Form, r: any, c: NaamCtx) {
   const { t, esc } = c;
+  const selectedPada: number[] = r.candidates.map((x: any) => x.pada);
   const nameOf = (n: any) => c.lang === 'gu' ? n.gu : c.lang === 'hi' ? n.hi : n.en;
   const nameList = (list: any[], gender: string) => list.length ? `<div class="naam-names">${list.map((n, i) => `<button class="naam-name" data-g="${gender}" data-i="${i}"><b>${esc(nameOf(n))}</b><span class="small">${esc(c.lang === 'en' || c.lang === 'hinglish' ? n.hi : n.en)}</span><span class="small muted">${esc(n.m)}</span></button>`).join('')}</div>` : '';
+  const padaSectionHtml = (x: any, selPada: number) => {
+    const syl = x.syllables[selPada - 1] ?? x.syllable;
+    const names = x.padaNames?.[selPada - 1] ?? x.names;
+    return `<div class="naam-sylrow">${x.syllables.map((s: any, i: number) => {
+      const p = i + 1; const isBirth = p === x.pada; const isCur = p === selPada;
+      return `<button type="button" class="naam-pada ${isCur ? 'cur' : ''} ${isBirth ? 'janma' : ''}" data-pada="${p}" aria-pressed="${isCur}">${sylHtml(s, c.lang)}<span class="naam-pada-sub">${isBirth ? '● ' : ''}${t('naam.pada')} ${p}</span></button>`;
+    }).join('')}</div>
+    <div class="label mt">${t('naam.names', { s: `${c.lang === 'gu' ? syl.gu : syl.deva} ${syl.latin}` })}</div>
+    ${names.boys.length || names.girls.length ? `<p class="small muted">${t('naam.pick')}</p>${names.boys.length ? `<div class="label small">${t('naam.boys')}</div>${nameList(names.boys, 'boys')}` : ''}${names.girls.length ? `<div class="label small">${t('naam.girls')}</div>${nameList(names.girls, 'girls')}` : ''}` : ''}${names.boys.length + names.girls.length < 3 ? `<p class="small muted">${t('naam.noNames')}</p>` : ''}
+    ${selPada !== x.pada ? `<p class="small muted naam-other-pada">${t('naam.otherPada', { pada: x.pada })}</p>` : ''}`;
+  };
   const cand = (x: any, idx: number) => `<div class="card ${idx === 0 ? 'gold' : ''}">
     <div class="label">${t('naam.janma')}${r.candidates.length > 1 ? ` · ${idx + 1}/${r.candidates.length}` : ''}</div>
     <h2 style="margin:4px 0">${esc(x.nakshatraLabel)} <span class="muted" style="font-weight:400">· ${t('naam.pada')} ${x.pada}</span></h2>
@@ -78,9 +109,7 @@ async function renderResult(out: HTMLElement, form: Form, r: any, c: NaamCtx) {
     <div class="label mt">${t('naam.syllable')}</div>
     <div class="naam-sylrow">${sylHtml(x.syllable, c.lang, true)}</div>
     <div class="label mt">${t('naam.syllables')}</div>
-    <div class="naam-sylrow">${x.syllables.map((s: any, i: number) => `<span class="${i + 1 === x.pada ? 'cur' : ''}">${sylHtml(s, c.lang)}</span>`).join('')}</div>
-    <div class="label mt">${t('naam.names', { s: `${c.lang === 'gu' ? x.syllable.gu : x.syllable.deva} ${x.syllable.latin}` })}</div>
-    ${x.names.boys.length || x.names.girls.length ? `<p class="small muted">${t('naam.pick')}</p>${x.names.boys.length ? `<div class="label small">${t('naam.boys')}</div>${nameList(x.names.boys, 'boys')}` : ''}${x.names.girls.length ? `<div class="label small">${t('naam.girls')}</div>${nameList(x.names.girls, 'girls')}` : ''}` : ''}${x.names.boys.length + x.names.girls.length < 3 ? `<p class="small muted">${t('naam.noNames')}</p>` : ''}
+    <div class="naam-pada-box" data-cand="${idx}">${padaSectionHtml(x, selectedPada[idx])}</div>
   </div>`;
   const days = `<div class="card"><div class="label">${t('naam.muhurta')}</div><p class="small muted">${t('naam.muhurtaNote')}</p>
     ${r.days.slice(0, 5).map((d: any) => `<div class="list-item"><div class="body"><div class="title"><b>${esc(c.fmtDate(d.date))}</b> <span class="small muted">· ${esc(d.headline)}</span></div><div class="sub">${d.windows.slice(0, 2).map((w: any) => `${c.fmtTime(w.start, form.city.tz)}–${c.fmtTime(w.end, form.city.tz)}${w.choghadiya ? ` · ${esc(w.choghadiya)}` : ''}`).join(' · ')}</div></div>${c.scoreRing(d.score)}</div>`).join('')}
@@ -95,12 +124,26 @@ async function renderResult(out: HTMLElement, form: Form, r: any, c: NaamCtx) {
     ${unlocked ? `<button class="btn btn-gold" id="n-report">📄 ${t('naam.openReport')}</button>${ent?.entitlement.sku === 'family_annual' ? `<p class="small muted"><a href="#" id="n-manage">${t('settings.manageSub')}</a></p>` : ''}` : prod ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start"><button class="btn btn-gold btn-small" id="n-buy">${t('naam.buy', { price: formatPrice(prod) })}</button>${fam ? `<button class="btn btn-outline btn-small" id="n-buy-fam">${t('report.buyFamily', { price: formatPrice(fam) })}</button>` : ''}<button class="btn btn-outline btn-small" id="n-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>` : `<p class="small muted">${t('naam.locked')}</p>`}</div>`;
   out.innerHTML = `${r.janma.ambiguous ? `<div class="banner">${t('naam.ambiguous')}</div>` : ''}${r.candidates.map(cand).join('')}<div id="n-card"></div>${days}${reportCard}<p class="small dim">${r.sources.map((s: string) => esc(humanSource(s))).join(' · ')}</p>`;
 
-  out.querySelectorAll<HTMLButtonElement>('.naam-name').forEach(btn => btn.addEventListener('click', () => {
-    const card = btn.closest('.card')!; const idx = [...out.querySelectorAll('.card')].indexOf(card); const x = r.candidates[Math.max(0, idx)] ?? r.candidates[0];
-    const n = x.names[btn.dataset.g!][Number(btn.dataset.i)];
-    renderCard(out.querySelector('#n-card') as HTMLElement, form, x, n, c);
-    (out.querySelector('#n-card') as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }));
+  const bindBox = (box: HTMLElement) => {
+    const idx = Number(box.dataset.cand ?? 0);
+    const x = r.candidates[idx] ?? r.candidates[0];
+    box.querySelectorAll<HTMLButtonElement>('.naam-pada').forEach(btn => btn.addEventListener('click', () => {
+      const p = Number(btn.dataset.pada);
+      if (!p || p === selectedPada[idx]) return;
+      selectedPada[idx] = p;
+      box.innerHTML = padaSectionHtml(x, p);
+      bindBox(box);
+    }));
+    box.querySelectorAll<HTMLButtonElement>('.naam-name').forEach(btn => btn.addEventListener('click', () => {
+      const p = selectedPada[idx];
+      const syl = x.syllables[p - 1] ?? x.syllable;
+      const names = x.padaNames?.[p - 1] ?? x.names;
+      const n = names[btn.dataset.g!][Number(btn.dataset.i)];
+      renderCard(out.querySelector('#n-card') as HTMLElement, form, { ...x, pada: p, syllable: syl }, n, c);
+      (out.querySelector('#n-card') as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }));
+  };
+  out.querySelectorAll<HTMLElement>('.naam-pada-box').forEach(bindBox);
   out.querySelector('#n-report')?.addEventListener('click', () => { c.onFirstFullRender?.(naamKey(form)); renderReport(form, r, c); });
   out.querySelector('#n-buy')?.addEventListener('click', async (e) => {
     const b = e.currentTarget as HTMLButtonElement; b.disabled = true;
@@ -133,7 +176,8 @@ function renderCard(host: HTMLElement, form: Form, x: any, n: any, c: NaamCtx) {
     g.font = '500 72px "Noto Serif Devanagari", "Noto Sans Gujarati", serif'; g.fillStyle = '#7E2D3D'; g.fillText(script, W / 2, 800);
     g.fillStyle = '#6C604E'; g.font = 'italic 36px "Cormorant Garamond", serif'; g.fillText(n.m, W / 2, 870);
     g.fillStyle = '#251C30'; g.font = '34px "DM Sans", sans-serif';
-    g.fillText(t('naam.cardLine', { nakshatra: x.nakshatraLabel, pada: x.pada, rashi: x.rashiLabel }), W / 2, 980);
+    const syl = x.syllable; const sylStr = syl ? ` · ${c.lang === 'gu' ? syl.gu : syl.deva} (${syl.latin})` : '';
+    g.fillText(t('naam.cardLine', { nakshatra: x.nakshatraLabel, pada: x.pada, rashi: x.rashiLabel }) + sylStr, W / 2, 980);
     g.fillStyle = '#6C604E'; g.font = '30px "DM Sans", sans-serif'; g.fillText(t('naam.born', { date: c.fmtDate(form.date), city: form.city.name }), W / 2, 1040);
     g.fillStyle = '#946916'; g.font = '500 24px "DM Sans", sans-serif'; g.fillText('ShubhDate · shubhdate.sakredstudio.ca', W / 2, 1250);
   };

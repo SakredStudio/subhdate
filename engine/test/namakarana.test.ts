@@ -23,6 +23,9 @@ describe('namakarana', () => {
     expect(r.candidates.length).toBe(1);
     const c = r.candidates[0];
     expect(c.syllables.length).toBe(4); expect(c.lord.length).toBeGreaterThan(0);
+    expect(c.padaNames.length).toBe(4);
+    expect(c.padaNames[c.pada - 1]).toEqual(c.names);
+    for (let i = 0; i < 4; i++) expect(c.padaNames[i]).toEqual(namesFor(c.syllables[i], 'any'));
     expect(r.from).toBe('2026-10-31'); expect(r.to).toBe('2026-12-04');
     expect(r.muhurta.days.length).toBeGreaterThan(0);
     for (const d of r.muhurta.days) expect(d.date >= r.from && d.date <= r.to).toBe(true);

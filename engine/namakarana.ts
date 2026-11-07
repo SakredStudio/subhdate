@@ -79,6 +79,7 @@ export interface NaamRequest { birth: Birth; gender?: Gender; region?: Region; s
 export interface NaamCandidate extends Janma {
   syllable: Syllable; syllables: Syllable[]; lord: string; deity: string; gandMool: boolean;
   names: { boys: NameEntry[]; girls: NameEntry[] };
+  padaNames: { boys: NameEntry[]; girls: NameEntry[] }[];
 }
 export interface NaamResult {
   janma: JanmaResult;
@@ -94,10 +95,12 @@ function addDays(iso: string, n: number): string { const [y, m, d] = iso.split('
 /** Everything the Namakarana screen needs. */
 export function naam(req: NaamRequest): NaamResult {
   const j = janma(req.birth);
+  const g = req.gender ?? 'any';
   const candidates: NaamCandidate[] = j.candidates.map(c => {
     const syl = syllableFor(c.nakshatra, c.pada);
     const all = PADA_SYLLABLES[c.nakshatra - 1];
-    return { ...c, syllable: syl, syllables: all, lord: NAK_LORD[c.nakshatra - 1], deity: NAK_DEITY[c.nakshatra - 1], gandMool: isGandMool(c.nakshatra), names: namesFor(syl, req.gender ?? 'any') };
+    const padaNames = all.map(s => namesFor(s, g));
+    return { ...c, syllable: syl, syllables: all, lord: NAK_LORD[c.nakshatra - 1], deity: NAK_DEITY[c.nakshatra - 1], gandMool: isGandMool(c.nakshatra), names: padaNames[c.pada - 1], padaNames };
   });
   // Traditional window: the 11th or 12th day (some families the 16th, or the first month). We search day 11..45.
   const from = addDays(req.birth.date, 11), to = addDays(req.birth.date, 45);

@@ -89,6 +89,7 @@ input[type="date"], input[type="time"] { min-width: 0; max-width: 100%; -webkit-
 .field { margin: 10px 0; }
 .field label { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 6px; }
 input, select, textarea { width: 100%; font: inherit; font-size: 14px; color: var(--text); background: var(--input-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 12px 14px; outline: none; }
+input:disabled { opacity: .45; pointer-events: none; }
 input:focus, select:focus { border-color: var(--gold); }
 select option { color: #000; }
 .strip { display: flex; gap: 6px; overflow-x: auto; padding: 6px 0 10px; scrollbar-width: none; }
@@ -133,7 +134,7 @@ ul.reasons li.avoid::marker { color: var(--avoid); }
 .center { text-align: center; }
 .mt { margin-top: 16px; } .mb { margin-bottom: 16px; }
 .beta { font-size: 10px; color: var(--purple); border: 1px solid var(--purple); border-radius: 10px; padding: 1px 6px; vertical-align: middle; }
-.toggle { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
+.toggle { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; cursor: pointer; }
 .switch { width: 44px; height: 24px; border-radius: 12px; background: var(--switch-off); position: relative; cursor: pointer; transition: background .2s; flex: 0 0 44px; }
 .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--knob); box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: left .2s; }
 .switch.on { background: var(--gold); }
@@ -150,10 +151,15 @@ ul.reasons li.avoid::marker { color: var(--avoid); }
 /* Namakarana */
 .naam-cta { display: block; text-decoration: none; color: var(--gold-light); font-weight: 500; margin: 10px 0 14px; }
 .naam-sylrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-.naam-syl { display: inline-flex; flex-direction: column; align-items: center; min-width: 56px; padding: 6px 10px; border: 1px solid var(--glass-border); border-radius: 10px; font-size: 12px; color: var(--text-muted); }
+.naam-pada { font: inherit; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; display: inline-flex; flex-direction: column; align-items: center; gap: 3px; }
+.naam-pada:active { transform: scale(.96); }
+.naam-pada-sub { font-size: 10px; color: var(--text-dim); line-height: 1.1; }
+.naam-pada.janma .naam-pada-sub { color: var(--gold-light); font-weight: 600; }
+.naam-syl { display: inline-flex; flex-direction: column; align-items: center; min-width: 56px; padding: 6px 10px; border: 1px solid var(--glass-border); border-radius: 10px; font-size: 12px; color: var(--text-muted); transition: border-color .15s, background .15s; }
 .naam-syl b { font-size: 22px; line-height: 1.2; color: var(--text); font-weight: 500; font-family: 'Noto Serif Devanagari', 'Noto Sans Gujarati', serif; }
 .naam-syl.big { min-width: 96px; padding: 10px 16px; } .naam-syl.big b { font-size: 40px; color: var(--gold-light); }
 .naam-sylrow .cur .naam-syl { border-color: var(--gold); background: var(--gold-tint); }
+.naam-other-pada { margin-top: 6px; }
 .naam-names { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 6px 0 10px; }
 .naam-name { font: inherit; text-align: left; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px 12px; color: var(--text); cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .naam-name b { font-weight: 500; font-size: 15px; } .naam-name span { overflow-wrap: anywhere; }
