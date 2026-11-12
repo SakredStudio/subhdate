@@ -59,7 +59,7 @@ p { line-height: 1.5; }
 .topbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; padding: 14px var(--pad) 10px; background: var(--topbar); backdrop-filter: blur(10px); }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
 .brand-name { font-family: var(--serif); font-size: 24px; font-weight: 400; letter-spacing: 0.02em; }
-.brand-mark { width: 28px; height: 28px; display: block; border-radius: 8px; object-fit: cover; }
+.brand-mark { width: 28px; height: 28px; display: block; border-radius: 50%; object-fit: cover; }
 .top-actions { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .install-chip { font: inherit; font-size: 12px; font-weight: 600; color: var(--btn-text); background: linear-gradient(135deg, #D97706, #D4A84F, #E6C97A); border: 0; border-radius: 20px; padding: 6px 12px; white-space: nowrap; cursor: pointer; box-shadow: 0 2px 10px rgba(217,119,6,0.28); transition: transform .15s; }
 .install-chip:active { transform: scale(.96); }
@@ -111,8 +111,14 @@ select option { color: #000; }
 .score text { fill: var(--gold-light); font: 700 15px var(--sans); }
 .hero { text-align: center; padding: 22px 0 6px; }
 .hero .mandala { width: 120px; height: 120px; margin: 0 auto 10px; color: var(--gold); filter: drop-shadow(0 0 18px var(--glow)); animation: spin 60s linear infinite; }
-.hero .hero-art { width: 180px; height: 180px; margin: 0 auto 6px; display: block; border-radius: 50%; object-fit: cover; animation: spin 240s linear infinite; }
-html[data-theme="dark"] .hero .hero-art, html[data-theme="dark"] .brand-mark { filter: invert(.92) hue-rotate(180deg) saturate(1.25) brightness(1.05); }
+.hero .hero-art { width: 180px; height: 180px; margin: 0 auto 6px; display: block; border-radius: 50%; object-fit: cover; }
+/* Website only (a browser tab, not the installed app): the hero is the astrolabe line art and it turns. The art is
+   brown on clear, so the night theme flips it to light lines; the sun-and-moon logo keeps its own colours. */
+@media (display-mode: browser) {
+  .hero .hero-art { border-radius: 0; animation: spin 60s linear infinite; }
+  html[data-theme="dark"] .hero .hero-art { filter: invert(.92) hue-rotate(180deg) saturate(1.25) brightness(1.05); }
+}
+@media (display-mode: browser) and (min-width: 1100px) { .hero .hero-art { width: 220px; height: 220px; } }
 @media (prefers-reduced-motion: reduce) { .hero .hero-art, .hero .mandala { animation: none; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 .tagline { font-family: var(--serif); font-style: italic; font-size: 24px; }
@@ -173,7 +179,6 @@ ul.reasons li.avoid::marker { color: var(--avoid); }
 .naam-name { font: inherit; text-align: left; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 10px 12px; color: var(--text); cursor: pointer; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .naam-name b { font-weight: 500; font-size: 15px; } .naam-name span { overflow-wrap: anywhere; }
 .naam-name:active { transform: scale(.97); border-color: var(--gold); }
-.rp-page .naam-syl { border-color: #DCCFB4; color: rgba(37,28,48,0.64); } .rp-page .naam-syl b { color: #251C30; } .rp-page .cur .naam-syl { border-color: #BC8B2C; background: rgba(188,139,44,0.08); }
 
 /* Universal Install Sheet & QR */
 .qr-wrap { display: flex; align-items: center; gap: 14px; background: rgba(188,139,44,0.08); border: 1px solid var(--glass-border); border-radius: 14px; padding: 12px; margin-top: 10px; }

@@ -6,6 +6,7 @@ import { db, type SavedItem } from './db.ts';
 import { aboutHtml, privacyHtml } from './screens/about.ts';
 import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
 import { renderReport } from './screens/report.ts';
+import { closeReport } from './screens/report-shell.ts';
 import { renderNaam } from './screens/naam.ts';
 import { humanSource } from './format.ts';
 import { isEntitled, useStore, consumeReport } from './entitlement.ts';
@@ -116,7 +117,8 @@ async function triggerInstall() {
   showUniversalInstallSheet();
 }
 function scoreRing(score: number) { const r = 24, c = 2 * Math.PI * r; return `<svg class="score" viewBox="0 0 56 56"><circle class="track" cx="28" cy="28" r="${r}" fill="none" stroke-width="3"/><circle class="fill" cx="28" cy="28" r="${r}" fill="none" stroke-width="3" stroke-dasharray="${(score / 100 * c).toFixed(1)} ${c.toFixed(1)}"/><text x="28" y="33" text-anchor="middle">${score}</text></svg>`; }
-const heroArt = `<picture><source srcset="${BASE}hero.webp" type="image/webp"><img class="hero-art" src="${BASE}hero.png" width="180" height="180" alt="" aria-hidden="true"></picture>`;
+// Hero art: in a browser tab (the website) it is the astrolabe line art, which turns; in the installed app it is the main sun-and-moon logo.
+const heroArt = `<picture><source media="(display-mode: browser)" srcset="${BASE}hero-web.webp" type="image/webp"><source media="(display-mode: browser)" srcset="${BASE}hero-web.png"><source srcset="${BASE}hero.webp" type="image/webp"><img class="hero-art" src="${BASE}hero.png" width="180" height="180" alt="" aria-hidden="true"></picture>`;
 const mandala = `<svg class="mandala" viewBox="0 0 120 120" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="60" cy="60" r="56" opacity=".5"/><circle cx="60" cy="60" r="46" opacity=".6"/><circle cx="60" cy="60" r="34" opacity=".5"/><circle cx="60" cy="60" r="22" opacity=".6"/><circle cx="60" cy="60" r="10" opacity=".5"/>${Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6; return `<line x1="${60 + 22 * Math.cos(a)}" y1="${60 + 22 * Math.sin(a)}" x2="${60 + 56 * Math.cos(a)}" y2="${60 + 56 * Math.sin(a)}" opacity=".5"/><circle cx="${60 + 56 * Math.cos(a)}" cy="${60 + 56 * Math.sin(a)}" r="2" fill="currentColor" stroke="none"/>`; }).join('')}${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4 + Math.PI / 8; const x = 60 + 28 * Math.cos(a), y = 60 + 28 * Math.sin(a); return `<path d="M${x} ${y - 7} L${x + 5} ${y} L${x} ${y + 7} L${x - 5} ${y} Z" opacity=".7"/>`; }).join('')}</g><circle cx="60" cy="60" r="3.5" fill="currentColor" opacity=".8"/></svg>`;
 
 // ---------- City picker ----------
@@ -557,6 +559,7 @@ let navSeq = 0;
 const isStale = (seq: number) => seq !== navSeq;
 function route() {
   navSeq++;
+  closeReport();
   abandonPending();
   const hash = location.hash || '#/today';
   const [, path, arg] = hash.split('/');

@@ -4,7 +4,7 @@
 import { humanSource } from '../format.ts';
 import { isPlayBillingAvailable, listProducts, purchase, restorePurchases, formatPrice, PurchaseError, openManageSubscriptions } from '../billing.ts';
 import { loadEntitlement } from '../entitlement.ts';
-import { loadReportFonts } from './report.ts';
+import { loadReportFonts, reportDeck, reportToolbar, mountReport, closeReport, slideTitle, label, heading, kv, list, chunk } from './report-shell.ts';
 
 export interface NaamCity { name: string; lat: number; lon: number; tz: string; region?: string }
 export interface NaamCtx {
@@ -214,29 +214,44 @@ function renderCard(host: HTMLElement, form: Form, x: any, n: any, c: NaamCtx) {
   void esc;
 }
 
-// ---- Printable report (A4 pages, reuses report.css) ----
+// ---- The paid report: the same slide deck as every other paid report (report-shell.ts) ----
 function renderReport(form: Form, r: any, c: NaamCtx) {
   const { t, esc } = c;
   loadReportFonts();
   const view = document.getElementById('view')!;
-  const page = (cls: string, body: string) => `<section class="rp-page ${cls}"><div class="rp-head">ShubhDate · ${esc(t('naam.reportTitle'))}</div>${body}<div class="rp-foot">ShubhDate engine v${esc(r.engineVersion)} · MIT · ${esc(form.city.name)}</div></section>`;
-  const row = (k: string, v: string) => `<div class="rp-row"><span class="rp-k">${k}</span><span class="rp-v">${v}</span></div>`;
-  const nameRows = (list: any[]) => list.map((n: any) => `<tr><td><b>${esc(n.en)}</b></td><td class="rp-deva">${esc(n.hi)}</td><td>${esc(n.gu)}</td><td class="small">${esc(n.m)}</td></tr>`).join('');
-  const cands = r.candidates.map((x: any) => page('rp-naam', `<h2>${esc(x.nakshatraLabel)} · ${t('naam.pada')} ${x.pada}</h2>
-    ${row(t('naam.rashi'), esc(x.rashiLabel))}${row(t('naam.lord'), esc(x.lord))}${row(t('naam.deity'), esc(x.deity))}${row(t('naam.moonAt'), `${x.moonLongitude.toFixed(4)}° (Lahiri)`)}
-    ${x.gandMool ? `<p class="small">⚠ ${t('naam.gandMool')}</p>` : ''}
-    <h3>${t('naam.syllables')}</h3><div class="naam-sylrow">${x.syllables.map((s: any, i: number) => `<span class="${i + 1 === x.pada ? 'cur' : ''}">${sylHtml(s, c.lang)}</span>`).join('')}</div>
-    ${x.names.boys.length ? `<h3>${t('naam.boys')}</h3><table class="rp-table"><tbody>${nameRows(x.names.boys)}</tbody></table>` : ''}
-    ${x.names.girls.length ? `<h3>${t('naam.girls')}</h3><table class="rp-table"><tbody>${nameRows(x.names.girls)}</tbody></table>` : ''}`)).join('');
-  const days = page('rp-naam-days', `<h2>${t('naam.muhurta')}</h2><p class="small muted">${t('naam.muhurtaNote')}</p>
-    ${r.days.map((d: any) => `<div class="rp-window"><div class="rp-wtime">${esc(c.fmtDate(d.date))} <span class="small muted">· ${t('naam.score')} ${d.score}</span></div><div class="small muted">${esc(d.headline)}</div>
-      ${d.windows.map((w: any) => `<div class="small"><b>${c.fmtTime(w.start, form.city.tz)}–${c.fmtTime(w.end, form.city.tz)}</b>${w.choghadiya ? ` · ${esc(w.choghadiya)}` : ''}${w.keep?.length ? `<ul class="reasons">${w.keep.map((k: string) => `<li class="keep">${esc(k)}</li>`).join('')}</ul>` : ''}</div>`).join('')}
-      ${d.summary ? `<p class="small">${esc(d.summary)}</p>` : ''}</div>`).join('')}`);
-  const sources = page('rp-sources', `<h2>${t('naam.sourcesPage')}</h2><ul class="reasons">${r.sources.map((s: string) => `<li>${esc(humanSource(s))}</li>`).join('')}</ul><ul class="reasons">${(r.caveats ?? []).map((s: string) => `<li>${esc(s)}</li>`).join('')}</ul>`);
-  const cover = page('rp-cover', `<div class="rp-kicker">ShubhDate · ${esc(t('naam.reportTitle'))}</div><h1 class="rp-title">${esc(t('naam.title'))}</h1><p class="rp-sub">${esc(t('naam.born', { date: c.fmtDate(form.date), city: form.city.name }))}${form.time ? ` · ${esc(form.time)}` : ''}</p><p class="rp-ondevice">${t('naam.privacy')}</p>`);
-  view.innerHTML = `<div class="rp-toolbar"><a href="#/naam" class="small">‹ ${t('report.back')}</a><h1>${t('naam.reportTitle')}</h1>
-    <div class="row" style="border:0;gap:8px;justify-content:flex-start"><button class="btn btn-gold btn-small" id="rp-print">⬇ ${t('report.download')}</button></div></div>
-    <div class="report" lang="${c.lang === 'hinglish' ? 'en' : c.lang}">${cover}${cands}${days}${sources}</div>`;
-  view.querySelector('#rp-print')!.addEventListener('click', async () => { await (document as any).fonts?.ready; window.print(); });
+  const deck = reportDeck({ base: c.base, brand: `ShubhDate · ${esc(t('naam.reportTitle'))}`, subject: esc(form.city.name), note: esc(t('naam.privacy')) });
+  const genAt = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: form.city.tz }).format(new Date());
+  const cover = deck.cover({
+    kicker: esc(t('naam.reportTitle')), title: esc(t('naam.title')),
+    facts: [
+      [t('report.cover.city'), esc(form.city.name)],
+      [t('naam.dob'), esc(c.fmtDate(form.date))],
+      [t('naam.tob'), esc(form.time || t('naam.timeUnknown'))],
+      [t('naam.janma'), r.candidates.map((x: any) => `${esc(x.nakshatraLabel)} · ${t('naam.pada')} ${x.pada}`).join(' / ')],
+    ],
+    fine: `${t('report.cover.generated')} ${esc(genAt)} · ShubhDate v${esc(r.engineVersion)}`,
+    note: t('report.cover.onDevice'),
+  });
+  // One slide per janma candidate: the reading on the left, the names on the right.
+  const nameTable = (title: string, rows: any[]) => rows.length ? `<div class="rp-block">${heading(title)}<table class="rp-table"><tbody>${rows.map((n: any) => `<tr><td><b>${esc(n.en)}</b></td><td class="rp-deva">${esc(n.hi)}</td><td>${esc(n.gu)}</td><td class="rp-muted">${esc(n.m)}</td></tr>`).join('')}</tbody></table></div>` : '';
+  const cands = r.candidates.map((x: any) => deck.slide('rp-s-naam', `<div class="rp-cols">
+      <div class="rp-col top">
+        ${slideTitle(`${esc(x.nakshatraLabel)} · ${t('naam.pada')} ${x.pada}`)}
+        <div>${kv(t('naam.rashi'), esc(x.rashiLabel))}${kv(t('naam.lord'), esc(x.lord))}${kv(t('naam.deity'), esc(x.deity))}${kv(t('naam.moonAt'), `${x.moonLongitude.toFixed(4)}° (Lahiri)`)}</div>
+        ${x.gandMool ? `<p class="rp-small">⚠ ${t('naam.gandMool')}</p>` : ''}
+        <div class="rp-block">${label(t('naam.syllables'))}<div class="naam-sylrow">${x.syllables.map((s: any, i: number) => `<span class="${i + 1 === x.pada ? 'cur' : ''}">${sylHtml(s, c.lang)}</span>`).join('')}</div></div>
+      </div>
+      <div class="rp-col top w125">${nameTable(t('naam.boys'), x.names.boys)}${nameTable(t('naam.girls'), x.names.girls)}${x.names.boys.length + x.names.girls.length ? '' : `<p class="rp-small rp-muted">${t('naam.noNames')}</p>`}</div>
+    </div>`, t('naam.janma'))).join('');
+  // Ceremony dates, two to a slide (each keeps the reasons for its best window).
+  const dayHtml = (d: any) => `<div class="rp-day"><div class="rp-dc-rank"><span class="rp-dc-time">${esc(c.fmtDate(d.date))}</span><span class="rp-small rp-muted">${t('naam.score')} ${d.score}</span></div>
+      <div class="rp-small rp-muted">${esc(d.headline)}</div>
+      ${d.windows.map((w: any, i: number) => `<div><b>${c.fmtTime(w.start, form.city.tz)}–${c.fmtTime(w.end, form.city.tz)}</b>${w.choghadiya ? ` · ${esc(w.choghadiya)}` : ''}</div>${i === 0 && w.keep?.length ? list(w.keep.map(esc), 'keep') : ''}`).join('')}</div>`;
+  const dayGroups = chunk(r.days as any[], 2);
+  const days = dayGroups.map((g, i) => deck.slide('rp-s-naamdays', `${slideTitle(t('naam.muhurta'), i === 0 ? t('naam.muhurtaNote') : undefined)}<div class="rp-daygrid">${g.map(dayHtml).join('')}</div>`, dayGroups.length > 1 ? `${esc(form.city.name)} · ${i + 1} / ${dayGroups.length}` : undefined)).join('');
+  const sources = deck.slide('rp-s-sources', `${slideTitle(t('naam.sourcesPage'))}${list(r.sources.map((s: string) => esc(humanSource(s))))}${list((r.caveats ?? []).map(esc))}`);
+  mountReport(view, reportToolbar({ backHref: '#/naam', back: t('report.back'), title: t('naam.reportTitle'), download: t('report.download') }), c.lang, `${cover}${cands}${days}${sources}`);
+  // The report replaces the Naam screen in place, so "back" has no route change to ride on: rebuild the screen.
+  view.querySelector('#rp-back')?.addEventListener('click', (e) => { e.preventDefault(); closeReport(); renderNaam(view, c); window.scrollTo(0, 0); });
   window.scrollTo(0, 0);
 }
