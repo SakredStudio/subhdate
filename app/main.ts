@@ -71,6 +71,30 @@ const isIos = () => typeof navigator !== 'undefined' && (/iPhone|iPad|iPod/i.tes
 const isStandalone = () => typeof window !== 'undefined' && (!!(navigator as any).standalone || !!window.matchMedia?.('(display-mode: standalone)').matches);
 const IOS_DISMISS_KEY = 'shubhdate.iosDismissed';
 const PLAY_URL = 'https://play.google.com/store/apps/details?id=com.sakredstudio.shubhdate';
+// Sakred Graha (graha.sakredstudio.ca) sells personalised PDF reports through Stripe. Google Play does not let an
+// app installed from Play send people to a payment outside Play Billing, so this card shows on the website and the
+// home-screen web app only, never inside the Play app. (Soul, 2026-11-12: the two products advertise each other.)
+const GRAHA_URL = 'https://graha.sakredstudio.ca/';
+let fromPlayApp: boolean | null = null;
+async function isPlayApp(): Promise<boolean> {
+  if (fromPlayApp === null) {
+    let twa = false;
+    try {
+      twa = sessionStorage.getItem('shubhdate.twa') === '1' || (document.referrer || '').startsWith('android-app://');
+      if (twa) sessionStorage.setItem('shubhdate.twa', '1');
+    } catch { /* storage blocked */ }
+    fromPlayApp = twa || await isPlayBillingAvailable().catch(() => false);
+  }
+  return fromPlayApp;
+}
+const grahaCard = (medium: string, cls: string) => `<a class="${cls} graha-promo" href="${GRAHA_URL}?utm_source=shubhdate&amp;utm_medium=${medium}" target="_blank" rel="noopener">
+  <img src="${BASE}report-lotus.webp" width="72" height="72" alt="">
+  <span class="graha-txt"><span class="label">${esc(t('graha.label'))}</span><b>${esc(t('graha.title'))}</b><span class="small muted">${esc(t('graha.body'))}</span><span class="graha-cta">${esc(t('graha.cta'))} ›</span></span></a>`;
+/** Fills a placeholder with the Graha card unless this is the Play app. The slot stays empty until that is known. */
+async function mountGrahaPromo(host: Element | null, medium: string, cls = 'card') {
+  if (!host || await isPlayApp()) return;
+  if (host.isConnected) host.innerHTML = grahaCard(medium, cls);
+}
 const QR_ROWS = [533480831,273556289,391678301,391983709,390935389,274718017,534074751,166144,502993348,309836584,470277195,145716874,443796593,309775922,467674585,170037044,451090044,376913812,424697685,194409486,33246185,488327936,458826623,52103745,301175389,494943837,331111261,153055297,458999935];
 function qrSvg() {
   let d = '';
@@ -220,7 +244,9 @@ async function renderToday() {
     <div class="sankalpa ${S.sankalpaScript === 'deva' ? 'deva' : ''}" id="sk-text">${esc(S.sankalpaScript === 'deva' ? sank.devanagari : sank.iast)}</div>
     <p class="small muted">${t('today.sankalpaHint')}</p>
   </div>
+  <div id="graha-slot"></div>
   <p class="small dim center">Lahiri ayanamsa · ${S.sunrise === 'limb' ? 'upper-limb sunrise' : 'disc-centre sunrise'} · astronomy-engine · <a href="#/about">${t('settings.about')}</a></p>`;
+  void mountGrahaPromo(view.querySelector('#graha-slot'), 'today');
   view.querySelector('#prev')!.addEventListener('click', () => { todayDate = addIso(todayDate, -1); renderToday(); });
   view.querySelector('#next')!.addEventListener('click', () => { todayDate = addIso(todayDate, 1); renderToday(); });
   view.querySelector('#tod')!.addEventListener('click', () => { todayDate = todayIso(); renderToday(); });
@@ -540,7 +566,9 @@ async function updateDesktopRails(force = false) {
           <a class="quick-chip" href="#/muhurta">🚗 Vahana</a>
           <a class="quick-chip" href="#/naam">👶 Naam Karan</a>
         </div>
-      </div>`;
+      </div>
+      <div id="graha-rail"></div>`;
+    void mountGrahaPromo(right.querySelector('#graha-rail'), 'rail', 'rail-card');
     right.querySelector('#rail-install')?.addEventListener('click', triggerInstall);
     right.querySelector('#rail-ios')?.addEventListener('click', showIosInstallSheet);
   } catch { /* ignore background rail errors */ }

@@ -243,3 +243,14 @@ ul.reasons li.avoid::marker { color: var(--avoid); }
   .tabbar a { padding: 6px 12px; border-radius: 999px; transition: background .15s; }
   .tabbar a.active { background: var(--gold-tint-strong); }
 }
+
+/* Sakred Graha card (website and home-screen web app only; see mountGrahaPromo in main.ts) */
+.graha-promo { display: flex; gap: 14px; align-items: center; text-decoration: none; color: inherit; }
+.graha-promo img { width: 72px; height: 72px; flex-shrink: 0; }
+.graha-promo .graha-txt { display: block; min-width: 0; }
+.graha-promo .graha-txt > * { display: block; }
+.graha-promo b { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 21px; font-weight: 600; line-height: 1.15; margin: 2px 0 3px; }
+.graha-promo .graha-cta { margin-top: 6px; font-weight: 600; font-size: 13.5px; color: var(--gold-light); }
+.rail-card.graha-promo { align-items: flex-start; }
+.rail-card.graha-promo img { width: 56px; height: 56px; }
+.rail-card.graha-promo b { font-size: 18px; }
