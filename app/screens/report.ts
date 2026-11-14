@@ -8,6 +8,8 @@ import { humanSource } from '../format.ts';
 import { isPlayBillingAvailable, listProducts, purchase, restorePurchases, formatPrice, PurchaseError, type ProductDetails } from '../billing.ts';
 import type { Sku } from '../entitlement.ts';
 import type { ReportModel, ReportDay, RWin } from '../../engine/report.ts';
+import type { WebShop } from '../webpay.ts';
+import { webBuyHtml, wireWebBuy } from './web-buy.ts';
 import { loadReportFonts, reportDeck, reportToolbar, mountReport, slideTitle, label, heading, fact, kv, list, scoreRing, dateParts } from './report-shell.ts';
 
 export interface ReportCtx {
@@ -19,6 +21,8 @@ export interface ReportCtx {
   scoreRing: (n: number) => string; toast: (m: string) => void;
   call: (op: string, args: any) => Promise<any>;
   lastReq: any; isUnlocked: () => Promise<boolean>; onFirstFullRender?: () => void;
+  /** the website's Stripe checkout; resolves null inside the Play app or while it is not set up */
+  webShop?: () => Promise<WebShop | null>;
 }
 
 const NAMES_KEY = 'shubhdate.reportNames';
@@ -180,14 +184,17 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
     <p class="rp-small"><a href="${esc(m.pandit.reviewDoc)}">docs/PANDIT-REVIEW.md</a></p>
     <p class="rp-final">${esc(m.footer.line)}</p>`);
 
-  // Inside the Play app the lock card sells the two products through Play Billing; on the web it only explains.
+  // Inside the Play app the lock card sells the two products through Play Billing; on the website it sells them
+  // through Stripe Checkout when that is set up (c.webShop), and otherwise only explains.
   let products: ProductDetails[] = [];
   if (!unlocked) { try { if (await isPlayBillingAvailable()) products = await listProducts(); } catch { products = []; } }
+  const shop = !unlocked && !products.length ? await c.webShop?.().catch(() => null) ?? null : null;
+  const webBuy = shop ? webBuyHtml(shop, 'report_single', 'report.buyReport', t) : '';
   if (c.isCurrent?.() === false) return;
   const skuSingle = products.find(p => p.itemId === 'report_single'), skuFamily = products.find(p => p.itemId === 'family_annual');
   const buyButtons = products.length
     ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start;margin-top:8px">${skuSingle ? `<button class="btn btn-gold btn-small" data-buy="report_single">${t('report.buyReport', { price: formatPrice(skuSingle) })}</button>` : ''}${skuFamily ? `<button class="btn btn-outline btn-small" data-buy="family_annual">${t('report.buyFamily', { price: formatPrice(skuFamily) })}</button>` : ''}<button class="btn btn-outline btn-small" id="rp-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>`
-    : `<p class="small muted">${t('report.playOnly')}</p>`;
+    : webBuy || `<p class="small muted">${t('report.playOnly')}</p>`;
   const lockedCard = unlocked ? '' : `<div class="card gold rp-lockcard"><div class="label">${t('report.lockedTitle')}</div><p class="small">${t('report.previewNote')}</p><p class="small"><b>${t('report.fullContains')}:</b> ${t('report.fullList')}</p>${buyButtons}</div>`;
   const toolbar = reportToolbar({
     backHref: '#/muhurta', back: t('report.back'), title: t('report.title'), badge: unlocked ? '' : `<span class="pill info">${t('report.preview')}</span>`, download: t('report.download'),
@@ -217,6 +224,7 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
       if (!(e instanceof PurchaseError && e.code === 'cancelled')) c.toast(t('report.buyFailed', { err: String(e?.code ?? e?.message ?? 'error') }));
     }
   });
+  if (shop && webBuy) wireWebBuy(view, shop, 'report', { t, toast: c.toast, onUnlocked: () => renderReport(view, c) });
   view.querySelector('#rp-restore')?.addEventListener('click', async () => {
     const n = await restorePurchases(); c.toast(t('report.restored', { n: String(n) })); if (n) renderReport(view, c);
   });

@@ -1,5 +1,5 @@
-// Entitlements: a signed token (ES256 JWS, compact form) issued by the Cloudflare Worker after a Play purchase is
-// verified. The PWA verifies it locally with the Worker's public key, caches it in IndexedDB, honours it offline for
+// Entitlements: a signed token (ES256 JWS, compact form) issued by the Cloudflare Worker after a Play purchase, or a
+// website purchase through Stripe (webpay.ts), is verified. The PWA verifies it locally with the Worker's public key, caches it in IndexedDB, honours it offline for
 // 7 days past `iat`, then re-fetches when online. Nothing here talks to Google; the purchase flow is in billing.ts.
 // Privacy: the device id is a random UUID that is sent only with a purchase claim; never a name or email.
 import { ENTITLEMENT_PUBLIC_KEY_JWK, IS_PLACEHOLDER } from './config.ts';
@@ -8,7 +8,8 @@ export type Sku = 'report_single' | 'family_annual' | 'naam_report';
 export const CONSUMABLE_SKUS: Sku[] = ['report_single', 'naam_report'];
 export interface Entitlement {
   sku: Sku;
-  source: 'play';
+  /** where it was bought: Google Play (the Android app) or Stripe (the website) */
+  source: 'play' | 'stripe';
   /** unix seconds; family_annual = subscription expiry, report_single = far future (consumed via credits) */
   exp: number;
   /** unix seconds the Worker signed it */
@@ -50,7 +51,7 @@ export async function verifyToken(jws: string, jwk: JsonWebKey | null = ENTITLEM
     const ok = await subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, key, b64u.decode(parts[2]), utf8.encode(`${parts[0]}.${parts[1]}`));
     if (!ok) return null;
     const p = decodePayload(jws);
-    if (!p || !['report_single', 'family_annual', 'naam_report'].includes(p.sku) || p.source !== 'play' || typeof p.exp !== 'number' || typeof p.iat !== 'number' || typeof p.dev !== 'string') return null;
+    if (!p || !['report_single', 'family_annual', 'naam_report'].includes(p.sku) || !['play', 'stripe'].includes(p.source) || typeof p.exp !== 'number' || typeof p.iat !== 'number' || typeof p.dev !== 'string') return null;
     return p;
   } catch { return null; }
 }

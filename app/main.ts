@@ -7,6 +7,7 @@ import { aboutHtml, privacyHtml } from './screens/about.ts';
 import { WAITLIST_URL, IS_PLACEHOLDER } from './config.ts';
 import { renderReport } from './screens/report.ts';
 import { closeReport } from './screens/report-shell.ts';
+import { webOffer, startWebCheckout, claimWebPurchase, restoreWebPurchase, takePaidSession, type WebShop } from './webpay.ts';
 import { renderNaam } from './screens/naam.ts';
 import { humanSource } from './format.ts';
 import { isEntitled, useStore, consumeReport } from './entitlement.ts';
@@ -381,7 +382,7 @@ async function renderSettings() {
     <div class="row" style="border:0;gap:8px"><button class="btn btn-gold" id="bsave">${t('settings.saveBirth')}</button><button class="btn btn-outline btn-small" id="bclear">${t('settings.clearBirth')}</button></div></div>
   ${IS_PLACEHOLDER(WAITLIST_URL) ? '' : `<div class="card"><a class="btn btn-outline" href="${WAITLIST_URL}" target="_blank" rel="noopener">💌 ${t('settings.waitlist')}</a></div>`}
   <div class="card"><div class="label">${t('settings.purchases')}</div><p class="small">${esc(entLine)}</p>
-    <div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start">${playOk ? `<button class="btn btn-outline btn-small" id="restore">${t('report.restore')}</button>` : ''}<button class="btn btn-outline btn-small" id="manage-sub">${t('settings.manageSub')}</button></div>
+    <div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start">${playOk ? `<button class="btn btn-outline btn-small" id="restore">${t('report.restore')}</button>` : ''}${ent?.entitlement.source === 'stripe' ? '' : `<button class="btn btn-outline btn-small" id="manage-sub">${t('settings.manageSub')}</button>`}</div>
     <p class="small muted">${t('settings.purchasesNote')}</p></div>
   <div class="card"><div class="label">${t('settings.yourData')}</div><p class="small">${t('settings.yourDataNote')}</p><button class="btn btn-outline btn-small" id="wipe">${t('settings.deleteData')}</button></div>
   <div class="card"><div class="list-item" id="about"><span class="ico">📖</span><div class="body"><div class="title">${t('settings.about')}</div></div><span class="chev">›</span></div><div class="list-item" id="privacy"><span class="ico">🔒</span><div class="body"><div class="title">${t('settings.privacy')}</div></div><span class="chev">›</span></div></div>
@@ -466,6 +467,38 @@ async function isReportUnlocked(): Promise<boolean> {
 async function isNaamUnlocked(): Promise<boolean> {
   if (localStorage.getItem('shubhdate.devReport') === '1') return true;
   return isEntitled(['naam_report', 'family_annual']);
+}
+// Website purchases (Stripe Checkout, app/webpay.ts). Never inside the Play app: Play Billing is the only rail there.
+// Paying leaves the page, so the muhurta search is parked in sessionStorage and picked up again on the way back.
+const PENDING_REQ_KEY = 'shubhdate.pendingReq';
+async function webShop(): Promise<WebShop | null> {
+  if (await isPlayApp()) return null;
+  const o = await webOffer();
+  if (!o.enabled) return null;
+  return {
+    prices: o.prices,
+    buy: async (sku, back) => {
+      try { if (back === 'report' && lastReq) sessionStorage.setItem(PENDING_REQ_KEY, JSON.stringify(lastReq)); } catch { /* storage blocked: the buyer searches again after paying */ }
+      await startWebCheckout(sku, back);
+    },
+    restore: restoreWebPurchase,
+  };
+}
+function resumePendingReport() {
+  try {
+    const raw = sessionStorage.getItem(PENDING_REQ_KEY); if (!raw) return;
+    sessionStorage.removeItem(PENDING_REQ_KEY);
+    const req = JSON.parse(raw);
+    if (req && typeof req.event === 'string' && typeof req.from === 'string' && typeof req.to === 'string' && req.place && typeof req.place.lat === 'number') lastReq = req;
+  } catch { /* nothing to resume */ }
+}
+/** Back from Stripe ("?paid=<session>"): confirm the payment with the Worker, then show the unlocked screen. */
+function finishWebPurchase() {
+  const session = takePaidSession(); if (!session) return;
+  claimWebPurchase(session).then(r => {
+    toast(t('report.unlocked')); route();
+    if (r.restoreCode) sheet(`<h3>${esc(t('report.webCodeTitle'))}</h3><p class="small muted">${esc(t('report.webCodeBody'))}</p><p style="font:600 26px/1.3 ui-monospace,Consolas,monospace;letter-spacing:0.06em;text-align:center;margin:14px 0;user-select:all">${esc(r.restoreCode)}</p><button class="btn btn-gold" data-close type="button">OK</button>`, root => root.querySelector('button[data-close]')?.addEventListener('click', closeSheet));
+  }).catch((e: any) => toast(t('report.webFailed', { err: String(e?.code ?? e?.message ?? 'error') })));
 }
 const reportKey = () => lastReq ? `${lastReq.event}|${lastReq.from}|${lastReq.to}|${lastReq.place.lat.toFixed(2)},${lastReq.place.lon.toFixed(2)}` : '';
 
@@ -602,8 +635,8 @@ function route() {
   switch (path) {
     case 'muhurta': return renderMuhurta();
     case 'result': return renderResult(Number(arg));
-    case 'naam': return renderNaam(view, { isCurrent: ((q) => () => !isStale(q))(navSeq), t, lang: S.lang, region: S.region, base: BASE, city: S.city, esc, fmtTime, fmtDate, scoreRing, toast, call, pickCity: cityPicker, isUnlocked: isNaamUnlocked, onFirstFullRender: (key) => { consumeReport(key).catch(() => null); } });
-    case 'report': return renderReport(view, { isCurrent: ((q) => () => !isStale(q))(navSeq), t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, isUnlocked: isReportUnlocked, onFirstFullRender: () => { consumeReport(reportKey()).catch(() => null); } });
+    case 'naam': return renderNaam(view, { isCurrent: ((q) => () => !isStale(q))(navSeq), t, lang: S.lang, region: S.region, base: BASE, city: S.city, esc, fmtTime, fmtDate, scoreRing, toast, call, pickCity: cityPicker, webShop, isUnlocked: isNaamUnlocked, onFirstFullRender: (key) => { consumeReport(key).catch(() => null); } });
+    case 'report': return renderReport(view, { isCurrent: ((q) => () => !isStale(q))(navSeq), t, lang: S.lang, tz: tz(), cityName: S.city.name, region: S.region, base: BASE, esc, fmtTime, fmtTimeD, fmtDate, scoreRing, toast, call, lastReq, webShop, isUnlocked: isReportUnlocked, onFirstFullRender: () => { consumeReport(reportKey()).catch(() => null); } });
     case 'festivals': return renderFestivals();
     case 'saved': return renderSaved();
     case 'settings': return renderSettings();
@@ -618,7 +651,9 @@ document.getElementById('city-chip')!.addEventListener('click', () => cityPicker
 document.getElementById('top-install')?.addEventListener('click', triggerInstall);
 initDesktopBackdrop();
 updateChrome();
+resumePendingReport();
 route();
+finishWebPurchase();
 // A cached entitlement older than the offline grace period is refreshed from the Worker (no-op on the web / offline).
 refreshIfStale().then(() => { if (location.hash.startsWith('#/report')) route(); }).catch(() => null);
 if ('serviceWorker' in navigator) {

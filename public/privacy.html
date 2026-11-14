@@ -69,8 +69,9 @@
   </div>
 
   <div class="card">
-    <h2>Purchases (Android app only)</h2>
-    <p>The full Muhurta Report and the Family Annual plan can be bought in the Android app through <b>Google Play Billing</b>. Google handles the payment and your payment details; ShubhDate never sees them. To unlock the purchase on your device, the app sends Google's purchase token and an anonymous device id (a random UUID created on first use) to the ShubhDate server, which keeps only a one-way hash of the token and that id. No name, email or phone number is collected. The web app sells nothing and never asks for payment.</p>
+    <h2>Purchases</h2>
+    <p><b>In the Android app</b>, the full Muhurta Report and the Family Annual plan can be bought through <b>Google Play Billing</b>. Google handles the payment and your payment details; ShubhDate never sees them. To unlock the purchase on your device, the app sends Google's purchase token and an anonymous device id (a random UUID created on first use) to the ShubhDate server, which keeps only a one-way hash of the token and that id. No name, email or phone number is collected.</p>
+    <p><b>On the website</b>, where the reports are offered for sale, payment is taken by <b>Stripe</b> on Stripe's own checkout page. Stripe handles your card details and the email address for your receipt; ShubhDate never receives or stores them. The ShubhDate server receives the product you chose and the same anonymous device id, and keeps that id, a one-way hash of a purchase code, and Stripe's payment reference (used only for refunds). A website purchase unlocks the browser it was made in.</p>
   </div>
 
   <div class="card">

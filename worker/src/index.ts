@@ -1,10 +1,13 @@
 // ShubhDate API (Cloudflare Worker + D1): Play purchase verification -> signed entitlement tokens, RTDN processing,
+// website purchases through Stripe Checkout (the /v1/web/* routes and /stripe/webhook; never used by the Play app),
 // and festival/vrat reminders by Web Push. Nothing here stores a name, email or phone; purchase tokens are hashed.
 import { festivals } from '../../engine/festivals.ts';
 import { sha256b64u } from './jws.ts';
 import { acknowledgeProduct, acknowledgeSubscription, consumeProduct, getProduct, getSubscription, subscriptionExpiry, type ServiceAccount } from './play.ts';
 import { SKUS, CONSUMABLE, issueToken, judgeProduct, judgeSubscription, payloadFor, rtdnAction, type EntRow, type Sku } from './entitle.ts';
 import { sendWebPush } from './webpush.ts';
+import { createCheckoutSession, getCheckoutSession, verifyWebhook } from './stripe.ts';
+import { webOffer, priceIdFor, newPurchaseCode, normaliseCode, isSessionId, judgeSession, webhookAction, PRODUCT_LABEL, type SessionVerdict } from './web.ts';
 
 export interface Env {
   DB: D1Database;
@@ -15,12 +18,17 @@ export interface Env {
   VAPID_PUBLIC_KEY?: string;            // secret: base64url raw 65-byte point
   PLAY_SERVICE_ACCOUNT?: string;        // secret: service-account JSON
   RTDN_TOKEN?: string;                  // secret: ?token= on the Pub/Sub push URL
+  // Website purchases (Stripe). Nothing is sold on the website until the key, a price id and its display price are set.
+  STRIPE_SECRET_KEY?: string;           // secret: restricted key, Checkout Sessions write
+  STRIPE_WEBHOOK_SECRET?: string;       // secret: whsec_... of the /stripe/webhook endpoint
+  STRIPE_PRICE_REPORT_SINGLE?: string; STRIPE_PRICE_FAMILY_ANNUAL?: string; STRIPE_PRICE_NAAM_REPORT?: string; // price_... ids
+  PRICE_REPORT_SINGLE?: string; PRICE_FAMILY_ANNUAL?: string; PRICE_NAAM_REPORT?: string;                      // display only, e.g. "CA$9"
 }
 
 const json = (body: unknown, status = 200, extra: Record<string, string> = {}) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...extra } });
 // ALLOWED_ORIGIN may list several origins, comma-separated (old github.io origin kept during the move).
 let reqOrigin = '';
-const cors = (env: Env) => ({ 'access-control-allow-origin': env.ALLOWED_ORIGIN.split(',').map(s => s.trim()).includes(reqOrigin) ? reqOrigin : env.ALLOWED_ORIGIN.split(',')[0].trim(), 'vary': 'Origin', 'access-control-allow-methods': 'POST, DELETE, OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-max-age': '86400' });
+const cors = (env: Env) => ({ 'access-control-allow-origin': env.ALLOWED_ORIGIN.split(',').map(s => s.trim()).includes(reqOrigin) ? reqOrigin : env.ALLOWED_ORIGIN.split(',')[0].trim(), 'vary': 'Origin', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-max-age': '86400' });
 const nowS = () => Math.floor(Date.now() / 1000);
 const isUuid = (s: unknown) => typeof s === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 const validTz = (tz: unknown) => { try { new Intl.DateTimeFormat('en', { timeZone: String(tz) }); return typeof tz === 'string'; } catch { return false; } };
@@ -30,11 +38,18 @@ const signingKey = (env: Env): JsonWebKey | null => { try { return env.ENTITLEME
 async function rowsFor(env: Env, dev: string): Promise<EntRow[]> {
   return (await env.DB.prepare('SELECT * FROM entitlements WHERE device_id = ?').bind(dev).all<EntRow>()).results;
 }
-async function tokenResponse(env: Env, dev: string, status = 200): Promise<Response> {
+async function tokenResponse(env: Env, dev: string, status = 200, extra: Record<string, unknown> = {}): Promise<Response> {
   const key = signingKey(env); if (!key) return json({ error: 'signing_not_configured' }, 503, cors(env));
   const payload = payloadFor(dev, await rowsFor(env, dev), nowS());
   if (!payload) return json({ error: 'none' }, 404, cors(env));
-  return json({ token: await issueToken(payload, key), entitlement: payload }, status, cors(env));
+  return json({ token: await issueToken(payload, key), entitlement: payload, ...extra }, status, cors(env));
+}
+/** 20 purchase-related calls per device per hour (claims, checkouts, restores). true = over the limit. */
+async function overLimit(env: Env, dev: string, now: number): Promise<boolean> {
+  const n = await env.DB.prepare('SELECT COUNT(*) AS c FROM claim_log WHERE device_id = ? AND at > ?').bind(dev, now - 3600).first<{ c: number }>();
+  if ((n?.c ?? 0) >= 20) return true;
+  await env.DB.prepare('INSERT INTO claim_log (device_id, at) VALUES (?, ?)').bind(dev, now).run();
+  return false;
 }
 
 // ---------- POST /v1/entitlement/claim ----------
@@ -47,10 +62,7 @@ async function claim(req: Request, env: Env): Promise<Response> {
   const b: any = await req.json().catch(() => null);
   if (!b || typeof b.purchaseToken !== 'string' || b.purchaseToken.length < 20 || b.purchaseToken.length > 4096 || !SKUS.includes(b.sku) || !isUuid(b.dev) || b.packageName !== env.PACKAGE_NAME) return json({ error: 'bad_request' }, 400, cors(env));
   const sku = b.sku as Sku, dev = String(b.dev).toLowerCase(), now = nowS();
-  // rate limit: 20 claims per device per hour
-  const n = await env.DB.prepare('SELECT COUNT(*) AS c FROM claim_log WHERE device_id = ? AND at > ?').bind(dev, now - 3600).first<{ c: number }>();
-  if ((n?.c ?? 0) >= 20) return json({ error: 'too_many_claims' }, 429, cors(env));
-  await env.DB.prepare('INSERT INTO claim_log (device_id, at) VALUES (?, ?)').bind(dev, now).run();
+  if (await overLimit(env, dev, now)) return json({ error: 'too_many_claims' }, 429, cors(env));
 
   const hash = await sha256b64u(b.purchaseToken);
   const existing = await env.DB.prepare('SELECT * FROM entitlements WHERE purchase_token_hash = ?').bind(hash).first<EntRow>();
@@ -103,6 +115,92 @@ async function refresh(req: Request, env: Env): Promise<Response> {
     }
   }
   return tokenResponse(env, dev);
+}
+
+// ---------- website purchases (Stripe Checkout) ----------
+// GET  /v1/web/config            -> { enabled, prices } : what the website may offer right now
+// POST /v1/web/checkout          { sku, dev, back } -> { url } : a Stripe Checkout page for one product
+// POST /v1/web/claim             { session, dev } -> { token, entitlement, restoreCode? } : called when the buyer lands back
+// POST /v1/web/restore           { code, dev } -> { token, entitlement } : move a Family plan to this browser
+// POST /stripe/webhook           Stripe -> grant on payment (the buyer may never come back), revoke on refund or dispute
+const signingReady = (env: Env) => !!signingKey(env);
+const siteOrigin = (env: Env) => { const list = env.ALLOWED_ORIGIN.split(',').map(s => s.trim()); return list.includes(reqOrigin) ? reqOrigin : list[0]; };
+
+async function webCheckout(req: Request, env: Env): Promise<Response> {
+  const b: any = await req.json().catch(() => null);
+  if (!b || !SKUS.includes(b.sku) || !isUuid(b.dev) || !['report', 'naam'].includes(b.back)) return json({ error: 'bad_request' }, 400, cors(env));
+  const sku = b.sku as Sku, dev = String(b.dev).toLowerCase();
+  const priceId = priceIdFor(env, sku);
+  if (!priceId || !webOffer(env, signingReady(env)).prices[sku]) return json({ error: 'web_checkout_not_configured' }, 503, cors(env));
+  if (await overLimit(env, dev, nowS())) return json({ error: 'too_many_claims' }, 429, cors(env));
+  const code = newPurchaseCode(), origin = siteOrigin(env);
+  try {
+    const s = await createCheckoutSession(env, {
+      priceId, clientRef: dev, idempotencyKey: `shubhdate-${crypto.randomUUID()}`,
+      successUrl: `${origin}/?paid={CHECKOUT_SESSION_ID}#/${b.back}`, cancelUrl: `${origin}/#/${b.back}`,
+      metadata: { app: 'shubhdate', sku, dev, code },
+      // The Family plan's code is its restore code, so it goes on the Stripe receipt too.
+      description: `ShubhDate ${PRODUCT_LABEL[sku]}${sku === 'family_annual' ? ` · restore code ${code}` : ''}`,
+    });
+    return json({ url: s.url }, 200, cors(env));
+  } catch (e: any) { return json({ error: 'stripe_error', detail: String(e?.message ?? e).slice(0, 200) }, 502, cors(env)); }
+}
+
+/** Write the entitlement row of a paid session (once, however many times it is seen). Returns the row's device id. */
+async function grantWeb(env: Env, v: Extract<SessionVerdict, { ok: true }>): Promise<string> {
+  const hash = await sha256b64u(v.code);
+  await env.DB.prepare('INSERT OR IGNORE INTO entitlements (id, sku, source, device_id, purchase_token_hash, order_id, expires_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
+    .bind(crypto.randomUUID(), v.sku, 'stripe', v.dev, hash, v.orderId, v.expiresAt, nowS()).run();
+  const row = await env.DB.prepare('SELECT device_id FROM entitlements WHERE purchase_token_hash = ?').bind(hash).first<{ device_id: string }>();
+  return row?.device_id ?? v.dev;
+}
+
+async function webClaim(req: Request, env: Env): Promise<Response> {
+  const b: any = await req.json().catch(() => null);
+  if (!b || !isSessionId(b.session) || !isUuid(b.dev)) return json({ error: 'bad_request' }, 400, cors(env));
+  const dev = String(b.dev).toLowerCase();
+  if (!env.STRIPE_SECRET_KEY) return json({ error: 'web_checkout_not_configured' }, 503, cors(env));
+  if (await overLimit(env, dev, nowS())) return json({ error: 'too_many_claims' }, 429, cors(env));
+  let s: any;
+  try { s = await getCheckoutSession(env, b.session); } catch (e: any) { return json({ error: 'stripe_error', detail: String(e?.message ?? e).slice(0, 200) }, 502, cors(env)); }
+  if (!s) return json({ error: 'not_purchased' }, 402, cors(env));
+  const v = judgeSession(s, nowS());
+  if (!v.ok) return json({ error: v.error === 'pending' ? 'pending' : 'not_purchased' }, 402, cors(env));
+  if (v.dev !== dev) return json({ error: 'claimed_by_other_device' }, 409, cors(env)); // the session was started by another browser
+  if (await grantWeb(env, v) !== dev) return json({ error: 'claimed_by_other_device' }, 409, cors(env)); // since moved with its restore code
+  return tokenResponse(env, dev, 200, v.sku === 'family_annual' ? { restoreCode: v.code } : {});
+}
+
+/** Move a website Family plan to this browser with its restore code. Single reports are not restorable: their
+ *  use is tracked on the device, so a restore would hand out a fresh report every time. */
+async function webRestore(req: Request, env: Env): Promise<Response> {
+  const b: any = await req.json().catch(() => null);
+  const code = normaliseCode(b?.code);
+  if (!b || !code || !isUuid(b.dev)) return json({ error: 'bad_request' }, 400, cors(env));
+  const dev = String(b.dev).toLowerCase(), now = nowS();
+  if (await overLimit(env, dev, now)) return json({ error: 'too_many_claims' }, 429, cors(env));
+  const row = await env.DB.prepare("SELECT * FROM entitlements WHERE purchase_token_hash = ? AND source = 'stripe'").bind(await sha256b64u(code)).first<EntRow>();
+  if (!row || row.revoked_at || row.sku !== 'family_annual' || (row.expires_at ?? 0) <= now) return json({ error: 'not_found' }, 404, cors(env));
+  if (row.device_id !== dev) await env.DB.prepare('UPDATE entitlements SET device_id = ? WHERE id = ?').bind(dev, row.id).run();
+  return tokenResponse(env, dev);
+}
+
+async function stripeWebhook(req: Request, env: Env): Promise<Response> {
+  if (!env.STRIPE_WEBHOOK_SECRET) return json({ error: 'webhook_not_configured' }, 503);
+  const event = await verifyWebhook(env.STRIPE_WEBHOOK_SECRET, await req.text(), req.headers.get('stripe-signature'));
+  if (!event) return json({ error: 'bad_signature' }, 400);
+  const a = webhookAction(event);
+  if (a.kind === 'grant') {
+    const v = judgeSession(a.session, nowS());
+    if (!v.ok) return json({ received: true, ignored: v.error }); // another product's payment on the same Stripe account, or not paid yet
+    await grantWeb(env, v);
+    return json({ received: true, granted: true });
+  }
+  if (a.kind === 'revoke') {
+    await env.DB.prepare("UPDATE entitlements SET revoked_at = ? WHERE order_id = ? AND source = 'stripe' AND revoked_at IS NULL").bind(nowS(), a.orderId).run();
+    return json({ received: true, revoked: true });
+  }
+  return json({ received: true, ignored: event.type });
 }
 
 // ---------- POST /v1/device/forget { dev } : delete the entitlement + claim rows of an anonymous device id (push rows are keyed by endpoint and removed by DELETE /v1/push/subscribe) ----------
@@ -213,10 +311,15 @@ export default {
     const url = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(env) });
     const p = url.pathname;
-    if (p === '/' || p === '/health') return json({ ok: true, service: 'shubhdate-api', time: nowS(), play: !!env.PLAY_SERVICE_ACCOUNT, signing: !!env.ENTITLEMENT_PRIVATE_KEY_JWK, push: !!env.VAPID_PRIVATE_KEY });
+    if (p === '/' || p === '/health') return json({ ok: true, service: 'shubhdate-api', time: nowS(), play: !!env.PLAY_SERVICE_ACCOUNT, signing: !!env.ENTITLEMENT_PRIVATE_KEY_JWK, push: !!env.VAPID_PRIVATE_KEY, stripe: !!env.STRIPE_SECRET_KEY, stripeWebhook: !!env.STRIPE_WEBHOOK_SECRET, web: webOffer(env, signingReady(env)).enabled });
     if (p === '/v1/entitlement/claim' && req.method === 'POST') return claim(req, env);
     if (p === '/v1/entitlement/refresh' && req.method === 'POST') return refresh(req, env);
     if (p === '/v1/rtdn' && req.method === 'POST') return rtdn(req, env, url);
+    if (p === '/v1/web/config' && req.method === 'GET') return json(webOffer(env, signingReady(env)), 200, cors(env));
+    if (p === '/v1/web/checkout' && req.method === 'POST') return webCheckout(req, env);
+    if (p === '/v1/web/claim' && req.method === 'POST') return webClaim(req, env);
+    if (p === '/v1/web/restore' && req.method === 'POST') return webRestore(req, env);
+    if (p === '/stripe/webhook' && req.method === 'POST') return stripeWebhook(req, env);
     if (p === '/v1/device/forget' && req.method === 'POST') return forget(req, env);
     if (p === '/v1/push/subscribe' && req.method === 'POST') return subscribe(req, env);
     if (p === '/v1/push/subscribe' && req.method === 'DELETE') return unsubscribe(req, env);

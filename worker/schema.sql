@@ -4,10 +4,10 @@
 CREATE TABLE IF NOT EXISTS entitlements (
   id TEXT PRIMARY KEY,                     -- uuid
   sku TEXT NOT NULL,                       -- 'report_single' | 'family_annual'
-  source TEXT NOT NULL DEFAULT 'play',
+  source TEXT NOT NULL DEFAULT 'play',     -- 'play' | 'stripe' (website purchase)
   device_id TEXT NOT NULL,                 -- anonymous UUID from the app
-  purchase_token_hash TEXT NOT NULL UNIQUE,-- sha256(purchaseToken), base64url
-  order_id TEXT,                           -- Play orderId (GPA.xxxx), for support
+  purchase_token_hash TEXT NOT NULL UNIQUE,-- sha256(purchaseToken), base64url; for 'stripe' rows, sha256(purchase code)
+  order_id TEXT,                           -- Play orderId (GPA.xxxx) or Stripe payment intent (pi_...), for support and refunds
   expires_at INTEGER,                      -- unix seconds; NULL for consumables
   created_at INTEGER NOT NULL,
   revoked_at INTEGER                       -- refund / RTDN revocation

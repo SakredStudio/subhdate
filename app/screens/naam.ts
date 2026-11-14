@@ -4,6 +4,8 @@
 import { humanSource } from '../format.ts';
 import { isPlayBillingAvailable, listProducts, purchase, restorePurchases, formatPrice, PurchaseError, openManageSubscriptions } from '../billing.ts';
 import { loadEntitlement } from '../entitlement.ts';
+import type { WebShop } from '../webpay.ts';
+import { webBuyHtml, wireWebBuy } from './web-buy.ts';
 import { loadReportFonts, reportDeck, reportToolbar, mountReport, closeReport, slideTitle, label, heading, kv, list, chunk } from './report-shell.ts';
 
 export interface NaamCity { name: string; lat: number; lon: number; tz: string; region?: string }
@@ -17,6 +19,8 @@ export interface NaamCtx {
   call: (op: string, args: any) => Promise<any>;
   pickCity: (onPick: (c: NaamCity) => void) => void;
   isUnlocked: () => Promise<boolean>; onFirstFullRender?: (key: string) => void;
+  /** the website's Stripe checkout; resolves null inside the Play app or while it is not set up */
+  webShop?: () => Promise<WebShop | null>;
 }
 interface Form { date: string; time: string | null; unk?: boolean; city: NaamCity; gender: 'boy' | 'girl' | 'any'; }
 const FORM_KEY = 'shubhdate.naam';
@@ -155,17 +159,20 @@ async function renderResult(out: HTMLElement, form: Form, r: any, c: NaamCtx) {
   if (!unlocked) { try { if (await isPlayBillingAvailable()) products = await listProducts(); } catch { products = []; } }
   const prod = products.find(p => p.itemId === 'naam_report'), fam = products.find(p => p.itemId === 'family_annual');
   const ent = unlocked ? await loadEntitlement().catch(() => null) : null;
+  const shop = !unlocked && !products.length ? await c.webShop?.().catch(() => null) ?? null : null;
+  const webBuy = shop ? webBuyHtml(shop, 'naam_report', 'naam.buy', t) : '';
   if (c.isCurrent?.() === false) return;
   const slot = out.querySelector('#n-report-slot');
   if (!slot) return;
   slot.innerHTML = `<div class="card ${unlocked ? '' : 'gold'}"><div class="label">${t('naam.report')}</div><p class="small">${t('naam.reportIntro')}</p>
-    ${unlocked ? `<button class="btn btn-gold" id="n-report">📄 ${t('naam.openReport')}</button>${ent?.entitlement.sku === 'family_annual' ? `<p class="small muted"><a href="#" id="n-manage">${t('settings.manageSub')}</a></p>` : ''}` : prod ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start"><button class="btn btn-gold btn-small" id="n-buy">${t('naam.buy', { price: formatPrice(prod) })}</button>${fam ? `<button class="btn btn-outline btn-small" id="n-buy-fam">${t('report.buyFamily', { price: formatPrice(fam) })}</button>` : ''}<button class="btn btn-outline btn-small" id="n-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>` : `<p class="small muted">${t('naam.locked')}</p>`}</div>`;
+    ${unlocked ? `<button class="btn btn-gold" id="n-report">📄 ${t('naam.openReport')}</button>${ent?.entitlement.sku === 'family_annual' && ent.entitlement.source !== 'stripe' ? `<p class="small muted"><a href="#" id="n-manage">${t('settings.manageSub')}</a></p>` : ''}` : prod ? `<div class="row" style="border:0;gap:8px;flex-wrap:wrap;justify-content:flex-start"><button class="btn btn-gold btn-small" id="n-buy">${t('naam.buy', { price: formatPrice(prod) })}</button>${fam ? `<button class="btn btn-outline btn-small" id="n-buy-fam">${t('report.buyFamily', { price: formatPrice(fam) })}</button>` : ''}<button class="btn btn-outline btn-small" id="n-restore">${t('report.restore')}</button></div><p class="small muted">${t('report.playNote')}</p>` : webBuy || `<p class="small muted">${t('naam.locked')}</p>`}</div>`;
   slot.querySelector('#n-report')?.addEventListener('click', () => { c.onFirstFullRender?.(naamKey(form)); renderReport(form, r, c); });
   slot.querySelector('#n-buy')?.addEventListener('click', async (e) => {
     const b = e.currentTarget as HTMLButtonElement; b.disabled = true;
     try { await purchase('naam_report'); c.toast(t('report.unlocked')); renderResult(out, form, r, c); }
     catch (err: any) { b.disabled = false; if (!(err instanceof PurchaseError && err.code === 'cancelled')) c.toast(t('report.buyFailed', { err: String(err?.code ?? err?.message ?? 'error') })); }
   });
+  if (shop && webBuy) wireWebBuy(slot, shop, 'naam', { t, toast: c.toast, onUnlocked: () => renderResult(out, form, r, c) });
   slot.querySelector('#n-manage')?.addEventListener('click', e => { e.preventDefault(); openManageSubscriptions(); });
   slot.querySelector('#n-buy-fam')?.addEventListener('click', async (e) => {
     const b = e.currentTarget as HTMLButtonElement; b.disabled = true;

@@ -16,6 +16,15 @@ crons = ["0 */6 * * *"]
 [vars]
 PACKAGE_NAME = "com.sakredstudio.shubhdate"
 ALLOWED_ORIGIN = "https://shubhdate.sakredstudio.ca,https://sakredstudio.github.io"
+# Website purchases (Stripe Checkout). A product is offered on the website only when BOTH its price id and its
+# display price are filled in here, and the secrets STRIPE_SECRET_KEY (+ STRIPE_WEBHOOK_SECRET) are set with
+# `wrangler secret put`. Empty = not for sale on the website. Steps: docs/WEB-CHECKOUT.md.
+STRIPE_PRICE_REPORT_SINGLE = ""
+STRIPE_PRICE_FAMILY_ANNUAL = ""
+STRIPE_PRICE_NAAM_REPORT = ""
+PRICE_REPORT_SINGLE = ""
+PRICE_FAMILY_ANNUAL = ""
+PRICE_NAAM_REPORT = ""
 
 # Secrets (wrangler secret put <NAME>), never in this file:
 #   ENTITLEMENT_PRIVATE_KEY_JWK   ES256 private key (JWK JSON) that signs entitlement tokens; its public half goes to app/config.ts

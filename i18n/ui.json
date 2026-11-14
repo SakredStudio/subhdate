@@ -355,7 +355,17 @@
     "settings.yourDataNote": "Everything you enter stays on this phone: birth details, saved dates, settings. Our server holds only an anonymous device id for purchases and reminders.",
     "settings.deleteData": "Delete my data",
     "settings.deleteConfirm": "This removes all birth details, saved dates, settings and the reminder subscription from this phone and our server. Purchases are not lost: use \"Restore purchases\" afterwards. Continue?",
-    "settings.deleteYes": "Delete everything"
+    "settings.deleteYes": "Delete everything",
+    "report.buyFamilyWeb": "Family plan · {price} for one year",
+    "report.webNote": "Secure card payment by Stripe. The report unlocks in this browser; download the PDF to keep it.",
+    "report.webFamilyNote": "The Family plan is one payment for one year and does not renew by itself.",
+    "report.webStarting": "Opening secure checkout…",
+    "report.webFailed": "We could not confirm the payment ({err}). If your card was charged, reload this page in a minute.",
+    "report.webRestore": "Have a Family plan restore code?",
+    "report.webRestoreGo": "Restore",
+    "report.webRestoreBad": "That code was not found.",
+    "report.webCodeTitle": "Your Family plan is active",
+    "report.webCodeBody": "Keep this restore code. It unlocks the plan in another browser, and it is also on your Stripe receipt."
   },
   "hi": {
     "nav.today": "आज",
@@ -660,7 +670,17 @@
     "settings.yourDataNote": "आप जो भी भरते हैं वह इसी फ़ोन पर रहता है: जन्म विवरण, सहेजी तिथियाँ, सेटिंग्स। हमारे सर्वर पर केवल खरीद और रिमाइंडर के लिए एक गुमनाम डिवाइस आईडी है।",
     "settings.deleteData": "मेरा डेटा हटाएँ",
     "settings.deleteConfirm": "इससे जन्म विवरण, सहेजी तिथियाँ, सेटिंग्स और रिमाइंडर सदस्यता इस फ़ोन और हमारे सर्वर से हट जाएगी। खरीद नहीं खोती: बाद में \"खरीद पुनर्स्थापित करें\" दबाएँ। जारी रखें?",
-    "settings.deleteYes": "सब हटाएँ"
+    "settings.deleteYes": "सब हटाएँ",
+    "report.buyFamilyWeb": "फ़ैमिली प्लान · {price}, एक वर्ष के लिए",
+    "report.webNote": "Stripe द्वारा सुरक्षित कार्ड भुगतान। रिपोर्ट इसी ब्राउज़र में खुलती है; इसे रखने के लिए PDF डाउनलोड कर लें।",
+    "report.webFamilyNote": "फ़ैमिली प्लान एक वर्ष के लिए एक बार का भुगतान है और अपने आप नवीनीकृत नहीं होता।",
+    "report.webStarting": "सुरक्षित भुगतान पेज खुल रहा है…",
+    "report.webFailed": "भुगतान की पुष्टि नहीं हो सकी ({err})। यदि आपके कार्ड से राशि कट गई है, तो एक मिनट बाद यह पेज फिर से खोलें।",
+    "report.webRestore": "फ़ैमिली प्लान का रीस्टोर कोड है?",
+    "report.webRestoreGo": "रीस्टोर करें",
+    "report.webRestoreBad": "यह कोड नहीं मिला।",
+    "report.webCodeTitle": "आपका फ़ैमिली प्लान चालू है",
+    "report.webCodeBody": "यह रीस्टोर कोड संभालकर रखें। इससे प्लान किसी दूसरे ब्राउज़र में खुलता है, और यह आपकी Stripe रसीद पर भी है।"
   },
   "gu": {
     "nav.today": "આજ",
@@ -965,7 +985,17 @@
     "settings.yourDataNote": "તમે જે ભરો છો તે આ જ ફોન પર રહે છે: જન્મ વિગત, સાચવેલી તારીખો, સેટિંગ્સ. અમારા સર્વર પર ફક્ત ખરીદી અને રિમાઇન્ડર માટે એક અનામી ડિવાઇસ આઈડી છે.",
     "settings.deleteData": "મારો ડેટા કાઢી નાખો",
     "settings.deleteConfirm": "આનાથી જન્મ વિગત, સાચવેલી તારીખો, સેટિંગ્સ અને રિમાઇન્ડર સબ્સ્ક્રિપ્શન આ ફોન અને અમારા સર્વરથી દૂર થશે. ખરીદી ખોવાતી નથી: પછી \"ખરીદી પાછી મેળવો\" દબાવો. ચાલુ રાખવું?",
-    "settings.deleteYes": "બધું કાઢી નાખો"
+    "settings.deleteYes": "બધું કાઢી નાખો",
+    "report.buyFamilyWeb": "ફેમિલી પ્લાન · {price}, એક વર્ષ માટે",
+    "report.webNote": "Stripe દ્વારા સુરક્ષિત કાર્ડ ચુકવણી. રિપોર્ટ આ જ બ્રાઉઝરમાં ખૂલે છે; તેને રાખવા માટે PDF ડાઉનલોડ કરી લો.",
+    "report.webFamilyNote": "ફેમિલી પ્લાન એક વર્ષ માટે એક વખતની ચુકવણી છે અને આપમેળે રિન્યૂ થતો નથી.",
+    "report.webStarting": "સુરક્ષિત ચુકવણી પેજ ખૂલી રહ્યું છે…",
+    "report.webFailed": "ચુકવણીની પુષ્ટિ થઈ શકી નથી ({err}). જો તમારા કાર્ડમાંથી રકમ કપાઈ હોય, તો એક મિનિટ પછી આ પેજ ફરી ખોલો.",
+    "report.webRestore": "ફેમિલી પ્લાનનો રિસ્ટોર કોડ છે?",
+    "report.webRestoreGo": "રિસ્ટોર કરો",
+    "report.webRestoreBad": "આ કોડ મળ્યો નથી.",
+    "report.webCodeTitle": "તમારો ફેમિલી પ્લાન ચાલુ છે",
+    "report.webCodeBody": "આ રિસ્ટોર કોડ સાચવી રાખો. તેનાથી પ્લાન બીજા બ્રાઉઝરમાં ખૂલે છે, અને તે તમારી Stripe રસીદ પર પણ છે."
   },
   "hinglish": {
     "nav.today": "Aaj",
