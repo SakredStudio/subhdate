@@ -19,12 +19,12 @@ ALLOWED_ORIGIN = "https://shubhdate.sakredstudio.ca,https://sakredstudio.github.
 # Website purchases (Stripe Checkout). A product is offered on the website only when BOTH its price id and its
 # display price are filled in here, and the secrets STRIPE_SECRET_KEY (+ STRIPE_WEBHOOK_SECRET) are set with
 # `wrangler secret put`. Empty = not for sale on the website. Steps: docs/WEB-CHECKOUT.md.
-STRIPE_PRICE_REPORT_SINGLE = ""
-STRIPE_PRICE_FAMILY_ANNUAL = ""
-STRIPE_PRICE_NAAM_REPORT = ""
-PRICE_REPORT_SINGLE = ""
-PRICE_FAMILY_ANNUAL = ""
-PRICE_NAAM_REPORT = ""
+STRIPE_PRICE_REPORT_SINGLE = "price_1UboH7IVDoaZZxH0Z4aFbELu"
+STRIPE_PRICE_FAMILY_ANNUAL = "price_1UboJ0IVDoaZZxH0sOJCQqTL"
+STRIPE_PRICE_NAAM_REPORT = "price_1UboI7IVDoaZZxH0CttzDhzC"
+PRICE_REPORT_SINGLE = "CA$6.99"
+PRICE_FAMILY_ANNUAL = "CA$20.99"
+PRICE_NAAM_REPORT = "CA$13.99"
 
 # Secrets (wrangler secret put <NAME>), never in this file:
 #   ENTITLEMENT_PRIVATE_KEY_JWK   ES256 private key (JWK JSON) that signs entitlement tokens; its public half goes to app/config.ts
