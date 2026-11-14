@@ -102,6 +102,27 @@ right after paying would have to reload the page to get the report.
 Empty a product's two lines in `worker/wrangler.toml` and run `npx wrangler deploy`. To stop all website sales at
 once: `npx wrangler secret delete STRIPE_SECRET_KEY`.
 
+## Refunds and disputes (Soul)
+
+The rules are public at `/refunds.html` and printed on the buy card and above Stripe's Pay button:
+refund within 7 days if the report did not unlock, does not work, or was charged twice; an unlocked report cannot
+be returned; the Family plan is refundable within 7 days if no full report was opened. Requests come to
+sakredfamily@gmail.com.
+
+- **Refunding:** Stripe → Payments → the payment → Refund, full amount. The webhook locks the report again within
+  a minute (verified 2026-11-14).
+- **Once per person:** before a goodwill refund, filter Stripe Payments by Refunded and search the buyer's
+  e-mail. A second "read it, want my money back" gets a polite no.
+- **When did they unlock it?** The unlock time is the purchase row's `created_at`:
+
+  ```powershell
+  npx wrangler d1 execute shubhdate --remote --command "SELECT sku, order_id, datetime(created_at,'unixepoch') AS unlocked, datetime(revoked_at,'unixepoch') AS revoked FROM entitlements WHERE order_id = 'pi_...'"
+  ```
+- **A shared or resold PDF:** every page says "ref XXXXXXXX", the first 8 characters of the buyer's device id:
+  `... WHERE device_id LIKE 'xxxxxxxx%'` (lower case) finds the purchase and its `order_id`.
+- **A dispute (chargeback):** answer it in Stripe with the refund policy URL, a screenshot of the buy card and
+  Stripe page showing the terms, and the unlock time from the query above.
+
 ## Sakred Graha shares the Stripe account
 
 Every webhook on the account receives every paid checkout. Graha's webhook must therefore answer 200 for
