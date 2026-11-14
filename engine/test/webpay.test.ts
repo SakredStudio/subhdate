@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { takePaidSession } from '../../app/webpay.ts';
 import { signToken, verifyToken, type Entitlement } from '../../app/entitlement.ts';
+import { licenceRef } from '../../app/screens/report-shell.ts';
 
 const page = (search: string, hash = '#/report') => {
   const calls: string[] = [];
@@ -35,5 +36,12 @@ describe('tokens for website purchases', () => {
     expect(await verifyToken(await signToken(base, priv), pub)).toMatchObject({ source: 'stripe', credits: 1 });
     expect(await verifyToken(await signToken({ ...base, source: 'play' }, priv), pub)).toMatchObject({ source: 'play' });
     expect(await verifyToken(await signToken({ ...base, source: 'gift' as any }, priv), pub)).toBeNull();
+  });
+});
+
+describe('licence mark on paid reports', () => {
+  it('is the first 8 hex characters of the device id, upper case', () => {
+    expect(licenceRef('bf001d89-be16-4fc8-a7dc-844a802e1114')).toBe('BF001D89');
+    expect(licenceRef('')).toBe('');
   });
 });

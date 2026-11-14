@@ -6,11 +6,11 @@
 // (Play Billing, see entitlement.ts) or the dev/QA flag localStorage['shubhdate.devReport']==='1' is set.
 import { humanSource } from '../format.ts';
 import { isPlayBillingAvailable, listProducts, purchase, restorePurchases, formatPrice, PurchaseError, type ProductDetails } from '../billing.ts';
-import type { Sku } from '../entitlement.ts';
+import { getDeviceId, type Sku } from '../entitlement.ts';
 import type { ReportModel, ReportDay, RWin } from '../../engine/report.ts';
 import type { WebShop } from '../webpay.ts';
 import { webBuyHtml, wireWebBuy } from './web-buy.ts';
-import { loadReportFonts, reportDeck, reportToolbar, mountReport, slideTitle, label, heading, fact, kv, list, scoreRing, dateParts } from './report-shell.ts';
+import { loadReportFonts, reportDeck, reportToolbar, mountReport, slideTitle, label, heading, fact, kv, list, scoreRing, dateParts, licenceRef } from './report-shell.ts';
 
 export interface ReportCtx {
   /** false once the user has navigated away; async work must not paint then */
@@ -53,7 +53,7 @@ export async function renderReport(view: HTMLElement, c: ReportCtx) {
   const strictness = t('muhurta.' + m.cover.strictness);
   const tradition = `${t('settings.' + m.cover.region)} · ${t('today.' + m.cover.monthSystem)}`;
   const genAt = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: tz }).format(new Date(m.generatedAt));
-  const deck = reportDeck({ base: c.base, brand: t('report.kicker'), subject: `${esc(m.cover.event.local)} · ${esc(m.cover.city)}`, note: esc(m.footer.line) });
+  const deck = reportDeck({ base: c.base, brand: t('report.kicker'), subject: `${esc(m.cover.event.local)} · ${esc(m.cover.city)}`, note: esc(m.footer.line), licence: unlocked ? esc(t('report.licence', { ref: licenceRef(getDeviceId()) })) : undefined });
   const best = (d: ReportDay) => d.windows.reduce((a, b) => (b.score > a.score ? b : a), d.windows[0]);
   const dayCtx = (date: string, i: number) => `${t('report.dayN', { n: i + 1 })} · ${esc(D(date))}`;
 

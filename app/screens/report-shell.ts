@@ -23,6 +23,8 @@ export interface DeckOpts {
   subject: string;
   /** the one-line note at the foot of every slide */
   note: string;
+  /** paid copies only: the licence mark in every slide foot, e.g. "Licensed copy · ref 1A2B3C4D" (see licenceRef) */
+  licence?: string;
 }
 export interface CoverOpts {
   kicker: string; title: string;
@@ -38,10 +40,11 @@ export interface Deck { slide: (cls: string, body: string, ctx?: string) => stri
 
 export function reportDeck(d: DeckOpts): Deck {
   const mark = `<img src="${d.base}icons/mark-84.png" width="28" height="28" alt="">`;
+  const lic = d.licence ? `<span class="rp-lic">${d.licence}</span>` : '';
   const slide = (cls: string, body: string, ctx?: string) => `<section class="rp-slide ${cls}"><div class="rp-frame">
     <header class="rp-shead"><span class="rp-brand">${mark}<span>${d.brand}</span></span><span>${ctx ?? d.subject}</span></header>
     <div class="rp-sbody">${body}</div>
-    <footer class="rp-sfoot"><span>${d.note}</span><span class="rp-num"></span></footer></div></section>`;
+    <footer class="rp-sfoot"><span>${d.note}</span>${lic}<span class="rp-num"></span></footer></div></section>`;
   // The cover every paid report opens with: logo, title block, lotus, facts, privacy line.
   const cover = (o: CoverOpts) => `<section class="rp-slide rp-s-cover"><div class="rp-frame">
     <div class="rp-cbrand">${mark}<span>ShubhDate</span></div>
@@ -57,9 +60,14 @@ export function reportDeck(d: DeckOpts): Deck {
     </div>
     <div class="rp-cfacts" style="--n:${Math.max(1, o.facts.length)}">${o.facts.map(([k, v]) => fact(k, v)).join('')}</div>
     ${o.fine ? `<div class="rp-fine">${o.fine}</div>` : ''}
-    <footer class="rp-sfoot"><span>🔒 ${o.note}</span><span class="rp-num"></span></footer></div></section>`;
+    <footer class="rp-sfoot"><span>🔒 ${o.note}</span>${lic}<span class="rp-num"></span></footer></div></section>`;
   return { slide, cover };
 }
+
+/** The reference printed on a paid copy: the first 8 characters of the anonymous device id, upper case. It lets
+ *  Sakred Studio match a shared or resold PDF to its purchase (entitlements.device_id LIKE 'ref%') without putting a
+ *  name on the report, and is far too short to stand in for the device id itself. */
+export const licenceRef = (deviceId: string) => deviceId.replace(/[^0-9a-f]/gi, '').slice(0, 8).toUpperCase();
 
 // ---- building blocks shared by all reports ----
 export const slideTitle = (title: string, sub?: string) => `<div class="rp-title"><h1 class="rp-h1">${title}</h1>${sub ? `<p class="rp-sub">${sub}</p>` : ''}</div>`;

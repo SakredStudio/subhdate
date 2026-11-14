@@ -15,6 +15,7 @@ export function webBuyHtml(shop: WebShop, single: Sku, singleLabelKey: string, t
       ${f ? `<button class="btn btn-outline btn-small" data-webbuy="family_annual">${t('report.buyFamilyWeb', { price: esc(f) })}</button>` : ''}
     </div>
     <p class="small muted">${t('report.webNote')}${f ? ` ${t('report.webFamilyNote')}` : ''}</p>
+    <p class="small muted">${t('report.webRefund')} <a href="refunds.html" target="_blank" rel="noopener">${t('report.webRefundLink')}</a></p>
     <details><summary class="small">${t('report.webRestore')}</summary>
       <div class="row" style="border:0;gap:8px;justify-content:flex-start;margin-top:6px">
         <input id="web-code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="XXXX-XXXX-XXXX" aria-label="${esc(t('report.webRestore'))}" style="max-width:190px">

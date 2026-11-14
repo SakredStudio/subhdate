@@ -31,6 +31,6 @@ export function privacyHtml(t: (k: string) => string): string {
     <li><b>Purchases in the Android app</b>: Google Play Billing handles the payment; ShubhDate never sees your payment details. The app sends Google's purchase token and an anonymous device id to the ShubhDate server, which stores a hash of the token and that id, never a name or email.</li>
     <li><b>Purchases on the website</b>, where offered: Stripe takes the payment on its own page and handles your card details and receipt email; ShubhDate never receives them. The ShubhDate server keeps the anonymous device id, a hash of a purchase code and Stripe's payment reference (for refunds).</li>
   </ul></div>
-  <p class="small"><a href="privacy.html" target="_blank" rel="noopener">Full privacy policy</a></p>
+  <p class="small"><a href="privacy.html" target="_blank" rel="noopener">Full privacy policy</a> · <a href="refunds.html" target="_blank" rel="noopener">Refund policy</a></p>
   <p class="small dim">Questions: open an issue at github.com/SakredStudio/subhdate.</p>`;
 }

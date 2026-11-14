@@ -22,6 +22,7 @@
 .rp-sbody { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 1.2em; }
 .rp-sfoot { display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5em; font-size: 0.75em; line-height: 1.35; color: var(--muted); }
 .rp-num { flex: none; letter-spacing: 0.2em; }
+.rp-lic { flex: none; letter-spacing: 0.06em; white-space: nowrap; }
 .rp-num::before { content: counter(rp-slide, decimal-leading-zero); }
 
 /* ---------- type ---------- */

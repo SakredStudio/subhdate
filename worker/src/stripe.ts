@@ -20,6 +20,8 @@ export const toForm = (obj: Record<string, any>) => form(obj).join('&');
 export interface CheckoutInput {
   priceId: string; clientRef: string; successUrl: string; cancelUrl: string;
   metadata: Record<string, string>; description: string; idempotencyKey: string;
+  /** shown on Stripe's page right above the Pay button (the refund terms), max 1200 characters */
+  submitNote?: string;
 }
 /** Create a one-time-payment Checkout Session. No customer details are sent: Stripe collects what it needs itself. */
 export async function createCheckoutSession(env: StripeEnv, inp: CheckoutInput, fetchFn: typeof fetch = fetch): Promise<{ id: string; url: string }> {
@@ -32,6 +34,7 @@ export async function createCheckoutSession(env: StripeEnv, inp: CheckoutInput, 
     metadata: inp.metadata,
     payment_intent_data: { description: inp.description, metadata: inp.metadata },
     allow_promotion_codes: 'true',
+    custom_text: inp.submitNote ? { submit: { message: inp.submitNote.slice(0, 1200) } } : undefined,
   });
   const r = await fetchFn('https://api.stripe.com/v1/checkout/sessions', {
     method: 'POST', body,

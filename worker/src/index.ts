@@ -7,7 +7,7 @@ import { acknowledgeProduct, acknowledgeSubscription, consumeProduct, getProduct
 import { SKUS, CONSUMABLE, issueToken, judgeProduct, judgeSubscription, payloadFor, rtdnAction, type EntRow, type Sku } from './entitle.ts';
 import { sendWebPush } from './webpush.ts';
 import { createCheckoutSession, getCheckoutSession, verifyWebhook } from './stripe.ts';
-import { webOffer, priceIdFor, newPurchaseCode, normaliseCode, isSessionId, judgeSession, webhookAction, PRODUCT_LABEL, type SessionVerdict } from './web.ts';
+import { webOffer, priceIdFor, newPurchaseCode, normaliseCode, isSessionId, judgeSession, webhookAction, PRODUCT_LABEL, CHECKOUT_TERMS, type SessionVerdict } from './web.ts';
 
 export interface Env {
   DB: D1Database;
@@ -141,6 +141,7 @@ async function webCheckout(req: Request, env: Env): Promise<Response> {
       metadata: { app: 'shubhdate', sku, dev, code },
       // The Family plan's code is its restore code, so it goes on the Stripe receipt too.
       description: `ShubhDate ${PRODUCT_LABEL[sku]}${sku === 'family_annual' ? ` · restore code ${code}` : ''}`,
+      submitNote: CHECKOUT_TERMS,
     });
     return json({ url: s.url }, 200, cors(env));
   } catch (e: any) { return json({ error: 'stripe_error', detail: String(e?.message ?? e).slice(0, 200) }, 502, cors(env)); }

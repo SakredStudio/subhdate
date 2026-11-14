@@ -3,10 +3,10 @@
 // (Play Billing inside the TWA; the web shows the preview and explains). Birth details stay on this device.
 import { humanSource } from '../format.ts';
 import { isPlayBillingAvailable, listProducts, purchase, restorePurchases, formatPrice, PurchaseError, openManageSubscriptions } from '../billing.ts';
-import { loadEntitlement } from '../entitlement.ts';
+import { loadEntitlement, getDeviceId } from '../entitlement.ts';
 import type { WebShop } from '../webpay.ts';
 import { webBuyHtml, wireWebBuy } from './web-buy.ts';
-import { loadReportFonts, reportDeck, reportToolbar, mountReport, closeReport, slideTitle, label, heading, kv, list, chunk } from './report-shell.ts';
+import { loadReportFonts, reportDeck, reportToolbar, mountReport, closeReport, slideTitle, label, heading, kv, list, chunk, licenceRef } from './report-shell.ts';
 
 export interface NaamCity { name: string; lat: number; lon: number; tz: string; region?: string }
 export interface NaamCtx {
@@ -226,7 +226,7 @@ function renderReport(form: Form, r: any, c: NaamCtx) {
   const { t, esc } = c;
   loadReportFonts();
   const view = document.getElementById('view')!;
-  const deck = reportDeck({ base: c.base, brand: `ShubhDate · ${esc(t('naam.reportTitle'))}`, subject: esc(form.city.name), note: esc(t('naam.privacy')) });
+  const deck = reportDeck({ base: c.base, brand: `ShubhDate · ${esc(t('naam.reportTitle'))}`, subject: esc(form.city.name), note: esc(t('naam.privacy')), licence: esc(t('report.licence', { ref: licenceRef(getDeviceId()) })) });
   const genAt = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: form.city.tz }).format(new Date());
   const cover = deck.cover({
     kicker: esc(t('naam.reportTitle')), title: esc(t('naam.title')),
