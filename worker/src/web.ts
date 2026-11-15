@@ -16,7 +16,7 @@ export interface WebEnv {
 }
 /** A Family plan bought on the website is one payment for one year. It does not renew. */
 export const FAMILY_WEB_SECONDS = 365 * 86400;
-export const PRODUCT_LABEL: Record<Sku, string> = { report_single: 'Muhurta Report', family_annual: 'Family plan, one year', naam_report: 'Namakarana Report' };
+export const PRODUCT_LABEL: Record<Sku, string> = { report_single: 'Muhurta Report', family_annual: 'Family plan, one year', naam_report: 'Namakarana Report', shagun_pro: 'Shagun Register Pro' };
 
 /** The refund terms on Stripe's page, above the Pay button. Same rules as public/refunds.html. */
 export const CHECKOUT_TERMS = 'Digital report: it unlocks as soon as you pay. Refund within 7 days if it does not unlock, does not work, or you were charged twice. An unlocked report cannot be returned. Full policy: shubhdate.sakredstudio.ca/refunds.html';

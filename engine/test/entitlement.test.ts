@@ -52,3 +52,19 @@ describe('entitlement tokens (ES256)', () => {
     await clearEntitlement();
   });
 });
+
+describe('shagun_pro (one-time, never consumed)', () => {
+  it('unlocks shagun_pro via its flag, via its own sku, and via the family plan; not via report credits', async () => {
+    const e = mk({ sku: 'naam_report', naam: 1, shagun: true }); await cacheEntitlement(await signToken(e, priv, subtle), e);
+    expect(await isEntitled('shagun_pro', now, pub)).toBe(true);
+    expect(await isEntitled('naam_report', now, pub)).toBe(true);
+    const e2 = mk({ sku: 'shagun_pro', shagun: true }); await cacheEntitlement(await signToken(e2, priv, subtle), e2);
+    expect(await isEntitled('shagun_pro', now, pub)).toBe(true);
+    expect(await isEntitled('report_single', now, pub)).toBe(false);
+    const e3 = mk({ sku: 'report_single', credits: 3 }); await cacheEntitlement(await signToken(e3, priv, subtle), e3);
+    expect(await isEntitled('shagun_pro', now, pub)).toBe(false);
+    const e4 = mk(); await cacheEntitlement(await signToken(e4, priv, subtle), e4);
+    expect(await isEntitled('shagun_pro', now, pub)).toBe(true);
+    await clearEntitlement();
+  });
+});
