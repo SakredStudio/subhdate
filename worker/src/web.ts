@@ -19,7 +19,7 @@ export const FAMILY_WEB_SECONDS = 365 * 86400;
 export const PRODUCT_LABEL: Record<Sku, string> = { report_single: 'Muhurta Report', family_annual: 'Family plan, one year', naam_report: 'Namakarana Report', shagun_pro: 'Shagun Register Pro' };
 
 /** The refund terms on Stripe's page, above the Pay button. Same rules as public/refunds.html. */
-export const CHECKOUT_TERMS = 'Digital report: it unlocks as soon as you pay. Refund within 7 days if it does not unlock, does not work, or you were charged twice. An unlocked report cannot be returned. Full policy: shubhdate.sakredstudio.ca/refunds.html';
+export const CHECKOUT_TERMS = 'Digital report: it unlocks as soon as you pay. Refund within 7 days if it does not unlock, does not work, or you were charged twice. An unlocked report cannot be returned. Full policy: shubhdate.sakredstudio.ca/refunds.html. Canadian buyers: GST/HST for your province is added to the total. 17899181 CANADA INC. (Sakred Studio), GST/HST no. 78394 9373 RT0001.';
 
 const val = (env: WebEnv, name: string): string | undefined => { const v = (env as any)[name]; return typeof v === 'string' && v.trim() ? v.trim() : undefined; };
 export const priceIdFor = (env: WebEnv, sku: Sku) => val(env, `STRIPE_PRICE_${sku.toUpperCase()}`);
