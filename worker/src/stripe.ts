@@ -34,6 +34,9 @@ export async function createCheckoutSession(env: StripeEnv, inp: CheckoutInput, 
     metadata: inp.metadata,
     payment_intent_data: { description: inp.description, metadata: inp.metadata },
     allow_promotion_codes: 'true',
+    // Stripe Tax (on since 2026-11-15, GST/HST 78394 9373 RT0001): adds GST/HST for Canadian buyers by province,
+    // nothing outside Canada. Prices are tax-exclusive (account default).
+    automatic_tax: { enabled: 'true' },
     custom_text: inp.submitNote ? { submit: { message: inp.submitNote.slice(0, 1200) } } : undefined,
   });
   const r = await fetchFn('https://api.stripe.com/v1/checkout/sessions', {

@@ -103,7 +103,7 @@ describe('website purchase routes', () => {
       if (init?.method === 'POST' && url.endsWith('/v1/checkout/sessions')) {
         const f = new URLSearchParams(init.body); const id = `cs_test_${'a'.repeat(8)}${created.length}`;
         const s = { id, object: 'checkout.session', status: paid ? 'complete' : 'open', payment_status: paid ? 'paid' : 'unpaid', payment_intent: `pi_${created.length}`, created: now, url: `https://checkout.stripe.com/c/pay/${id}`,
-          success_url: f.get('success_url'), cancel_url: f.get('cancel_url'), price: f.get('line_items[0][price]'), description: f.get('payment_intent_data[description]'), terms: f.get('custom_text[submit][message]'), auth: init.headers.authorization,
+          success_url: f.get('success_url'), cancel_url: f.get('cancel_url'), price: f.get('line_items[0][price]'), description: f.get('payment_intent_data[description]'), terms: f.get('custom_text[submit][message]'), tax: f.get('automatic_tax[enabled]'), auth: init.headers.authorization,
           metadata: { app: f.get('metadata[app]'), sku: f.get('metadata[sku]'), dev: f.get('metadata[dev]'), code: f.get('metadata[code]') } };
         created.push(s); return new Response(JSON.stringify(s), { status: 200 });
       }
@@ -123,7 +123,9 @@ describe('website purchase routes', () => {
     const { db, ents } = fakeDb(); const e = env(db); const made = stripe();
     const co = await call(e, '/v1/web/checkout', { sku: 'report_single', dev: DEV, back: 'report' });
     expect(co.status).toBe(200); expect((await co.json() as any).url).toMatch(/^https:\/\/checkout\.stripe\.com\//);
-    expect(made[0].terms).toMatch(/cannot be returned.*refunds\.html$/); // the refund terms sit above Stripe's Pay button
+    expect(made[0].terms).toMatch(/cannot be returned.*refunds\.html\./); // the refund terms sit above Stripe's Pay button
+    expect(made[0].terms).toMatch(/GST\/HST no\. 78394 9373 RT0001/); // tax line
+    expect(made[0].tax).toBe('true'); // Stripe Tax adds GST/HST for Canadian buyers
     expect(made[0]).toMatchObject({ price: 'price_r', auth: 'Bearer rk_test_x', success_url: `${SITE}/?paid={CHECKOUT_SESSION_ID}#/report`, cancel_url: `${SITE}/#/report`, description: 'ShubhDate Muhurta Report' });
     const claim = await call(e, '/v1/web/claim', { session: made[0].id, dev: DEV }); const body: any = await claim.json();
     expect(claim.status).toBe(200); expect(body.restoreCode).toBeUndefined();

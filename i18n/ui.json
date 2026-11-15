@@ -366,7 +366,7 @@
     "report.webRestoreBad": "That code was not found.",
     "report.webCodeTitle": "Your Family plan is active",
     "report.webCodeBody": "Keep this restore code. It unlocks the plan in another browser, and it is also on your Stripe receipt.",
-    "report.webRefund": "Refunds within 7 days if the report did not unlock, does not work, or you were charged twice. An unlocked report cannot be returned, so read the free preview first.",
+    "report.webRefund": "Refunds within 7 days if the report did not unlock, does not work, or you were charged twice. An unlocked report cannot be returned, so read the free preview first. Buyers in Canada pay GST/HST for their province on top of the price; nothing is added outside Canada.",
     "report.webRefundLink": "Refund policy",
     "report.licence": "Licensed copy for personal and family use · ref {ref}"
   },
@@ -684,7 +684,7 @@
     "report.webRestoreBad": "यह कोड नहीं मिला।",
     "report.webCodeTitle": "आपका फ़ैमिली प्लान चालू है",
     "report.webCodeBody": "यह रीस्टोर कोड संभालकर रखें। इससे प्लान किसी दूसरे ब्राउज़र में खुलता है, और यह आपकी Stripe रसीद पर भी है।",
-    "report.webRefund": "7 दिनों के भीतर रिफ़ंड, यदि रिपोर्ट नहीं खुली, ठीक से काम नहीं करती, या आपसे दो बार शुल्क लिया गया। खुल चुकी रिपोर्ट वापस नहीं हो सकती, इसलिए पहले मुफ़्त झलक पढ़ लें।",
+    "report.webRefund": "7 दिनों के भीतर रिफ़ंड, यदि रिपोर्ट नहीं खुली, ठीक से काम नहीं करती, या आपसे दो बार शुल्क लिया गया। खुल चुकी रिपोर्ट वापस नहीं हो सकती, इसलिए पहले मुफ़्त झलक पढ़ लें। कनाडा के ख़रीदारों से उनके प्रांत का GST/HST कीमत के ऊपर लिया जाता है; कनाडा के बाहर कुछ नहीं जुड़ता।",
     "report.webRefundLink": "रिफ़ंड नीति",
     "report.licence": "निजी और पारिवारिक उपयोग के लिए लाइसेंस प्रति · संदर्भ {ref}"
   },
@@ -1002,7 +1002,7 @@
     "report.webRestoreBad": "આ કોડ મળ્યો નથી.",
     "report.webCodeTitle": "તમારો ફેમિલી પ્લાન ચાલુ છે",
     "report.webCodeBody": "આ રિસ્ટોર કોડ સાચવી રાખો. તેનાથી પ્લાન બીજા બ્રાઉઝરમાં ખૂલે છે, અને તે તમારી Stripe રસીદ પર પણ છે.",
-    "report.webRefund": "7 દિવસમાં રિફંડ, જો રિપોર્ટ ખૂલ્યો નથી, બરાબર કામ કરતો નથી, અથવા તમારી પાસેથી બે વાર રકમ લેવાઈ છે. ખૂલી ગયેલો રિપોર્ટ પાછો આપી શકાતો નથી, તેથી પહેલાં મફત ઝલક વાંચી લો.",
+    "report.webRefund": "7 દિવસમાં રિફંડ, જો રિપોર્ટ ખૂલ્યો નથી, બરાબર કામ કરતો નથી, અથવા તમારી પાસેથી બે વાર રકમ લેવાઈ છે. ખૂલી ગયેલો રિપોર્ટ પાછો આપી શકાતો નથી, તેથી પહેલાં મફત ઝલક વાંચી લો. કેનેડાના ખરીદારો પાસેથી તેમના પ્રાંતનો GST/HST કિંમત ઉપરાંત લેવાય છે; કેનેડાની બહાર કંઈ ઉમેરાતું નથી.",
     "report.webRefundLink": "રિફંડ નીતિ",
     "report.licence": "અંગત અને કૌટુંબિક ઉપયોગ માટે લાઇસન્સવાળી નકલ · સંદર્ભ {ref}"
   },
